@@ -142,7 +142,7 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     
     @Override
     public int getProtocolVersion(){
-        return this.protocol.getProtocol();
+        return event.getConnection().getVersion();
     }
     
     @Override

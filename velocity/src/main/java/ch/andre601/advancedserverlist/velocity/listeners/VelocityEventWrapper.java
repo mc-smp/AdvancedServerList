@@ -138,7 +138,7 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     
     @Override
     public int getProtocolVersion(){
-        return protocol.getProtocol();
+        return event.getConnection().getProtocolVersion().getProtocol();
     }
     
     @Override
