@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Discord Server
-    about: Ask questions about the plugin in the `#advancedserverlist` channel.
-    url: https://discord.gg/6dazXp6
+    about: Ask questions about the plugin in the `advancedserverlist` category of the M.O.S.S. Discord.
+    url: https://discord.gg/MyPTjpsgGH
   - name: Wiki
     about: Check the Wiki for explanations about the features and examples.
-    url: https://docs.andre601.ch/AdvancedServerList
+    url: https://asl.andre601.ch

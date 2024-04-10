@@ -5,7 +5,7 @@ icon: octicons/milestone-24
 # Getting Started
 
 This page will explain how to set up AdvancedServerList and make it work for your server.  
-It tries to be as easy to understand as possible. But if you still have problems, consider joining the [Discord Server](https://discord.gg/6dazXp6){ target="_blank" rel="nofollow" } for help.
+The guide is designed to be as easy to understand as possible. If you still have problems or questions, join the [M.O.S.S Discord Server](https://discord.gg/MyPTjpsgGH){ target="_blank" rel="nofollow" } for more help.
 
 ## 1. Download the plugin { #download-the-plugin }
 

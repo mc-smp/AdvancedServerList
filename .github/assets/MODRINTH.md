@@ -80,7 +80,7 @@ Spanish Video by Ajneb97
 </a>
 
 ## Support
-<a href="https://discord.gg/6dazXp6" target="_blank">
+<a href="https://discord.gg/MyPTjpsgGH" target="_blank">
   <img src="https://wsrv.nl/?url=https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact-minimal/social/discord-singular_vector.svg&w=64" alt="discord" title="Join my Discord Server">
 </a>
 <a href="https://app.revolt.chat/invite/74TpERXA" target="_blank">

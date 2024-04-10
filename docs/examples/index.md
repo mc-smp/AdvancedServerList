@@ -10,7 +10,7 @@ icon: octicons/list-unordered-24
 
 This page lists some examples you may want to use for your proxy or server.
 
-Feel free to suggest additional examples on my [Discord Server](https://discord.gg/6dazXp6) in the `#advancedserverlist` channel.
+Feel free to suggest additional examples in the `advancedserverlist` category on the [M.O.S.S. Discord Server](https://discord.gg/MyPTjpsgGH){ target="_blank" rel="nofollow" }.
 
 ## Table of Contents
 
