@@ -121,7 +121,10 @@ public class VersionUploader{
         
         WebhookEmbedBuilder builder = new WebhookEmbedBuilder()
             .setTitle(new WebhookEmbed.EmbedTitle("New Release", null))
-            .setDescription("A new release of AdvancedServerList is available on Modrinth and Hangar for you to download!")
+            .setDescription(String.format(
+                "Version `%s` of AdvancedServerList is now available for download on Modrinth and Hangar!",
+                release.tagName()
+            ))
             .setColor(0x1BD96A);
         
         StringJoiner modrinthText = new StringJoiner("\n");
