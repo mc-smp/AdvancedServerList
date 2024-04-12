@@ -26,6 +26,7 @@
 package ch.andre601.advancedserverlist.velocity.listeners;
 
 import ch.andre601.advancedserverlist.velocity.VelocityCore;
+import ch.andre601.advancedserverlist.velocity.commands.VelocityCmdSender;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -47,5 +48,14 @@ public class JoinEvent{
         Player player = event.getPlayer();
         
         plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getUsername(), player.getUniqueId());
+        
+        if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
+            if(plugin.getCore().getUpdateChecker() == null)
+                return;
+            
+            VelocityCmdSender sender = new VelocityCmdSender(player);
+            
+            plugin.getCore().getUpdateChecker().performeCachedUpdateCheck(sender);
+        }
     }
 }

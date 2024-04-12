@@ -27,6 +27,7 @@ package ch.andre601.advancedserverlist.core.check;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,6 +63,8 @@ public class UpdateChecker{
     
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new UpdateCheckThread());
     
+    private final VersionCache cache = new VersionCache();
+    
     private final AdvancedServerList<?> core;
     private final PluginLogger logger;
     private final String loader;
@@ -72,6 +75,31 @@ public class UpdateChecker{
         this.loader = core.getPlugin().getLoader();
         
         startUpdateChecker();
+    }
+    
+    public void performeCachedUpdateCheck(CmdSender sender){
+        ModrinthVersion version = cache.get(() -> {
+            try{
+                return performUpdateCheck().join();
+            }catch(Exception ex){
+                return null;
+            }
+        });
+        
+        if(version == null)
+            return;
+        
+        int result = version.compare(core.getVersion());
+        if(result == -1){
+            sender.sendPrefixedMsg("<green>A new version of AdvancedServerList is available!");
+            sender.sendPrefixedMsg("<green>Your version: <white>%s", core.getVersion());
+            sender.sendPrefixedMsg("<green>Modrinth: <white>%s", version.versionNumber());
+            sender.sendPrefixedMsg("<click:open_url:'https://modrinth.com/plugin/advancedserverlist/version/%s'><green>[<white>Download Page</white>]</click>", version.id());
+        }else
+        if(result == 1){
+            sender.sendPrefixedMsg("Your version (<white>%s</white>) seems newer than the latest release on Modrinth (<white>%s</white>)", core.getVersion(), version.versionNumber);
+            sender.sendPrefixedMsg("Are you running a dev-build?");
+        }
     }
     
     public void disable(){
@@ -144,22 +172,22 @@ public class UpdateChecker{
     }
     
     private void printUpdateBanner(ModrinthVersion version){
-        logger.info("==================================================================");
-        logger.info("You are running an outdated version of AdvancedServerList!");
-        logger.info("");
-        logger.info("Your version: %s", core.getVersion());
-        logger.info("Modrinth:     %s", version.versionNumber());
-        logger.info("");
+        logger.warn("==================================================================");
+        logger.warn("You are running an outdated version of AdvancedServerList!");
+        logger.warn("");
+        logger.warn("Your version: %s", core.getVersion());
+        logger.warn("Modrinth:     %s", version.versionNumber());
+        logger.warn("");
         
         if(!version.isRelease()){
-            logger.info("WARNING!");
-            logger.info("This is a %s version and may contain breaking changes and/or bugs!", version.versionType());
-            logger.info("");
+            logger.warn("WARNING!");
+            logger.warn("This is a %s version and may contain breaking changes and/or bugs!", version.versionType());
+            logger.warn("");
         }
         
-        logger.info("Download the latest version from here:");
-        logger.info("https://modrinth.com/plugin/advancedserverlist/version/%s", version.id());
-        logger.info("==================================================================");
+        logger.warn("Download the latest version from here:");
+        logger.warn("https://modrinth.com/plugin/advancedserverlist/version/%s", version.id());
+        logger.warn("==================================================================");
     }
     
     public record ModrinthVersion(String id, String versionNumber, String versionType){
