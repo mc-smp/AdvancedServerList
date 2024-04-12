@@ -42,7 +42,7 @@ public class VersionCache{
     
     private record CachedValue(long timestamp, UpdateChecker.ModrinthVersion version){
         public boolean hasExpired(){
-            return (timestamp < 0L) || System.currentTimeMillis() - timestamp >= 5000L;
+            return (timestamp < 0L) || System.currentTimeMillis() - timestamp >= 300_000L;
         }
     }
 }
