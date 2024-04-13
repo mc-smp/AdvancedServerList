@@ -26,6 +26,7 @@
 package ch.andre601.advancedserverlist.bungeecord.listeners;
 
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
+import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCmdSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -34,7 +35,6 @@ import net.md_5.bungee.event.EventHandler;
 import java.net.InetSocketAddress;
 
 public class JoinEvent implements Listener{
-    
     private final BungeeCordCore plugin;
     
     public JoinEvent(BungeeCordCore plugin){
@@ -48,5 +48,14 @@ public class JoinEvent implements Listener{
         ProxiedPlayer player = event.getPlayer();
         
         plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
+        
+        if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
+            if(plugin.getAudiences() == null || plugin.getCore().getUpdateChecker() == null)
+                return;
+            
+            BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
+            
+            plugin.getCore().getUpdateChecker().performeCachedUpdateCheck(sender);
+        }
     }
 }

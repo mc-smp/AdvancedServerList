@@ -96,6 +96,10 @@ public class AdvancedServerList<F>{
         return parser;
     }
     
+    public UpdateChecker getUpdateChecker(){
+        return updateChecker;
+    }
+    
     public void disable(){
         getPlugin().getPluginLogger().info("Saving playercache.json file...");
         getPlayerHandler().save();

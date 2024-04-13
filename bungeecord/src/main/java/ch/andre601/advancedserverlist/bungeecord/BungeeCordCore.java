@@ -36,6 +36,7 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -52,10 +53,12 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
+    private BungeeAudiences audiences = null;
     private final PluginLogger logger = new BungeeLogger(this);
     
     @Override
     public void onEnable(){
+        this.audiences = BungeeAudiences.create(this);
         this.core = AdvancedServerList.init(this, BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this));
     }
     
@@ -137,6 +140,10 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     @Override
     public Favicon createFavicon(BufferedImage image) throws IllegalArgumentException{
         return Favicon.create(image);
+    }
+    
+    public BungeeAudiences getAudiences(){
+        return audiences;
     }
     
     public int getOnlinePlayers(ServerInfo server){
