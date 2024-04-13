@@ -5,15 +5,15 @@ when:
 steps:
   createFiles:
     image: maven:3.9.6-eclipse-temurin-17
-    secrets:
-      - source: cb_token
-        target: codeberg_api_token
-      - source: modrinth_api_token
-        target: modrinth_api_token
-      - source: hangar_api_token
-        target: hangar_api_token
-      - source: discord_webhook_url
-        target: discord_webhook_url
+    environment:
+      CODEBERG_API_TOKEN:
+        from_secret: cb_token
+      MODRINTH_API_TOKEN:
+        from_secret: modrinth_api_token
+      HANGAR_API_TOKEN:
+        from_secret: hangar_api_token
+      DISCORD_WEBHOOK_URL:
+        from_secret: discord_webhook_url
     commands:
       # Create the jar files.
       - mvn clean install
@@ -33,7 +33,7 @@ steps:
         - "velocity/target/AdvancedServerList-*.jar"
         - "addons/banplugins/target/AdvancedServerList-*.jar"
       api_key:
-        from_secret: CB_TOKEN
+        from_secret: cb_token
   postOnMastodon:
     image: woodpeckerci/plugin-mastodon-post
     when:
@@ -41,6 +41,6 @@ steps:
     settings:
       server_url: https://blobfox.coffee
       access_token:
-        from_secret: MASTODON_TOKEN
+        from_secret: mastodon_token
       status: '${CI_COMMIT_TAG} of #AdvancedServerList has been released and can be found on Modrinth (https://modrinth.com/plugin/AdvancedServerList), Hangar (https://hangar.papermc.io/Andre_601/AdvancedServerList) and Codeberg (https://codeberg.org/Andre601/AdvancedServerList).'
       visibility: public
