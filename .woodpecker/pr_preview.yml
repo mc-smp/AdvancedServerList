@@ -39,8 +39,6 @@ steps:
     image: mcs94/gitea-comment
     when:
       - status: ['success']
-    secrets:
-      - bot_token
     settings:
       gitea_address: https://codeberg.org
       gitea_token:
@@ -56,8 +54,6 @@ steps:
     image: mcs94/gitea-comment
     when:
       - status: ['failure']
-    secrets:
-      - bot_token
     settings:
       gitea_address: https://codeberg.org
       gitea_token:
