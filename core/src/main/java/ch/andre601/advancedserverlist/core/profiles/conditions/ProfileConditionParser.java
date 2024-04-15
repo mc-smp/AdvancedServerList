@@ -60,8 +60,12 @@ public class ProfileConditionParser implements ExpressionParserEngine{
             .build();
     }
     
-    public ExpressionTemplate compile(String text, GenericPlayer player, GenericServer server, ParseWarnCollector collector){
-        return parser.parse(tokenizer.parse(text, player, server, collector), collector);
+    public boolean evaluate(String text, GenericPlayer player, GenericServer server, ParseWarnCollector collector){
+        ExpressionTemplate result = parser.parse(tokenizer.parse(text, player, server, collector), collector);
+        if(result == null)
+            return false;
+        
+        return result.returnBooleanExpression().evaluate();
     }
     
     @Override

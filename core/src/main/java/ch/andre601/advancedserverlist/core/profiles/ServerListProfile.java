@@ -31,7 +31,6 @@ import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.expressionparser.ParseWarnCollector;
-import ch.andre601.expressionparser.templates.ExpressionTemplate;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -47,7 +46,8 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             return true;
         
         ParseWarnCollector collector = new ParseWarnCollector(condition);
-        ExpressionTemplate template = parser.compile(condition, player, server, collector);
+        
+        boolean result = parser.evaluate(condition, player, server, collector);
         
         if(collector.hasWarnings()){
             logger.warn("Encountered %d Error(s) while parsing condition for file '%s':", collector.getWarnings().size(), file);
@@ -61,10 +61,7 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             }
         }
         
-        if(template == null)
-            return false;
-        
-        return template.returnBooleanExpression().evaluate();
+        return result;
     }
     
     public ProfileEntry getRandomProfile(){

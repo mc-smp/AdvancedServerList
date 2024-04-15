@@ -46,13 +46,7 @@ public class ExpressionParserTests{
             logger.info("TEST[expression=\"%s\", expected=%b]", values.getKey(), values.getValue());
             
             ParseWarnCollector collector = new ParseWarnCollector(values.getKey());
-            ExpressionTemplate template = parser.compile(values.getKey(), null, null, collector);
-            boolean result;
-            if(template == null){
-                result = false;
-            }else{
-                result = template.returnBooleanExpression().evaluate();
-            }
+            boolean result = parser.evaluate(values.getKey(), null, null, collector);
             
             logger.info("Result (output, isExpected): " + result + ", " + (result == values.getValue()));
             assertEquals(result, values.getValue());
