@@ -27,7 +27,6 @@ package ch.andre601.advancedserverlist.test;
 
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.expressionparser.ParseWarnCollector;
-import ch.andre601.expressionparser.templates.ExpressionTemplate;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -48,7 +47,7 @@ public class ExpressionParserTests{
             ParseWarnCollector collector = new ParseWarnCollector(values.getKey());
             boolean result = parser.evaluate(values.getKey(), null, null, collector);
             
-            logger.info("Result (output, isExpected): " + result + ", " + (result == values.getValue()));
+            logger.info("Result (Output, Expected?): %b, %b", result, (result == values.getValue()));
             assertEquals(result, values.getValue());
         }
     }
