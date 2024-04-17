@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: API Support
+    about: For API support, please create an issue in the `asl-api` repository.
+    url: https://codeberg.org/Andre601/asl-api
   - name: Discord Server
     about: Ask questions about the plugin in the `advancedserverlist` category of the M.O.S.S. Discord.
     url: https://discord.gg/MyPTjpsgGH
