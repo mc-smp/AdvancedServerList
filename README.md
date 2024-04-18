@@ -89,7 +89,7 @@ You can disable this in the global bStats config file located in `/plugins/bstat
 ## Support
 
 <a href="https://discord.gg/MyPTjpsgGH" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/discord-singular_vector.svg" height="64" alt="discord" title="Join my Discord Server">
+  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/discord-singular_vector.svg" height="64" alt="discord" title="Join the M.O.S.S. Discord Server">
 </a>
 <a href="https://app.revolt.chat/invite/74TpERXA" target="_blank">
   <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/revolt-singular_vector.svg" height="64" alt="revolt" title="Join my Revolt Server">
