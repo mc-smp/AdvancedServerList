@@ -9,7 +9,8 @@
     {
       "description": "Use Jitpack registry for AdvancedBan",
       "matchPackageNames": [
-        "com.github.DevLeoko:AdvancedBan"
+        "com.github.DevLeoko:AdvancedBan",
+        "com.github.LeonMangler:PremiumVanishAPI"
       ],
       "registryUrls": [
         "https://jitpack.io"
