@@ -30,7 +30,7 @@ steps:
       - bot_token
     commands:
       - <<: *setup_git
-      - mv domains site/.domains
+      - mv preview-domains site/.domains
       - cd site
       - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
