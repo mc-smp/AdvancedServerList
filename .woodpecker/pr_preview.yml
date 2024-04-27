@@ -8,14 +8,13 @@ variables:
     - apk add git
     - git config --global user.email "andre_601-bot@noreply.codeberg.org"
     - git config --global user.name "ASL Docs Builder"
+  target_branch: &target_branch '${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}'
 
 steps:
-  defineEnvVars:
-    image: bash
-    commands:
-      - echo "PR_TARGET_BRANCH=${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}" >> envvars # Store the target branch as envvar.
   cloneTargetRepo:
     image: alpine:3.18.4
+    environment:
+      TARGET_BRANCH: *target_branch
     commands:
       - source envvars
       - chmod -R a+w .
@@ -30,6 +29,8 @@ steps:
       pip_install_file: requirements.txt
   commitAndPush:
     image: alpine:3.18.4
+    environment:
+      TARGET_BRANCH: *target_branch
     secrets:
       - bot_token
     commands:
@@ -39,11 +40,13 @@ steps:
       - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
       - git commit -m "Update Preview for PR ${CI_COMMIT_PULL_REQUEST} in Repository ${CI_REPO_NAME} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
-      - git push --set-upstream upstream ${CI_REPO_NAME}/pr-${PR_TARGET_BRANCH} -f
+      - git push --set-upstream upstream ${PR_TARGET_BRANCH} -f
   commentOnSuccess:
     image: mcs94/gitea-comment
     when:
       - status: ['success']
+    environment:
+      TARGET_BRANCH: *target_branch
     settings:
       gitea_address: https://codeberg.org
       gitea_token:
