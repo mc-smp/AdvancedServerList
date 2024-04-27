@@ -13,23 +13,19 @@ variables:
 steps:
   cloneTargetRepo:
     image: alpine:3.18.4
-    environment:
-      TARGET_BRANCH: *target_branch
     commands:
       - chmod -R a+w .
       - <<: *setup_git
       - git clone https://codeberg.org/Andre601/preview.git site
       - chmod -R a+w site
       - cd site
-      - git switch ${PR_TARGET_BRANCH} 2>/dev/null || git switch -c ${PR_TARGET_BRANCH}
+      - git switch ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} 2>/dev/null || git switch -c ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}
   buildDocs:
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
       pip_install_file: requirements.txt
   commitAndPush:
     image: alpine:3.18.4
-    environment:
-      TARGET_BRANCH: *target_branch
     secrets:
       - bot_token
     commands:
@@ -39,13 +35,11 @@ steps:
       - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
       - git commit -m "Update Preview for PR ${CI_COMMIT_PULL_REQUEST} in Repository ${CI_REPO_NAME} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
-      - git push --set-upstream upstream ${PR_TARGET_BRANCH} -f
+      - git push --set-upstream upstream ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} -f
   commentOnSuccess:
     image: mcs94/gitea-comment
     when:
       - status: ['success']
-    environment:
-      TARGET_BRANCH: *target_branch
     settings:
       gitea_address: https://codeberg.org
       gitea_token:
@@ -53,10 +47,10 @@ steps:
       comment: |-
         Pull request Preview ready!
 
-        | Name   | Value                                            |
-        |--------|--------------------------------------------------|
-        | Commit | ${CI_COMMIT_SHA}                                 |
-        | Link   | https://preview.andre601.ch/@${PR_TARGET_BRANCH} |
+        | Name   | Value                                                                       |
+        |--------|-----------------------------------------------------------------------------|
+        | Commit | ${CI_COMMIT_SHA}                                                            |
+        | Link   | https://preview.andre601.ch/@${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} |
   commentOnFailure:
     image: mcs94/gitea-comment
     when:
