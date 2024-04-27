@@ -13,7 +13,7 @@ steps:
   defineEnvVars:
     image: bash
     commands:
-      - echo "PR_TARGET_BRANCH=${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}" >> envvars
+      - echo "PR_TARGET_BRANCH=${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}" >> envvars # Store the target branch as envvar.
   cloneTargetRepo:
     image: alpine:3.18.4
     commands:
