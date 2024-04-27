@@ -16,7 +16,6 @@ steps:
     environment:
       TARGET_BRANCH: *target_branch
     commands:
-      - source envvars
       - chmod -R a+w .
       - <<: *setup_git
       - git clone https://codeberg.org/Andre601/preview.git site
