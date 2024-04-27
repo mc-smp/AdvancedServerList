@@ -23,7 +23,7 @@ steps:
       - git clone https://codeberg.org/Andre601/preview.git site
       - chmod -R a+w site
       - cd site
-      - git switch ${PR_TARGET_BRANCH} 2>/dev/null || git switch -c ${PR_TARGET_BRANCH
+      - git switch ${PR_TARGET_BRANCH} 2>/dev/null || git switch -c ${PR_TARGET_BRANCH}
   buildDocs:
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
