@@ -8,7 +8,6 @@ variables:
     - apk add git
     - git config --global user.email "andre@andre601.ch"
     - git config --global user.name "ASL Docs Builder"
-  target_branch: &target_branch '${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}'
 
 steps:
   cloneTargetRepo:
@@ -19,7 +18,7 @@ steps:
       - git clone https://codeberg.org/Andre601/preview.git site
       - chmod -R a+w site
       - cd site
-      - git switch ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} 2>/dev/null || git switch -c ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST}
+      - git switch ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} 2>/dev/null || git switch -c ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST}
   buildDocs:
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
@@ -35,7 +34,7 @@ steps:
       - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
       - git commit -m "Update Preview for PR ${CI_COMMIT_PULL_REQUEST} in Repository ${CI_REPO_NAME} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
-      - git push --set-upstream upstream ${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} -f
+      - git push --set-upstream upstream ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} -f
   commentOnSuccess:
     image: mcs94/gitea-comment
     when:
@@ -50,7 +49,7 @@ steps:
         | Name   | Value                                                                       |
         |--------|-----------------------------------------------------------------------------|
         | Commit | ${CI_COMMIT_SHA}                                                            |
-        | Link   | https://preview.andre601.ch/@${CI_REPO_NAME,,}/pr-${CI_COMMIT_PULL_REQUEST} |
+        | Link   | https://preview.andre601.ch/@${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} |
   commentOnFailure:
     image: mcs94/gitea-comment
     when:
