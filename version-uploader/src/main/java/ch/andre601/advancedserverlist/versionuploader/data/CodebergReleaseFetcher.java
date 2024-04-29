@@ -57,6 +57,10 @@ public class CodebergReleaseFetcher{
             return null;
         }
         
+        // Forgejo broke tags returned, causing CI_COMMIT_TAG to return refs/tags/<tag>, so we check for this and filter it...
+        if(tag.startsWith("ref/tags/"))
+            tag = tag.substring("ref/tags/".length());
+        
         String url = "https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/releases/tags/" + tag;
         LOGGER.info("Fetching Release data from {}...", url);
         
