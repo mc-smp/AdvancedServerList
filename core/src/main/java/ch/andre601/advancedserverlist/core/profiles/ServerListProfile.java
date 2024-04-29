@@ -120,6 +120,13 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             this.logger = logger;
         }
         
+        public Builder(String filename, int priority, PluginLogger logger){
+            this.fileName = filename;
+            this.node = null;
+            this.priority = priority;
+            this.logger = logger;
+        }
+        
         public static Builder resolve(String fileName, ConfigurationNode node, PluginLogger logger){
             return new Builder(fileName, node, logger)
                 .resolveCondition()
@@ -128,6 +135,9 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
         }
         
         private Builder resolveCondition(){
+            if(node == null)
+                throw new IllegalStateException("ConfigurationNode was null!");
+            
             String condition = node.node("condition").getString();
             if(condition == null || condition.isEmpty())
                 return this;
@@ -137,6 +147,9 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
         }
         
         private Builder resolveProfiles(){
+            if(node == null)
+                throw new IllegalStateException("ConfigurationNode was null!");
+            
             try{
                 this.profiles = node.node("profiles").getList(ProfileEntry.class);
             }catch(SerializationException ex){
@@ -147,6 +160,9 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
         }
         
         private Builder resolveDefaultProfile(){
+            if(node == null)
+                throw new IllegalStateException("ConfigurationNode was null!");
+            
             try{
                 this.defaultProfile = node.get(ProfileEntry.class);
             }catch(SerializationException ex){
