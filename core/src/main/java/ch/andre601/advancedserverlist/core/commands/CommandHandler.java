@@ -28,18 +28,23 @@ package ch.andre601.advancedserverlist.core.commands;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.PluginCommand;
+import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandHandler{
     
-    private final List<PluginCommand> subCommands = new ArrayList<>();
+    private final List<PluginCommand> subCommands;
     
     public CommandHandler(AdvancedServerList<?> core){
-        subCommands.add(new Help());
-        subCommands.add(new Reload(core));
-        subCommands.add(new ClearCache(core));
+        subCommands = List.of(
+            new Help(),
+            new Reload(core),
+            new ClearCache(core),
+            new Migrate(core)
+        );
     }
     
     public void handle(CmdSender sender, String[] args){
@@ -58,7 +63,7 @@ public class CommandHandler{
                     return;
                 }
                 
-                subCommand.handle(sender);
+                subCommand.handle(sender, Arrays.copyOfRange(args, 1, args.length));
                 return;
             }
         }
@@ -73,7 +78,7 @@ public class CommandHandler{
         }
     
         @Override
-        public void handle(CmdSender sender){
+        public void handle(CmdSender sender, String[] args){
             sender.sendPrefixedMsg("- Commands");
             sender.sendMsg();
             sender.sendMsg("<aqua>/asl <white>help <grey>- Shows this help");
@@ -81,6 +86,8 @@ public class CommandHandler{
             sender.sendMsg("<aqua>/asl <white>reload <grey>- Reloads the config.yml and profiles");
             sender.sendMsg();
             sender.sendMsg("<aqua>/asl <white>clearCache <grey>- Clears the Player and Favicon cache");
+            sender.sendMsg();
+            sender.sendMsg("<aqua>/asl <white>migrate <grey><</grey>plugin<grey>> - Migrates configuration of another plugin");
         }
     }
     
@@ -95,7 +102,7 @@ public class CommandHandler{
         }
         
         @Override
-        public void handle(CmdSender sender){
+        public void handle(CmdSender sender, String[] args){
             sender.sendPrefixedMsg("Reloading plugin...");
             
             if(core.getFileHandler().reloadConfig()){
@@ -125,7 +132,7 @@ public class CommandHandler{
         }
     
         @Override
-        public void handle(CmdSender sender){
+        public void handle(CmdSender sender, String[] args){
             sender.sendPrefixedMsg("Clearing caches...");
             
             core.clearFaviconCache();
@@ -135,6 +142,41 @@ public class CommandHandler{
             sender.sendPrefixedMsg("<green>Successfully cleared Player Cache!");
             
             sender.sendPrefixedMsg("<green>Cache clearing complete!");
+        }
+    }
+    
+    private static class Migrate extends PluginCommand{
+        
+        private final AdvancedServerList<?> core;
+        
+        public Migrate(AdvancedServerList<?> core){
+            super("migrate");
+            
+            this.core = core;
+        }
+        
+        @Override
+        public void handle(CmdSender sender, String[] args){
+            if(args.length == 0){
+                sender.sendErrorMsg("<red>Insufficient arguments! Please provide a plugin to migrate from.");
+                sender.sendErrorMsg("<red>Available options:");
+                sender.sendErrorMsg(" - ServerListPlus");
+                return;
+            }
+            
+            if(args[0].equalsIgnoreCase("serverlistplus")){
+                sender.sendPrefixedMsg("Migrating ServerListPlus configuration file...");
+                
+                boolean success = SLPConfigMigrator.migrate(core);
+                if(success){
+                    sender.sendPrefixedMsg("<green>Migration completed! Check console for any additional notes.");
+                }else{
+                    sender.sendErrorMsg("<red>Migration unsuccessful! Check console for any errors and warnings.");
+                }
+            }else{
+                sender.sendErrorMsg("<red>Unknown plugin <grey>%s</grey>. Available Options:", args[0]);
+                sender.sendErrorMsg(" - ServerListPlus");
+            }
         }
     }
 }
