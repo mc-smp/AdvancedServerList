@@ -7,7 +7,7 @@ when:
 variables:
   setup_git: &setup_git
     - apk add git
-    - git config --global user.email "github@andre601.ch"
+    - git config --global user.email "andre_601-bot@noreply.codeberg.org"
     - git config --global user.name "ASL Docs Builder"
 
 steps:
