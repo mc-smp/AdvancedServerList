@@ -10,7 +10,7 @@ variables:
     - git config --global user.name "ASL Docs Builder"
 
 steps:
-  - name: 'Clone Preview Repository'
+  - name: 'ClonePreviewRepository'
     image: alpine:3.18.4
     commands:
       - chmod -R a+w .
@@ -19,7 +19,7 @@ steps:
       - chmod -R a+w site
       - cd site
       - git switch ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} 2>/dev/null || git switch -c ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST}
-  - name: 'Build Docs'
+  - name: 'BuildDocs'
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
       pip_install_file: requirements.txt
@@ -35,7 +35,7 @@ steps:
       - git add --all
       - git commit -m "Update Preview for PR ${CI_COMMIT_PULL_REQUEST} in Repository ${CI_REPO_NAME} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
       - git push --set-upstream upstream ${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} -f
-  - name: 'Comment on success'
+  - name: 'CommentOnSuccess'
     image: mcs94/gitea-comment
     when:
       - status: ['success']
@@ -50,7 +50,7 @@ steps:
         |--------|-----------------------------------------------------------------------------|
         | Commit | ${CI_COMMIT_SHA}                                                            |
         | Link   | https://preview.andre601.ch/@${CI_REPO_NAME,,}-pr-${CI_COMMIT_PULL_REQUEST} |
-  - name: 'Comment on failure'
+  - name: 'CommentOnFailure'
     image: mcs94/gitea-comment
     when:
       - status: ['failure']
