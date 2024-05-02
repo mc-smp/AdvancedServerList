@@ -3,7 +3,7 @@ when:
     branch: master
 
 steps:
-  - name: 'Build Jar files and upload'
+  - name: 'BuildJarAndUpload'
     image: maven:3.9.6-eclipse-temurin-17
     secrets:
       - modrinth_api_token
@@ -21,7 +21,7 @@ steps:
       - cd ../../
       # Execute Jar file
       - java -jar VersionUploader.jar --all
-  - name: 'Upload Jars to Codeberg'
+  - name: 'UploadJarsToCodeberg'
     image: woodpeckerci/plugin-gitea-release
     settings:
       base_url: https://codeberg.org
@@ -32,7 +32,7 @@ steps:
         - "addons/banplugins/target/AdvancedServerList-*.jar"
       api_key:
         from_secret: cb_token
-  - name: 'Create post on Mastodon'
+  - name: 'CreatePostOnMastodon'
     image: woodpeckerci/plugin-mastodon-post
     when:
       - status: ['success']
