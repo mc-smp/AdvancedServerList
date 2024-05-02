@@ -35,6 +35,8 @@ import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import com.alessiodp.libby.BungeeLibraryManager;
+import com.alessiodp.libby.Library;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.Favicon;
@@ -45,11 +47,17 @@ import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
+    
+    private boolean successfulLoad = false;
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
@@ -57,7 +65,18 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     private final PluginLogger logger = new BungeeLogger(this);
     
     @Override
+    public void onLoad(){
+        successfulLoad = loadLibs();
+    }
+    
+    @Override
     public void onEnable(){
+        if(!successfulLoad){
+            logger.warn("There were issues during the plugins Loading-phase! Please see the console for possible reasons.");
+            logger.warn("The plugin won't be enabled to prevent additional problems.");
+            return;
+        }
+        
         this.audiences = BungeeAudiences.create(this);
         this.core = AdvancedServerList.init(this, BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this));
     }
@@ -155,5 +174,40 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         }
         
         return players.size();
+    }
+    
+    private boolean loadLibs(){
+        BungeeLibraryManager libraryManager = new BungeeLibraryManager(this);
+        libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+        
+        try(InputStream stream = getClass().getResourceAsStream("/dependencies.maven")){
+            if(stream == null){
+                logger.warn("Received null InputStream while trying to resolve dependencies!");
+                return false;
+            }
+            try(InputStreamReader streamReader = new InputStreamReader(stream); 
+                BufferedReader reader = new BufferedReader(streamReader)){
+                String line;
+                while((line = reader.readLine()) != null){
+                    String[] dependency = line.split(":", 3);
+                    if(dependency.length < 3)
+                        continue;
+                    
+                    Library library = Library.builder()
+                        .groupId(dependency[0])
+                        .artifactId(dependency[1])
+                        .version(dependency[2])
+                        .resolveTransitiveDependencies(true)
+                        .build();
+                    
+                    libraryManager.loadLibrary(library);
+                }
+                
+                return true;
+            }
+        }catch(IOException ex){
+            logger.warn("Encountered IOException while trying to resolve dependencies.", ex);
+            return false;
+        }
     }
 }

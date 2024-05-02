@@ -1,0 +1,4 @@
+net{}kyori:adventure-api:${dependency.adventure-api}
+net{}kyori:adventure-text-minimessage:${dependency.adventure-text-minimessage}
+net{}kyori:adventure-platform-bungeecord:${dependency.adventure-platform-bungeecord}
+org{}spongepowered:configurate-yaml:${dependency.configurate-yaml}
