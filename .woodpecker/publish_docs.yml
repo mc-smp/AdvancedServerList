@@ -11,18 +11,18 @@ variables:
     - git config --global user.name "ASL Docs Builder"
 
 steps:
-  - name: 'Clone target Repository'
+  - name: 'CloneTargetRepository'
     image: alpine:3.18.4
     commands:
       - chmod -R a+w .
       - <<: *setup_git
       - git clone -b pages https://codeberg.org/Andre601/asl-docs site
       - chmod -R a+w site
-  - name: 'Build Docs'
+  - name: 'BuildDocs'
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
       pip_install_file: requirements.txt
-  - name: 'Commit and push to target Repository'
+  - name: 'CommitAndPushToTarget'
     image: alpine:3.18.4
     secrets:
       - bot_token
