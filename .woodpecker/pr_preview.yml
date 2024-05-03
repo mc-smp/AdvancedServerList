@@ -6,8 +6,8 @@ when:
 variables:
   setup_git: &setup_git
     - apk add git
-    - git config user.email "andre_601-bot@noreply.codeberg.org"
-    - git config user.name "PR Docs Preview Builder"
+    - git config --global user.email "andre_601-bot@noreply.codeberg.org"
+    - git config --global user.name "PR Docs Preview Builder"
 
 steps:
   - name: "Clone Preview Repository"
