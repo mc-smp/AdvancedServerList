@@ -23,7 +23,7 @@ steps:
     image: woodpeckerci/plugin-mkdocs:latest
     settings:
       pip_install_file: requirements.txt
-  - name: 'Commit and Push to Preview Repository'
+  - name: 'CommitAndPushToTarget'
     image: alpine:3.18.4
     secrets:
       - bot_token
