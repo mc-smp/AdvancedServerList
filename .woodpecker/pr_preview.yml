@@ -31,7 +31,7 @@ steps:
       - <<: *setup_git
       - mv preview-domains site/.domains
       - cd site
-      - git remote add upstream https://${BOT_TOKEN}@codeberg.org/Andre601/preview.git
+      - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
       - git commit -m "Update Preview for ${CI_REPO_NAME}/${CI_COMMIT_PULL_REQUEST} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
       - git push --set-upstream ${CI_REPO_NAME,,}/${CI_COMMIT_PULL_REQUEST} -f
