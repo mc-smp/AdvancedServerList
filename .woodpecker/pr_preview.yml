@@ -34,7 +34,7 @@ steps:
       - git remote add upstream https://$BOT_TOKEN@codeberg.org/Andre601/preview.git
       - git add --all
       - git commit -m "Update Preview for ${CI_REPO_NAME}/${CI_COMMIT_PULL_REQUEST} ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" )) [SKIP CI]"
-      - git push --set-upstream ${CI_REPO_NAME,,}/${CI_COMMIT_PULL_REQUEST} -f
+      - git push --set-upstream upstream ${CI_REPO_NAME,,}/${CI_COMMIT_PULL_REQUEST} -f
   - name: "Comment on Success"
     image: mcs94/gitea-comment
     when:
