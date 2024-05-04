@@ -3,86 +3,108 @@
 #
 unknownPlayer:
   #
-  # The name to use. Defaults to Anonymous.
+  # The name to use.
+  #
+  # Default: Anonymous
   #
   name: "Anonymous"
   #
-  # The UUID to use. Defaults to 606e2ff0-ed77-4842-9d6c-e1d3321c7838 (UUID of MHF_Question).
+  # The UUID to use.
+  #
+  # Default: 606e2ff0-ed77-4842-9d6c-e1d3321c7838 (UUID of MHF_Question).
   #
   uuid: "606e2ff0-ed77-4842-9d6c-e1d3321c7838"
 
 #
 # Should the Caching of players be disabled?
 #
-# When set to true will AdvancedServerList not load any players from the cache.data file (if present) nor save any to it.
-# Placeholders that rely on the player being cached (such as ${player name}) will not work while this option is enabled.
+# When set to true will no player joining the server be cached and saved to the playercache.json file.
+# This will also cause placeholders using a cached player such as ${player name} to no longer work.
 #
-# Defaults to false when not present.
+# Default: false
 #
 disableCache: false
 
 #
 # Should AdvancedServerList check for new versions?
 #
-# When set to true will AdvancedServerList check for a new version on modrinth.com every 12 hours and inform you in the
-# console about whether it found any new update or not.
+# When set to true will AdvancedServerList look for a new update on startup and repeat that check
+# every 12 hours after that.
+# It uses Modrinth to check for updates.
 #
-# Defaults to false when not present.
+# Default: true
 #
 checkUpdates: true
 
 #
 # Should debug mode be enabled?
 #
-# When set to true will AdvancedServerList print additional messages to the console prefixed with "[DEBUG]".
-# It is recommended to only enable this when having problems or when being told to by the plugin dev, as it could
-# otherwise cause significant spam in your console.
+# Additional messages prefixed with [DEBUG] will be printed in the console when this option is set
+# to true.
+# Enabling this option is only recommended for when you have problems, or have been told to enable
+# it by the plugin developer, as it can otherwise spam your console.
 #
-# Defaults to false when not present.
+# Default: false
 #
 debug: false
 
 #
-# Sets the time in minutes for favicons to be cached.
-# The number cannot be less than 1.
+# Sets how long Favicons should be cached. Value is in minutes with the lowest possible value being 1.
 #
-# Defaults to 1 if not set.
+# This option only affects dynamic favicons created from a placeholder or URL. Local favicons will
+# not be affected.
+#
+# Default: 1
 #
 faviconCacheTime: 1
 
 #
-# List of options that should be disabled while the Maintenance Mode of the plugin Maintenance is active.
-# Any option not listed here will NOT be disabled, meaning AdvancedServerList will continue to handle it.
+# Options to disable while the Maintenance Plugin is present and Maintenance Mode is active.
 #
-# Each option defaults to true when not present, disabling said option while Maintenance is active.
+# Should an option be removed from this section will AdvancedServerList continue to set it, as if
+# the Maintenance plugin isn't active.
 #
 disableDuringMaintenance:
   #
-  # When true (Default), disables handling of MOTD while Maintenance is enabled.
+  # Whether MOTD changing should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   motd: true
   #
-  # When true (Default), disables handling of Favicon while Maintenance is enabled.
+  # Whether favicon changing should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   favicon: true
   #
-  # When true (Default), disables hiding of player count while Maintenance is enabled.
+  # Whether player hiding should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   hidePlayers: true
   #
-  # When true (Default), disables handling of player count text while Maintenance is enabled.
+  # Whether player count text changing should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   playerCountText: true
   #
-  # When true (Default), disables handling of player count hover while Maintenance is enabled.
+  # Whether player count hover changing should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   playerCountHover: true
   #
-  # When true (Default), disables use of extra players feature while Maintenance is enabled.
+  # Whether the extra players feature should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   extraPlayers: true
   #
-  # When true (Default), disables use of max players feature while Maintenance is enabled.
+  # Whether the max players feature should be disabled while Maintenance mode is active.
+  #
+  # Default: true
   #
   maxPlayers: true
 
