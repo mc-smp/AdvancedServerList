@@ -93,10 +93,10 @@ public class SLPConfigMigrator{
             logger.warn("The migration of the ServerListPlus configuration failed! No settings couldn't be migrated.");
         }else
         if(total < 3){
-            logger.warn("There were issues while migrating the ServerListPlus configuration. One or more didn't migrate.");
-            logger.warn("  - Default?      %s", defConfParsed == 1 ? "Migrated" : "Not Migrated");
-            logger.warn("  - Personalized? %s", personalizedParsed == 1 ? "Migrated" : "Not Migrated");
-            logger.warn("  - Banned?       %s", bannedParsed == 1 ? "Migrated" : "Not Migrated");
+            logger.info("Only %d of 3 possible profiles could be migrated:");
+            logger.info("  - Default?      %s", defConfParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
+            logger.info("  - Personalized? %s", personalizedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
+            logger.info("  - Banned?       %s", bannedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
         }
         
         return total;
@@ -105,7 +105,7 @@ public class SLPConfigMigrator{
     private static int parseConf(AdvancedServerList<?> core, PersonalizedStatusConf.StatusConf conf, String filename, Type type){
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(conf == null){
-            logger.warn("Cannot migrate settings for status type %s (Is this type even present?). StatusConf was null.", type.name());
+            logger.warn("Cannot migrate settings for status type %s (Is this type even present?).", type.name());
             return 0;
         }
         

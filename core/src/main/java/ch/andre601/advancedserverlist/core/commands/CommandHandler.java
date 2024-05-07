@@ -173,15 +173,14 @@ public class CommandHandler{
                 sender.sendPrefixedMsg("Migrating ServerListPlus configuration file...");
                 
                 int migrated = SLPConfigMigrator.migrate(core);
-                if(migrated == 3){
-                    sender.sendPrefixedMsg("<green>Migration completed successfully!");
+                if(migrated == 0){
+                    sender.sendErrorMsg("<red>Couldn't migraty any profiles from ServerListPlus. Check console for details!");
                 }else
-                if(migrated < 3 && migrated > 0){
-                    sender.sendPrefixedMsg("<gold>There were issues while migrating the profiles.");
-                    sender.sendPrefixedMsg("<gold>Only <grey>%s</grey> profiles could be migrated successfully.", migrated);
-                    sender.sendPrefixedMsg("<gold>Check console for details on migrated configurations.");
+                if(migrated < 3){
+                    sender.sendPrefixedMsg("<gold>Successfully migrated <grey>%d</grey> of <grey>3</grey> profiles.", migrated);
+                    sender.sendPrefixedMsg("<gold>Check the console for further details.");
                 }else{
-                    sender.sendErrorMsg("<red>Migration from ServerListPlus failed. Check console for details.");
+                    sender.sendPrefixedMsg("<green>Successfully migrated all <grey>3</grey> profiles from ServerListPlus!");
                 }
             }else{
                 sender.sendErrorMsg("<red>Unknown plugin <grey>%s</grey>. Available Options:", args[0]);
