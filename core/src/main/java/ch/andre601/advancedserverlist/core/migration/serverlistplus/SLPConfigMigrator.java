@@ -25,163 +25,426 @@
 
 package ch.andre601.advancedserverlist.core.migration.serverlistplus;
 
+import ch.andre601.advancedserverlist.api.objects.NullBool;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.profiles.profile.ProfileSerializer;
+import net.minecrell.serverlistplus.core.ServerListPlusCore;
+import net.minecrell.serverlistplus.core.config.PersonalizedStatusConf;
+import net.minecrell.serverlistplus.core.config.ServerStatusConf;
+import net.minecrell.serverlistplus.core.util.BooleanOrList;
+import net.minecrell.serverlistplus.core.util.IntegerRange;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
-import org.yaml.snakeyaml.TypeDescription;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SLPConfigMigrator{
     
-    public static boolean migrate(AdvancedServerList<?> core){
-        Path path = core.getPlugin().getFolderPath().getParent().resolve("ServerListPlus");
+    private static final Pattern RGB_COLOR_PATTERN = Pattern.compile("&(?<color>#[a-fA-F0-9]{6})");
+    private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("&(?<color>[abcdefklmnorABCDEFKLMNOR0123456789])");
+    private static final Pattern RGB_GRADIENT_PATTERN = Pattern.compile(
+        "%gradient" +
+        "(?<start>#[a-fA-F0-9]{6})" + // Starting color
+        "(?<end>#[a-fA-F0-9]{6})" +   // Ending color
+        "%" +
+        "(?<text>[^%]+)" +            // Text
+        "%gradient%");
+    
+    private static final Map<String, String> STATIC_REPLACEMENTS = Map.of(
+        "%player%", "${player name}",
+        "%uuid%", "${player uuid}",
+        "%_uuid_%", "${player uuid}",
+        "%online%", "${server playersOnline}",
+        "%max%", "${server playersMax}");
+    
+    public static int migrate(AdvancedServerList<?> core){
+        ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
         PluginLogger logger = core.getPlugin().getPluginLogger();
-        if(!Files.exists(path) || !Files.isDirectory(path)){
-            logger.warn("No ServerListPlus folder found or it wasn't a folder.");
-            return false;
+        if(slpCore == null){
+            logger.warn("Cannot migrate ServerListPlus config. ServerListPlus is not active!");
+            return 0;
         }
         
-        Path file = path.resolve("ServerListPlus.yml");
-        if(!Files.exists(file) || !Files.isRegularFile(file)){
-            logger.warn("No ServerListPlus.yml file found or it wasn't a regular file.");
-            return false;
+        ServerStatusConf conf = slpCore.getConf(ServerStatusConf.class);
+        if(conf == null){
+            logger.warn("Cannot migrate ServerListPlus configuration. Received configuration was null.");
+            return 0;
         }
         
-        SLPConfig yaml = null;
-        try(BufferedReader reader = Files.newBufferedReader(file)){
-            Constructor constructor = new Constructor(SLPConfig.class);
-            Representer representer = new Representer();
-            TypeDescription slpDescription = new TypeDescription(SLPConfig.class);
-            slpDescription.substituteProperty("Default", SLPConfig.Options.class, "getDef", "setDef");
-            slpDescription.substituteProperty("Personalized", SLPConfig.Options.class, "getPersonalized", "setPersonalized");
-            representer.addTypeDescription(slpDescription);
-            yaml = new Yaml(constructor, representer).load(reader);
-            
-            
-        }catch(IOException ex){
-            logger.warn("Encountered IOException while migrating ServerListPlus configuration!", ex);
-            return false;
+        PersonalizedStatusConf.StatusConf defConf = conf.Default;
+        PersonalizedStatusConf.StatusConf personalizedConf = conf.Personalized;
+        PersonalizedStatusConf.StatusConf banned = conf.Banned;
+        
+        int defConfParsed = parseConf(core, defConf, "slp_default.yml", Type.DEFAULT);
+        int personalizedParsed = parseConf(core, personalizedConf, "slp_personalized.yml", Type.PERSONALIZED);
+        int bannedParsed = parseConf(core, banned, "slp_banned.yml", Type.BANNED);
+        
+        int total = defConfParsed + personalizedParsed + bannedParsed;
+        
+        if(total == 0){
+            logger.warn("The migration of the ServerListPlus configuration failed! No settings couldn't be migrated.");
+        }else
+        if(total < 3){
+            logger.warn("There were issues while migrating the ServerListPlus configuration. One or more didn't migrate.");
+            logger.warn("  - Default?      %s", defConfParsed == 1 ? "Migrated" : "Not Migrated");
+            logger.warn("  - Personalized? %s", personalizedParsed == 1 ? "Migrated" : "Not Migrated");
+            logger.warn("  - Banned?       %s", bannedParsed == 1 ? "Migrated" : "Not Migrated");
         }
         
-        if(yaml == null){
-            logger.warn("Unable to migrate ServerListPlus configuration. Retrieved YAML was null.");
-            return false;
-        }
-        
-        boolean defSuccess = createFile(core, yaml.getDef(), logger, "slp_default.yml", 0);
-        boolean personalSuccess = createFile(core, yaml.getPersonalized(), logger, "slp_personalized.yml", 1);
-        
-        if(!defSuccess && !personalSuccess){
-            logger.warn("Migration of ServerListPlus configuration was not successfull! Check previous entries for warnings.");
-            return false;
-        }
-        
-        if(defSuccess != personalSuccess){
-            logger.warn("Only one profile has been successfully migrated from ServerListPlus!");
-            logger.warn("  - Default migrated?      %s", (defSuccess ? "Yes" : "No"));
-            logger.warn("  - Personalized migrated? %s", (personalSuccess ? "Yes" : "No"));
-        }
-        
-        logger.info("Migration completed!");
-        
-        return true;
+        return total;
     }
     
-    private static boolean createFile(AdvancedServerList<?> core, SLPConfig.Options options, PluginLogger logger, String fileName, int priority){
-        List<String> motds = options.getDescription();
-        List<String> hovers = options.getPlayers().getHover();
-        List<String> favicons = options.getFavicon().getFiles();
+    private static int parseConf(AdvancedServerList<?> core, PersonalizedStatusConf.StatusConf conf, String filename, Type type){
+        PluginLogger logger = core.getPlugin().getPluginLogger();
+        if(conf == null){
+            logger.warn("Cannot migrate settings for status type %s (Is this type even present?). StatusConf was null.", type.name());
+            return 0;
+        }
         
-        ProfileEntry.Builder defProfileBuilder = ProfileEntry.empty().builder();
-        List<ProfileEntry.Builder> profileBuilders = new ArrayList<>();
+        ProfileEntry.Builder builder = ProfileEntry.empty().builder();
+        List<ProfileEntry.Builder> profiles = new ArrayList<>();
         
-        int size = motds.size();
-        if(hovers.size() > size)
-            size = hovers.size();
+        List<List<String>> motds = resolveMotds(conf.Description);
+        List<String> favicons = resolveFavicons(conf.Favicon);
+        List<List<String>> hovers = resolveHover(conf.Players);
+        NullBool hidePlayers = conf.Players != null ? NullBool.resolve(conf.Players.Hidden) : NullBool.NOT_SET;
+        List<Integer> maxPlayers = resolveMaxPlayers(conf.Players);
+        List<String> playerCount = resolvePlayerCounts(conf.Players);
         
-        if(favicons.size() > size)
-            size = favicons.size();
-        
+        int size = getMaxListSize(motds, favicons, hovers, maxPlayers, playerCount);
         for(int i = 0; i < size; i++){
-            profileBuilders.add(ProfileEntry.empty().builder());
+            profiles.add(ProfileEntry.empty().builder());
         }
         
         if(motds.size() == 1){
-            List<String> lines = Arrays.stream(motds.get(0).split("\n")).toList();
-            defProfileBuilder.motd(lines);
+            builder.motd(motds.get(0));
         }else
         if(motds.size() > 1){
             for(int i = 0; i < motds.size(); i++){
-                List<String> lines = Arrays.stream(motds.get(i).split("\n")).toList();
-                profileBuilders.get(i).motd(lines);
+                profiles.get(i).motd(motds.get(i));
+            }
+        }
+        
+        if(favicons.size() == 1){
+            builder.favicon(favicons.get(0));
+        }else
+        if(favicons.size() > 1){
+            for(int i = 0; i < favicons.size(); i++){
+                profiles.get(i).favicon(favicons.get(i));
             }
         }
         
         if(hovers.size() == 1){
-            List<String> lines = Arrays.stream(hovers.get(0).split("\n")).toList();
-            defProfileBuilder.players(lines);
+            builder.players(hovers.get(0));
         }else
         if(hovers.size() > 1){
             for(int i = 0; i < hovers.size(); i++){
-                List<String> lines = Arrays.stream(hovers.get(i).split("\n")).toList();
-                profileBuilders.get(i).players(lines);
+                profiles.get(i).players(hovers.get(i));
             }
         }
         
-        List<ProfileEntry> profiles = profileBuilders.stream()
+        builder.hidePlayersEnabled(hidePlayers);
+        
+        if(maxPlayers.size() == 1){
+            builder.maxPlayersCount(maxPlayers.get(0));
+        }else
+        if(maxPlayers.size() > 1){
+            for(int i = 0; i < maxPlayers.size(); i++){
+                profiles.get(i).maxPlayersCount(maxPlayers.get(i));
+            }
+        }
+        
+        if(playerCount.size() == 1){
+            builder.playerCountText(playerCount.get(0));
+        }else
+        if(playerCount.size() > 1){
+            for(int i = 0; i < playerCount.size(); i++){
+                profiles.get(i).playerCountText(playerCount.get(i));
+            }
+        }
+        
+        ProfileEntry entry = builder.build();
+        List<ProfileEntry> profileEntries = profiles.stream()
             .map(ProfileEntry.Builder::build)
             .toList();
-        ProfileEntry defProfile = defProfileBuilder.build();
         
-        Path newFile = core.getPlugin().getFolderPath().resolve("profiles").resolve(fileName);
-        if(Files.exists(newFile)){
-            logger.warn("Cannot migrate configuration from ServerListPlus. File named %s already exists!", fileName);
-            return false;
+        if(entry.isInvalid() && profileEntries.isEmpty()){
+            logger.warn("Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.name());
+            return 0;
+        }
+        
+        Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(filename);
+        if(Files.exists(profile)){
+            logger.warn("Cannot create new file %s. One with the same name is already present", filename);
+            return 0;
         }
         
         try{
-            Files.createFile(newFile);
+            Files.createFile(profile);
         }catch(IOException ex){
-            logger.warn("IOException while creating new file for migration.", ex);
-            return false;
+            logger.warn("Encountered an IOException while trying to create file %s.", ex, filename);
+            return 0;
+        }
+        
+        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(profile)
+            .defaultOptions(opt -> opt.serializers(build -> build.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
+            .build();
+        
+        ConfigurationNode node;
+        try{
+            node = loader.load();
+        }catch(IOException ex){
+            logger.warn("Encountered an IOException while trying to load file %s.", ex, filename);
+            return 0;
+        }
+        
+        if(node == null){
+            logger.warn("Cannot migrate Configuration of type %s. ConfigurationNode was null", type.name());
+            return 0;
         }
         
         try{
-            YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-                .defaultOptions(opt -> opt.serializers(builder -> builder.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
-                .path(newFile)
-                .build();
+            node.node("priority")
+                .set(type != Type.DEFAULT ? 1 : 0);
             
-            ConfigurationNode node = loader.load();
-            if(node == null)
-                return false;
+            if(type == Type.PERSONALIZED){
+                node.node("condition")
+                    .set("${player name} != \"" + core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
+            }else
+            if(type == Type.BANNED){
+                node.node("condition")
+                    .set("${player isBanned}");
+            }
             
-            node.node("priority").set(priority);
-            node.node("condition").set(priority > 0 ? "${player name} != \"anonymous\"" : "");
+            if(!profiles.isEmpty()){
+                
+                node.node("profiles").setList(ProfileEntry.class, profileEntries);
+            }
             
-            node.node("profiles").set(profiles);
-            node.set(defProfile);
-            
+            node.set(entry);
+        }catch(SerializationException ex){
+            logger.warn("Encountered a SerializationException while setting values.", ex);
+            return 0;
+        }
+        
+        try{
             loader.save(node);
-            
-            logger.info("Created new file '%s'!", fileName);
-            return true;
+            return 1;
         }catch(IOException ex){
-            logger.warn("Encountered IOException while trying to save migrated configuration file.", ex);
-            return false;
+            logger.warn("Encountered an IOException while trying to save new file %s.", ex, filename);
+            return 0;
         }
+    }
+    
+    private static int getMaxListSize(List<?>... lists){
+        int size = 0;
+        for(List<?> list : lists){
+            if(list.size() > size)
+                size = list.size();
+        }
+        
+        return size;
+    }
+    
+    private static List<List<String>> resolveMotds(List<String> descriptions){
+        if(descriptions == null || descriptions.isEmpty())
+            return Collections.emptyList();
+        
+        List<List<String>> motds = new ArrayList<>();
+        for(String line : descriptions){
+            motds.add(getList(line));
+        }
+        
+        return motds;
+    }
+    
+    private static List<String> resolveFavicons(PersonalizedStatusConf.StatusConf.FaviconConf faviconConf){
+        if(faviconConf == null || faviconConf.Disabled != null && faviconConf.Disabled)
+            return Collections.emptyList();
+        
+        List<String> list = new ArrayList<>();
+        
+        if(faviconConf.Heads != null){
+            for(String head : faviconConf.Heads){
+                list.add(
+                    "https://mc-heads.net/avatar/" +
+                        replacePlaceholders(head) +
+                        "/64/nohelm"
+                );
+            }
+        }
+        
+        if(faviconConf.Helms != null){
+            for(String helm : faviconConf.Helms){
+                list.add(replacePlaceholders(helm));
+            }
+        }
+        
+        if(faviconConf.Files != null){
+            for(String file : faviconConf.Files){
+                if(!file.toLowerCase(Locale.ROOT).endsWith(".png"))
+                    continue;
+                
+                list.add(replacePlaceholders(file));
+            }
+        }
+        
+        return list;
+    }
+    
+    private static List<List<String>> resolveHover(PersonalizedStatusConf.StatusConf.PlayersConf playersConf){
+        if(playersConf == null)
+            return Collections.emptyList();
+        
+        BooleanOrList<String> booleanOrList = playersConf.Hover;
+        if(booleanOrList == null)
+            return Collections.emptyList();
+        
+        if(booleanOrList.getList() != null){
+            List<List<String>> hovers = new ArrayList<>();
+            for(String line : booleanOrList.getList()){
+                if(line == null)
+                    continue;
+                
+                hovers.add(getList(line));
+            }
+            
+            return hovers;
+        }
+        
+        return Collections.emptyList();
+    }
+    
+    private static List<Integer> resolveMaxPlayers(PersonalizedStatusConf.StatusConf.PlayersConf playersConf){
+        if(playersConf == null)
+            return Collections.emptyList();
+        
+        List<IntegerRange> maxPlayers = playersConf.Max;
+        if(maxPlayers == null)
+            return Collections.emptyList();
+        
+        List<Integer> values = new ArrayList<>();
+        for(IntegerRange range : maxPlayers){
+            if(range == null)
+                continue;
+            
+            values.add(range.to());
+        }
+        
+        return values;
+    }
+    
+    private static List<String> resolvePlayerCounts(PersonalizedStatusConf.StatusConf.PlayersConf playersConf){
+        if(playersConf == null)
+            return Collections.emptyList();
+        
+        if(playersConf.Slots == null)
+            return Collections.emptyList();
+        
+        return playersConf.Slots.stream()
+            .map(SLPConfigMigrator::replacePlaceholders)
+            .toList();
+    }
+    
+    private static List<String> getList(String line){
+        return Arrays.asList(replacePlaceholders(line).split("\n"));
+    }
+    
+    private static String replacePlaceholders(String input){
+        StringBuilder parsed = new StringBuilder(input);
+        StringBuilder builder = new StringBuilder();
+        
+        Matcher rgbColorMatcher = RGB_COLOR_PATTERN.matcher(parsed.toString());
+        if(rgbColorMatcher.find()){
+            do{
+                rgbColorMatcher.appendReplacement(builder, "<" + rgbColorMatcher.group("color") + ">");
+            }while(rgbColorMatcher.find());
+            
+            rgbColorMatcher.appendTail(builder);
+            parsed = builder;
+        }
+        
+        Matcher colorCodeMatcher = COLOR_CODE_PATTERN.matcher(parsed.toString());
+        if(colorCodeMatcher.find()){
+            builder.setLength(0);
+            do{
+                String color = colorCodeMatcher.group("color").toLowerCase(Locale.ROOT); 
+                switch(color){
+                    case "a" -> colorCodeMatcher.appendReplacement(builder, "<green>");
+                    case "b" -> colorCodeMatcher.appendReplacement(builder, "<aqua>");
+                    case "c" -> colorCodeMatcher.appendReplacement(builder, "<red>");
+                    case "d" -> colorCodeMatcher.appendReplacement(builder, "<light_purple>");
+                    case "e" -> colorCodeMatcher.appendReplacement(builder, "<yellow>");
+                    case "f" -> colorCodeMatcher.appendReplacement(builder, "<white>");
+                    case "k" -> colorCodeMatcher.appendReplacement(builder, "<obfuscated>");
+                    case "l" -> colorCodeMatcher.appendReplacement(builder, "<bold>");
+                    case "m" -> colorCodeMatcher.appendReplacement(builder, "<strikethrough>");
+                    case "n" -> colorCodeMatcher.appendReplacement(builder, "<underlined>");
+                    case "o" -> colorCodeMatcher.appendReplacement(builder, "<italic>");
+                    case "r" -> colorCodeMatcher.appendReplacement(builder, "<reset>");
+                    case "0" -> colorCodeMatcher.appendReplacement(builder, "<black>");
+                    case "1" -> colorCodeMatcher.appendReplacement(builder, "<dark_blue>");
+                    case "2" -> colorCodeMatcher.appendReplacement(builder, "<dark_green>");
+                    case "3" -> colorCodeMatcher.appendReplacement(builder, "<dark_aqua>");
+                    case "4" -> colorCodeMatcher.appendReplacement(builder, "<dark_red>");
+                    case "5" -> colorCodeMatcher.appendReplacement(builder, "<dark_purple>");
+                    case "6" -> colorCodeMatcher.appendReplacement(builder, "<gold>");
+                    case "7" -> colorCodeMatcher.appendReplacement(builder, "<grey>");
+                    case "8" -> colorCodeMatcher.appendReplacement(builder, "<dark_grey>");
+                    case "9" -> colorCodeMatcher.appendReplacement(builder, "<blue>");
+                    default -> colorCodeMatcher.appendReplacement(builder, "&" + color);
+                }
+            }while(colorCodeMatcher.find());
+            
+            colorCodeMatcher.appendTail(builder);
+            parsed = builder;
+        }
+        
+        Matcher rgbGradientMatcher = RGB_GRADIENT_PATTERN.matcher(parsed.toString());
+        if(rgbGradientMatcher.find()){
+            builder.setLength(0);
+            do{
+                String start = rgbGradientMatcher.group("start");
+                String end = rgbGradientMatcher.group("end");
+                String text = rgbGradientMatcher.group("text");
+                
+                rgbGradientMatcher.appendReplacement(builder, "<gradient:" + start + ":" + end + ">" + text + "</gradient>");
+            }while(rgbGradientMatcher.find());
+            
+            rgbGradientMatcher.appendTail(builder);
+            parsed = builder;
+        }
+        
+        return replaceStaticPlaceholders(parsed);
+    }
+    
+    private static String replaceStaticPlaceholders(StringBuilder input){
+        if(input.isEmpty())
+            return "";
+        
+        for(Map.Entry<String, String> entry : STATIC_REPLACEMENTS.entrySet()){
+            int index = 0;
+            while((index = input.indexOf(entry.getKey(), index)) != -1){
+                input.replace(index, index + entry.getKey().length(), entry.getValue());
+                index += entry.getValue().length();
+            }
+        }
+        
+        return input.toString();
+    }
+    
+    private enum Type{
+        DEFAULT,
+        PERSONALIZED,
+        BANNED
     }
 }

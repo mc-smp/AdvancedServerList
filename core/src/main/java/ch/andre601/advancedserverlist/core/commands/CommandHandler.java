@@ -30,7 +30,6 @@ import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.PluginCommand;
 import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -165,13 +164,24 @@ public class CommandHandler{
             }
             
             if(args[0].equalsIgnoreCase("serverlistplus")){
+                if(!core.getPlugin().isPluginEnabled("ServerListPlus")){
+                    sender.sendErrorMsg("<red>Plugin ServerListPlus is not enabled.");
+                    sender.sendErrorMsg("<red>It needs to be active for the migration to work!");
+                    return;
+                }
+                
                 sender.sendPrefixedMsg("Migrating ServerListPlus configuration file...");
                 
-                boolean success = SLPConfigMigrator.migrate(core);
-                if(success){
-                    sender.sendPrefixedMsg("<green>Migration completed! Check console for any additional notes.");
+                int migrated = SLPConfigMigrator.migrate(core);
+                if(migrated == 3){
+                    sender.sendPrefixedMsg("<green>Migration completed successfully!");
+                }else
+                if(migrated < 3 && migrated > 0){
+                    sender.sendPrefixedMsg("<gold>There were issues while migrating the profiles.");
+                    sender.sendPrefixedMsg("<gold>Only <grey>%s</grey> profiles could be migrated successfully.", migrated);
+                    sender.sendPrefixedMsg("<gold>Check console for details on migrated configurations.");
                 }else{
-                    sender.sendErrorMsg("<red>Migration unsuccessful! Check console for any errors and warnings.");
+                    sender.sendErrorMsg("<red>Migration from ServerListPlus failed. Check console for details.");
                 }
             }else{
                 sender.sendErrorMsg("<red>Unknown plugin <grey>%s</grey>. Available Options:", args[0]);

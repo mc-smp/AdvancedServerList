@@ -158,6 +158,11 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
+    public boolean isPluginEnabled(String plugin){
+        return getProxy().getPluginManager().getPlugin(plugin) != null;
+    }
+    
+    @Override
     public Favicon createFavicon(BufferedImage image) throws IllegalArgumentException{
         return Favicon.create(image);
     }

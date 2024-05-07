@@ -165,6 +165,11 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
+    public boolean isPluginEnabled(String plugin){
+        return Bukkit.getPluginManager().isPluginEnabled(plugin);
+    }
+    
+    @Override
     public CachedServerIcon createFavicon(BufferedImage image) throws Exception{
         return Bukkit.loadServerIcon(image);
     }

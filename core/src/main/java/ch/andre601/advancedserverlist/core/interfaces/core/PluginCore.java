@@ -58,6 +58,8 @@ public interface PluginCore<F>{
     
     String getLoader();
     
+    boolean isPluginEnabled(String plugin);
+    
     F createFavicon(BufferedImage image) throws Exception;
     
     default boolean isDebugEnabled(){

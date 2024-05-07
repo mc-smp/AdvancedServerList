@@ -54,6 +54,7 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class VelocityCore implements PluginCore<Favicon>{
     
@@ -156,6 +157,14 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public String getLoader(){
         return "velocity";
+    }
+    
+    @Override
+    public boolean isPluginEnabled(String plugin){
+        if(getProxy() == null)
+            return false;
+        
+        return getProxy().getPluginManager().isLoaded(plugin.toLowerCase(Locale.ROOT));
     }
     
     @Override
