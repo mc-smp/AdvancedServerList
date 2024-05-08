@@ -43,7 +43,7 @@
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
         
-        <dependency.adventure-api>4.16.0</dependency.adventure-api>
+        <dependency.adventure-api>4.17.0</dependency.adventure-api>
         <dependency.adventure-text-minimessage>4.16.0</dependency.adventure-text-minimessage>
         <dependency.adventure-platform-bungeecord>4.3.2</dependency.adventure-platform-bungeecord>
         <dependency.configurate-yaml>4.1.2</dependency.configurate-yaml>
