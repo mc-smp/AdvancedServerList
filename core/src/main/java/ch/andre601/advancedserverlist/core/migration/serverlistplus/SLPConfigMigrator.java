@@ -37,12 +37,14 @@ import net.minecrell.serverlistplus.core.util.BooleanOrList;
 import net.minecrell.serverlistplus.core.util.IntegerRange;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +57,7 @@ public class SLPConfigMigrator{
         "(?<start>#[a-fA-F0-9]{6})" + // Starting color
         "(?<end>#[a-fA-F0-9]{6})" +   // Ending color
         "%" +
-        "(?<text>[^%]+)" +            // Text
+        "(?<text>.+?)" +              // Text
         "%gradient%");
     
     private static final Map<String, String> STATIC_REPLACEMENTS = Map.of(
@@ -93,7 +95,7 @@ public class SLPConfigMigrator{
             logger.warn("The migration of the ServerListPlus configuration failed! No settings couldn't be migrated.");
         }else
         if(total < 3){
-            logger.info("Only %d of 3 possible profiles could be migrated:");
+            logger.info("Only %d of 3 possible profiles could be migrated:", total);
             logger.info("  - Default?      %s", defConfParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
             logger.info("  - Personalized? %s", personalizedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
             logger.info("  - Banned?       %s", bannedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
@@ -124,52 +126,13 @@ public class SLPConfigMigrator{
             profiles.add(ProfileEntry.empty().builder());
         }
         
-        if(motds.size() == 1){
-            builder.motd(motds.get(0));
-        }else
-        if(motds.size() > 1){
-            for(int i = 0; i < motds.size(); i++){
-                profiles.get(i).motd(motds.get(i));
-            }
-        }
-        
-        if(favicons.size() == 1){
-            builder.favicon(favicons.get(0));
-        }else
-        if(favicons.size() > 1){
-            for(int i = 0; i < favicons.size(); i++){
-                profiles.get(i).favicon(favicons.get(i));
-            }
-        }
-        
-        if(hovers.size() == 1){
-            builder.players(hovers.get(0));
-        }else
-        if(hovers.size() > 1){
-            for(int i = 0; i < hovers.size(); i++){
-                profiles.get(i).players(hovers.get(i));
-            }
-        }
+        apply(motds, builder, profiles, ProfileEntry.Builder::motd);
+        apply(favicons, builder, profiles, ProfileEntry.Builder::favicon);
+        apply(hovers, builder, profiles, ProfileEntry.Builder::players);
+        apply(maxPlayers, builder, profiles, (build, count) -> build.maxPlayersEnabled(NullBool.TRUE).maxPlayersCount(count));
+        apply(playerCount, builder, profiles, ProfileEntry.Builder::playerCountText);
         
         builder.hidePlayersEnabled(hidePlayers);
-        
-        if(maxPlayers.size() == 1){
-            builder.maxPlayersCount(maxPlayers.get(0));
-        }else
-        if(maxPlayers.size() > 1){
-            for(int i = 0; i < maxPlayers.size(); i++){
-                profiles.get(i).maxPlayersCount(maxPlayers.get(i));
-            }
-        }
-        
-        if(playerCount.size() == 1){
-            builder.playerCountText(playerCount.get(0));
-        }else
-        if(playerCount.size() > 1){
-            for(int i = 0; i < playerCount.size(); i++){
-                profiles.get(i).playerCountText(playerCount.get(i));
-            }
-        }
         
         ProfileEntry entry = builder.build();
         List<ProfileEntry> profileEntries = profiles.stream()
@@ -196,6 +159,8 @@ public class SLPConfigMigrator{
         
         YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
             .path(profile)
+            .indent(2)
+            .nodeStyle(NodeStyle.BLOCK)
             .defaultOptions(opt -> opt.serializers(build -> build.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
             .build();
         
@@ -353,6 +318,18 @@ public class SLPConfigMigrator{
         return playersConf.Slots.stream()
             .map(SLPConfigMigrator::replacePlaceholders)
             .toList();
+    }
+    
+    private static <T> void apply(List<T> list, ProfileEntry.Builder builder, List<ProfileEntry.Builder> profiles,
+                                  BiConsumer<ProfileEntry.Builder, T> builderConsumer){
+        if(list.size() == 1){
+            builderConsumer.accept(builder, list.get(0));
+        }else
+        if(list.size() > 1){
+            for(int i = 0; i < list.size(); i++){
+                builderConsumer.accept(profiles.get(i), list.get(i));
+            }
+        }
     }
     
     private static List<String> getList(String line){
