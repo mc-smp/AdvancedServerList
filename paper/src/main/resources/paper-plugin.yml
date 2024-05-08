@@ -20,6 +20,9 @@ dependencies:
     Maintenance:
       load: BEFORE
       required: false
+    ServerListPlus:
+      load: BEFORE
+      required: false
 
 # The below stuff is NOT used by Paper plugin.
 commands:

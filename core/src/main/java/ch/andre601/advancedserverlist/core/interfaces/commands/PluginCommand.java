@@ -43,5 +43,5 @@ public abstract class PluginCommand{
         return "advancedserverlist.command." + getArgument().toLowerCase(Locale.ROOT);
     }
     
-    public abstract void handle(CmdSender sender);
+    public abstract void handle(CmdSender sender, String[] args);
 }

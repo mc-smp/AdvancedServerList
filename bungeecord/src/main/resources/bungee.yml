@@ -6,5 +6,6 @@ description: '${plugin.description}'
 softDepends:
   - PAPIProxyBridge
   - Maintenance
+  - ServerListPlus
 
 main: 'ch.andre601.advancedserverlist.bungeecord.BungeeCordCore'

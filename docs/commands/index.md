@@ -18,6 +18,7 @@ The following subcommands are available (Subcommands are case-insensitive):
 - [`help`](#help)
 - [`reload`](#reload)
 - [`clearCache`](#clearcache)
+- [`migrate <plugin>`](#migrate)
 
 ### help
 
@@ -41,4 +42,17 @@ Reloads the plugin's `config.yml` and all available YAML files in the `profiles`
 **Permission:** `advancedserverlist.command.clearcache`
 
 Clears the currently cached favicons and players.
+///
+
+### migrate &lt;plugin&gt; { #migrate }
+
+/// info |
+**Permission:** `advancedserverlist.command.migrate`
+
+**Arguments:
+
+- `<plugin>` - The plugin to migrate from.
+
+Migrates files from one plugin over to AdvancedServerList.  
+Check the [Migration Page](../migration/index.md) for a list of supported plugins.
 ///
