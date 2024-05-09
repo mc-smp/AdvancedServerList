@@ -102,15 +102,18 @@ public class HangarVersionUploader{
         final List<Dependency> paperDependencies = List.of(
             Dependency.fromNamespace("ViaVersion", false),
             Dependency.fromNamespace("Maintenance", false),
-            Dependency.fromNamespace("PlaceholderAPI", false)
+            Dependency.fromNamespace("PlaceholderAPI", false),
+            Dependency.fromUrl("https://github.com/Minecrell/ServerListPlus", false)
         );
         final List<Dependency> bungeeDependencies = List.of(
             Dependency.fromNamespace("PapiProxyBridge", false),
-            Dependency.fromNamespace("Maintenance", false)
+            Dependency.fromNamespace("Maintenance", false),
+            Dependency.fromUrl("https://github.com/Minecrell/ServerListPlus", false)
         );
         final List<Dependency> velocityDependencies = List.of(
             Dependency.fromNamespace("PapiProxyBridge", false),
-            Dependency.fromNamespace("Maintenance", false)
+            Dependency.fromNamespace("Maintenance", false),
+            Dependency.fromUrl("https://github.com/Minecrell/ServerListPlus", false)
         );
         
         final List<MultipartObject> fileInfo = List.of(
