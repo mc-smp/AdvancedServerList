@@ -174,8 +174,13 @@ public class HangarVersionUploader{
                 LOGGER.info("Uploading release...");
                 return client.execute(post, response -> {
                     if(response.getCode() != 200){
+                        String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                        
                         throw new RuntimeException(String.format(
-                            "Received non-successful response while uploading release. Code: %d, Message: %s", response.getCode(), response.getReasonPhrase()
+                            "Received non-successful response while uploading release. Code: %d, Message: %s, Body: %s",
+                            response.getCode(),
+                            response.getReasonPhrase(),
+                            body
                         ));
                     }
                     LOGGER.info("Successfully uploaded new release on Hangar!");
