@@ -177,7 +177,7 @@ public class HangarVersionUploader{
                         String body = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                         
                         throw new RuntimeException(String.format(
-                            "Received non-successful response while uploading release. Code: %d, Message: %s, Body: %s",
+                            "Received non-successful response while uploading release.\nCode: %d\nMessage: %s\nBody: %s",
                             response.getCode(),
                             response.getReasonPhrase(),
                             body
