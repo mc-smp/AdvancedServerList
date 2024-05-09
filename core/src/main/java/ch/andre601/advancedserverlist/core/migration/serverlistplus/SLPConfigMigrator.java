@@ -29,6 +29,7 @@ import ch.andre601.advancedserverlist.api.objects.NullBool;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.profiles.profile.ProfileSerializer;
 import net.minecrell.serverlistplus.core.ServerListPlusCore;
 import net.minecrell.serverlistplus.core.config.PersonalizedStatusConf;
@@ -67,17 +68,17 @@ public class SLPConfigMigrator{
         "%online%", "${server playersOnline}",
         "%max%", "${server playersMax}");
     
-    public static int migrate(AdvancedServerList<?> core){
+    public static int migrate(AdvancedServerList<?> core, CmdSender sender){
         ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(slpCore == null){
-            logger.warn("Cannot migrate ServerListPlus config. ServerListPlus is not active!");
+            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
             return 0;
         }
         
         ServerStatusConf conf = slpCore.getConf(ServerStatusConf.class);
         if(conf == null){
-            logger.warn("Cannot migrate ServerListPlus configuration. Received configuration was null.");
+            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus configuration. Received configuration was null.");
             return 0;
         }
         
@@ -85,29 +86,24 @@ public class SLPConfigMigrator{
         PersonalizedStatusConf.StatusConf personalizedConf = conf.Personalized;
         PersonalizedStatusConf.StatusConf banned = conf.Banned;
         
-        int defConfParsed = parseConf(core, defConf, "slp_default.yml", Type.DEFAULT);
-        int personalizedParsed = parseConf(core, personalizedConf, "slp_personalized.yml", Type.PERSONALIZED);
-        int bannedParsed = parseConf(core, banned, "slp_banned.yml", Type.BANNED);
+        sender.sendPrefixedMsg("Migrating <white>Default</white>...");
+        int defConfParsed = parseConf(core, sender, defConf, Type.DEFAULT);
         
-        int total = defConfParsed + personalizedParsed + bannedParsed;
+        sender.sendPrefixedMsg("Migrating <white>Personalized</white>...");
+        int personalizedParsed = parseConf(core, sender, personalizedConf, Type.PERSONALIZED);
         
-        if(total == 0){
-            logger.warn("The migration of the ServerListPlus configuration failed! No settings couldn't be migrated.");
-        }else
-        if(total < 3){
-            logger.info("Only %d of 3 possible profiles could be migrated:", total);
-            logger.info("  - Default?      %s", defConfParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
-            logger.info("  - Personalized? %s", personalizedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
-            logger.info("  - Banned?       %s", bannedParsed == 1 ? "Migrated" : "Not Migrated (Missing?)");
-        }
+        sender.sendPrefixedMsg("Migrating <white>Banned</white>...");
+        int bannedParsed = parseConf(core, sender, banned, Type.BANNED);
         
-        return total;
+        return defConfParsed + personalizedParsed + bannedParsed;
     }
     
-    private static int parseConf(AdvancedServerList<?> core, PersonalizedStatusConf.StatusConf conf, String filename, Type type){
+    private static int parseConf(AdvancedServerList<?> core, CmdSender sender, PersonalizedStatusConf.StatusConf conf, Type type){
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(conf == null){
-            logger.warn("Cannot migrate settings for status type %s (Is this type even present?).", type.name());
+            logger.info("[Migrator - ServerListPlus] No StatusConf found for type %s. Skipping...", type.getName());
+            sender.sendPrefixedMsg(" -> Not found! Skipping...");
+            
             return 0;
         }
         
@@ -140,20 +136,26 @@ public class SLPConfigMigrator{
             .toList();
         
         if(entry.isInvalid() && profileEntries.isEmpty()){
-            logger.warn("Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.name());
+            logger.warn("[Migrator - ServerListPlus] Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.getName());
+            sender.sendErrorMsg(" -> <red>Received invalid Configuration.");
+            
             return 0;
         }
         
-        Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(filename);
+        Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(type.getFile());
         if(Files.exists(profile)){
-            logger.warn("Cannot create new file %s. One with the same name is already present", filename);
+            logger.warn("[Migrator - ServerListPlus] Cannot create new file %s. One with the same name is already present", type.getFile());
+            sender.sendErrorMsg(" -> <red>File</red> %s <red>already present.", type.getFile());
+            
             return 0;
         }
         
         try{
             Files.createFile(profile);
         }catch(IOException ex){
-            logger.warn("Encountered an IOException while trying to create file %s.", ex, filename);
+            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to create file %s.", ex, type.getFile());
+            sender.sendErrorMsg(" -> <red>File creation error.");
+            
             return 0;
         }
         
@@ -168,12 +170,16 @@ public class SLPConfigMigrator{
         try{
             node = loader.load();
         }catch(IOException ex){
-            logger.warn("Encountered an IOException while trying to load file %s.", ex, filename);
+            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to load file %s.", ex, type.getFile());
+            sender.sendErrorMsg(" -> <red>File loading error.");
+            
             return 0;
         }
         
         if(node == null){
-            logger.warn("Cannot migrate Configuration of type %s. ConfigurationNode was null", type.name());
+            logger.warn("[Migrator - ServerListPlus] Cannot migrate Configuration of type %s. ConfigurationNode was null.", type.getName());
+            sender.sendErrorMsg(" -> <red>File loading error.");
+            
             return 0;
         }
         
@@ -183,7 +189,9 @@ public class SLPConfigMigrator{
             
             if(type == Type.PERSONALIZED){
                 node.node("condition")
-                    .set("${player name} != \"" + core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
+                    .set("${player name} != \"" +
+                        core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") +
+                        "\"");
             }else
             if(type == Type.BANNED){
                 node.node("condition")
@@ -191,21 +199,26 @@ public class SLPConfigMigrator{
             }
             
             if(!profiles.isEmpty()){
-                
                 node.node("profiles").setList(ProfileEntry.class, profileEntries);
             }
             
             node.set(entry);
         }catch(SerializationException ex){
             logger.warn("Encountered a SerializationException while setting values.", ex);
+            sender.sendErrorMsg(" -> <red>Error while updating file</red> %s<red>.", type.getFile());
+            
             return 0;
         }
         
         try{
             loader.save(node);
+            sender.sendPrefixedMsg(" -> <green>Completed!");
+            
             return 1;
         }catch(IOException ex){
-            logger.warn("Encountered an IOException while trying to save new file %s.", ex, filename);
+            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to save new file %s.", ex, type.getFile());
+            sender.sendErrorMsg(" -> <red>File saving error.");
+            
             return 0;
         }
     }
@@ -378,6 +391,7 @@ public class SLPConfigMigrator{
                     case "7" -> colorCodeMatcher.appendReplacement(builder, "<grey>");
                     case "8" -> colorCodeMatcher.appendReplacement(builder, "<dark_grey>");
                     case "9" -> colorCodeMatcher.appendReplacement(builder, "<blue>");
+                    // This one shouldn't be reachable given the pattern, but you never know...
                     default -> colorCodeMatcher.appendReplacement(builder, "&" + color);
                 }
             }while(colorCodeMatcher.find());
@@ -420,8 +434,23 @@ public class SLPConfigMigrator{
     }
     
     private enum Type{
-        DEFAULT,
-        PERSONALIZED,
-        BANNED
+        DEFAULT("Default", "slp_default.yml"),
+        PERSONALIZED("Personalized", "slp_personalized.yml"),
+        BANNED("Banned", "slp_banned.yml");
+        
+        private final String name, file;
+        
+        Type(String name, String file){
+            this.name = name;
+            this.file = file;
+        }
+        
+        public String getName(){
+            return name;
+        }
+        
+        public String getFile(){
+            return file;
+        }
     }
 }
