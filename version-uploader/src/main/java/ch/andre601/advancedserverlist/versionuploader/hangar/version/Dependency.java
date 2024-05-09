@@ -36,7 +36,7 @@ public record Dependency(String name, String externalUrl, boolean required){
         return new Dependency(name, null, required);
     }
     
-    public static Dependency fromUrl(String url, boolean required){
-        return new Dependency(null, url, required);
+    public static Dependency fromUrl(String name, String url, boolean required){
+        return new Dependency(name, url, required);
     }
 }
