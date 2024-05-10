@@ -102,8 +102,7 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
                     
                     return text;
                 })
-                .limit(16)
-                .toString();
+                .toString(16);
             
             players.add(Bukkit.createProfile(UUID.randomUUID(), parsed));
         }
