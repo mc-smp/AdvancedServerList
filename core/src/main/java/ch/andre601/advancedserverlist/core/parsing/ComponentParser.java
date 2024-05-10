@@ -43,6 +43,7 @@ public class ComponentParser{
     }
     
     private String text;
+    private int limit = -1;
     
     private ComponentParser(String text){
         this.text = text;
@@ -62,9 +63,7 @@ public class ComponentParser{
     }
     
     public ComponentParser limit(int limit){
-        if(this.text.length() > limit)
-            this.text = this.text.substring(0, limit);
-        
+        this.limit = limit;
         return this;
     }
     
@@ -74,6 +73,10 @@ public class ComponentParser{
     
     @Override
     public String toString(){
-        return legacy.serialize(toComponent());
+        String result = legacy.serialize(toComponent());
+        if(limit != -1)
+            return result.substring(0, limit);
+        
+        return result;
     }
 }
