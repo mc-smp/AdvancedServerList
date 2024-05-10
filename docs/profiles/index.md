@@ -189,9 +189,10 @@ The `playerCount -> hover` option allows you to define lines of text to show whe
 
 /// warning | Notes
 - Only basic color and formatting codes such as `<aqua>` and `<bold>` are accepted. Hex colors are not supported.
-- Due to limitations can the text for each line not be longer than 16 characters, including color codes.
+- The text can't be longer than 16 characters in total.
     - Any text larger than 16 characters will be truncated.
-    - The text length is checked **after** color and formatting codes have been parsed, which means that f.e. `<aqua>` becomes `§a` (only 2 characters). So treat every color and format code as 2 characters.
+    - Text length is checked after all placeholders, color and formatting codes have been parsed.  
+      This means a text like `<gold>Hello ${player name}` will be turned into `§6Hello ExampleUser` (Assuming player is called `ExampleUser`) which is truncated to `§6Hello ExampleU`.
 ///
 
 /// details | Example
