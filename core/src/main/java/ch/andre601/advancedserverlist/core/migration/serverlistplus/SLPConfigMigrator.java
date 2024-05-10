@@ -118,8 +118,12 @@ public class SLPConfigMigrator{
         List<String> playerCount = resolvePlayerCounts(conf.Players);
         
         int size = getMaxListSize(motds, favicons, hovers, maxPlayers, playerCount);
-        for(int i = 0; i < size; i++){
-            profiles.add(ProfileEntry.empty().builder());
+        // Only add profiles entries when there are more than 2 entries of an option.
+        // Avoids a profiles option with a single entry that has no options whatsoever.
+        if(size > 1){
+            for(int i = 0; i < size; i++){
+                profiles.add(ProfileEntry.empty().builder());
+            }
         }
         
         apply(motds, builder, profiles, ProfileEntry.Builder::motd);
