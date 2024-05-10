@@ -61,6 +61,13 @@ public class ComponentParser{
         return this;
     }
     
+    public ComponentParser limit(int limit){
+        if(this.text.length() > limit)
+            this.text = this.text.substring(0, limit);
+        
+        return this;
+    }
+    
     public Component toComponent(){
         return mm.deserialize(text);
     }
