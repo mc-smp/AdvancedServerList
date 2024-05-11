@@ -60,7 +60,7 @@ public class PAPIUtil{
         return cache.get(() -> {
             List<String> servers;
             try{
-                servers = papi.findServers().getNow(Collections.emptyList());
+                servers = getList(papi.findServers());
             }catch(CancellationException | CompletionException ex){
                 return null;
             }
@@ -86,5 +86,13 @@ public class PAPIUtil{
         }catch(IllegalArgumentException | CancellationException | CompletionException ex){
             return text;
         }
+    }
+    
+    private <T extends Collection<String>> List<String> getList(CompletableFuture<T> completableFuture){
+        T value = completableFuture.getNow(null);
+        if(value == null)
+            return Collections.emptyList();
+        
+        return List.copyOf(value);
     }
 }

@@ -72,9 +72,4 @@ public class ComponentParser{
         
         return result;
     }
-    
-    @Override
-    public String toString(){
-        return toString(-1);
-    }
 }
