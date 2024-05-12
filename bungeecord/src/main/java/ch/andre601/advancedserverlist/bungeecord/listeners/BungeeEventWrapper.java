@@ -101,7 +101,7 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
         for(int i = 0; i < players.length; i++){
             String parsed = ComponentParser.text(lines.get(i))
                 .modifyText(text -> StringReplacer.replace(text, player, server))
-                .toString(16);
+                .toString();
             
             ServerPing.PlayerInfo pi = new ServerPing.PlayerInfo(parsed, UUID.randomUUID());
             players[i] = pi;

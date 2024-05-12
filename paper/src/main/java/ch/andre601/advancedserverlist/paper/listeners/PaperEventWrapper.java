@@ -35,6 +35,7 @@ import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
 import ch.andre601.advancedserverlist.paper.PaperCore;
+import ch.andre601.advancedserverlist.paper.objects.FakePlayerProfile;
 import ch.andre601.advancedserverlist.paper.objects.impl.PaperPlayerImpl;
 import ch.andre601.advancedserverlist.paper.objects.impl.PaperServerImpl;
 import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
@@ -47,7 +48,6 @@ import org.bukkit.util.CachedServerIcon;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, PaperPlayerImpl>{
     
@@ -102,9 +102,9 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
                     
                     return text;
                 })
-                .toString(16);
+                .toString();
             
-            players.add(Bukkit.createProfile(UUID.randomUUID(), parsed));
+            players.add(FakePlayerProfile.create(parsed));
         }
         
         event.getPlayerSample().addAll(players);

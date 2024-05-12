@@ -65,11 +65,8 @@ public class ComponentParser{
         return mm.deserialize(text);
     }
     
-    public String toString(int limit){
-        String result = legacy.serialize(toComponent());
-        if(limit > -1 && result.length() >= limit)
-            return result.substring(0, limit);
-        
-        return result;
+    @Override
+    public String toString(){
+        return legacy.serialize(toComponent());
     }
 }
