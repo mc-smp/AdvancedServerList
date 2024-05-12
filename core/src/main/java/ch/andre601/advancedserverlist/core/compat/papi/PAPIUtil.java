@@ -30,8 +30,8 @@ import net.william278.papiproxybridge.api.PlaceholderAPI;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +51,7 @@ public class PAPIUtil{
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isCompatible(){
         try{
-            papi.getClass().getMethod("findServers");
+            papi.getClass().getMethod("getServers");
             return true;
         }catch(NoSuchMethodException ex){
             return false;
@@ -61,8 +61,13 @@ public class PAPIUtil{
     public String getServer(){
         return cache.get(() -> {
             List<String> servers;
+            
             try{
-                servers = getList(papi.findServers());
+                Set<String> value = papi.getServers().getNow(null);
+                if(value == null)
+                    return null;
+                
+                servers = List.copyOf(value);
             }catch(CancellationException | CompletionException ex){
                 return null;
             }
@@ -88,13 +93,5 @@ public class PAPIUtil{
         }catch(IllegalArgumentException | CancellationException | CompletionException ex){
             return text;
         }
-    }
-    
-    private <T extends Collection<String>> List<String> getList(CompletableFuture<T> completableFuture){
-        T value = completableFuture.getNow(null);
-        if(value == null)
-            return Collections.emptyList();
-        
-        return List.copyOf(value);
     }
 }
