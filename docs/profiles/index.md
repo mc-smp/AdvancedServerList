@@ -187,12 +187,8 @@ playerCount:
 
 The `playerCount -> hover` option allows you to define lines of text to show when a player hovers over the player count with their cursor.
 
-/// warning | Notes
-- Only basic color and formatting codes such as `<aqua>` and `<bold>` are accepted. Hex colors are not supported.
-- The text can't be longer than 16 characters in total.
-    - Any text larger than 16 characters will be truncated.
-    - Text length is checked after all placeholders, color and formatting codes have been parsed.  
-      This means a text like `<gold>Hello ${player name}` will be turned into `§6Hello ExampleUser` (Assuming player is called `ExampleUser`) which is truncated to `§6Hello ExampleU`.
+/// info | Notes 
+Only basic color and formatting codes such as `<aqua>` and `<bold>` are accepted. Hex colors will be downsampled to the closest supported color.
 ///
 
 /// details | Example

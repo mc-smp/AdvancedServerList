@@ -94,12 +94,6 @@ playerCount:
   # Unlike the MOTD option does this one only support basic color and formatting codes. Any RGB colors will be
   # downsampled to the nearest matching color.
   #
-  # IMPORTANT: The text length cannot be larger than 16 characters, including color codes, as it otherwise causes errors
-  #            to appear.
-  #            Should the text be larger than 16 characters will it be truncated.
-  #            Do note, that this happens AFTER the color and formatting codes have been parsed, meaning each would
-  #            count as 2 characters (i.e. <aqua> becomes §a when parsed).
-  #
   # If not present or empty (hover: []), defaults to not modifying the hover.
   #
   # Read more: https://asl.andre601.ch/profiles/#hover
