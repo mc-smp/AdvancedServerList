@@ -55,7 +55,7 @@ public class JoinEvent{
             
             VelocityCmdSender sender = new VelocityCmdSender(player);
             
-            plugin.getCore().getUpdateChecker().performeCachedUpdateCheck(sender);
+            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

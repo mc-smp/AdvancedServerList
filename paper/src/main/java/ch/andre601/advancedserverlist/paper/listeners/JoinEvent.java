@@ -59,7 +59,7 @@ public class JoinEvent implements Listener{
             
             PaperCmdSender sender = new PaperCmdSender(player);
             
-            plugin.getCore().getUpdateChecker().performeCachedUpdateCheck(sender);
+            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

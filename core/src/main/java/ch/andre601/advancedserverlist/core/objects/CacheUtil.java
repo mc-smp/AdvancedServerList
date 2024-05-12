@@ -23,26 +23,30 @@
  *
  */
 
-package ch.andre601.advancedserverlist.core.check;
+package ch.andre601.advancedserverlist.core.objects;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
-public class VersionCache{
+public class CacheUtil<T>{
     
-    private CachedValue cachedValue = null;
+    private final Duration duration;
+    private CacheValue<T> cache = null;
     
-    public VersionCache(){}
-    
-    public UpdateChecker.ModrinthVersion get(Supplier<UpdateChecker.ModrinthVersion> supplier){
-        if(cachedValue == null || cachedValue.hasExpired())
-            cachedValue = new CachedValue(System.currentTimeMillis(), supplier.get());
-        
-        return cachedValue.version();
+    public CacheUtil(Duration duration){
+        this.duration = duration;
     }
     
-    private record CachedValue(long timestamp, UpdateChecker.ModrinthVersion version){
-        public boolean hasExpired(){
-            return (timestamp < 0L) || System.currentTimeMillis() - timestamp >= 300_000L;
+    public T get(Supplier<T> supplier){
+        if(cache == null || cache.expired())
+            cache = new CacheValue<>(System.currentTimeMillis(), duration, supplier.get());
+        
+        return cache.value();
+    }
+    
+    private record CacheValue<T>(long timestamp, Duration duration, T value){
+        public boolean expired(){
+            return (timestamp < 0L) || System.currentTimeMillis() - timestamp >= duration.toMillis();
         }
     }
 }

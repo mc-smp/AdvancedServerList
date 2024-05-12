@@ -28,6 +28,7 @@ package ch.andre601.advancedserverlist.core.check;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
+import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,6 +42,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -63,7 +65,7 @@ public class UpdateChecker{
     
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new UpdateCheckThread());
     
-    private final VersionCache cache = new VersionCache();
+    private final CacheUtil<ModrinthVersion> cache = new CacheUtil<>(Duration.ofMinutes(5));
     
     private final AdvancedServerList<?> core;
     private final PluginLogger logger;
@@ -77,7 +79,7 @@ public class UpdateChecker{
         startUpdateChecker();
     }
     
-    public void performeCachedUpdateCheck(CmdSender sender){
+    public void performCachedUpdateCheck(CmdSender sender){
         ModrinthVersion version = cache.get(() -> {
             try{
                 return performUpdateCheck().join();
@@ -172,7 +174,7 @@ public class UpdateChecker{
     }
     
     private void printUpdateBanner(ModrinthVersion version){
-        logger.warn("==================================================================");
+        logger.warn("=======================================================================");
         logger.warn("You are running an outdated version of AdvancedServerList!");
         logger.warn("");
         logger.warn("Your version: %s", core.getVersion());
@@ -187,7 +189,7 @@ public class UpdateChecker{
         
         logger.warn("Download the latest version from here:");
         logger.warn("https://modrinth.com/plugin/advancedserverlist/version/%s", version.id());
-        logger.warn("==================================================================");
+        logger.warn("=======================================================================");
     }
     
     public record ModrinthVersion(String id, String versionNumber, String versionType){
@@ -198,11 +200,6 @@ public class UpdateChecker{
         
         public int compare(String version){
             return FlexVerComparator.compare(version, versionNumber());
-        }
-        
-        @Override
-        public String toString(){
-            return String.format("ModrinthVersion{id=%s,versionNumber=%s,versionType=%s}", id, versionNumber, versionType);
         }
     }
 }

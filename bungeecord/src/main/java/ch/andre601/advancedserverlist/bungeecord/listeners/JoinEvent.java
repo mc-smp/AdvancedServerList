@@ -55,7 +55,7 @@ public class JoinEvent implements Listener{
             
             BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
             
-            plugin.getCore().getUpdateChecker().performeCachedUpdateCheck(sender);
+            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

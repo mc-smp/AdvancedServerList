@@ -25,8 +25,10 @@
 
 package ch.andre601.advancedserverlist.core.compat.papi;
 
+import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import net.william278.papiproxybridge.api.PlaceholderAPI;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +41,7 @@ public class PAPIUtil{
     
     private final PlaceholderAPI papi;
     
-    private final PAPICache cache = new PAPICache();
+    private final CacheUtil<String> cache = new CacheUtil<>(Duration.ofSeconds(5));
     
     public PAPIUtil(){
         this.papi = PlaceholderAPI.createInstance();
