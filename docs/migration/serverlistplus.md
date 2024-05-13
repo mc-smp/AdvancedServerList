@@ -13,7 +13,7 @@ This is due to AdvancedServerList using the internal API of ServerListPlus to re
 
 ## Conversions
 
-Specific values within the ServerListPlus configuration will be converted into equivalents supported by AdvancedServerListPlus.
+Specific values within the ServerListPlus configuration will be converted into equivalents supported by AdvancedServerList.
 
 ### Placeholders
 
