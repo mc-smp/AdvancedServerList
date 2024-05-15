@@ -16,6 +16,8 @@ You can find the tool at https://webui.advntr.dev/
 Please make sure to surround your text with either single quotes (`'`) or double quotes (`"`).  
 This avoids possible issues where the YAML parser would treat lines starting with specific characters as special options (i.e. `<` would be treated as a scolar value).
 
+Also, should your text contain single quotes (for example when using `you're`), either surround the text with double quotes, or change the single quote in your text into two single quotes (`you're -> you''re`).
+
 ```yaml title="Wrong formatting"
 motd:
   - <red>This will cause
@@ -24,8 +26,8 @@ motd:
 
 ```yaml title="Right formatting"
 motd:
-  - '<green>This will be formatted'
-  - '<green>properly.'
+  - "<green>This will be formatted"
+  - "<green>properly."
 ```
 
 ## Unsupported options
