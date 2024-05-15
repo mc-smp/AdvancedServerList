@@ -32,13 +32,13 @@ import litebans.api.Entry;
 public class LiteBansProvider implements PunishmentProvider{
     
     @Override
-    public boolean muted(GenericPlayer player){
-        return Database.get().isPlayerMuted(player.getUUID(), null);
+    public String muted(GenericPlayer player){
+        return String.valueOf(Database.get().isPlayerMuted(player.getUUID(), null));
     }
     
     @Override
-    public boolean banned(GenericPlayer player){
-        return Database.get().isPlayerBanned(player.getUUID(), null);
+    public String banned(GenericPlayer player){
+        return String.valueOf(Database.get().isPlayerBanned(player.getUUID(), null));
     }
     
     @Override

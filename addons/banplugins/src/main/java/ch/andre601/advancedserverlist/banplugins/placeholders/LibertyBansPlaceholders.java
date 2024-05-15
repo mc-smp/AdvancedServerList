@@ -47,7 +47,7 @@ public class LibertyBansPlaceholders extends PlaceholderProvider{
         
         return switch(args[0]){
             // Mute-related placeholders
-            case "isMuted" -> String.valueOf(provider.muted(player));
+            case "isMuted" -> provider.muted(player);
             case "muteReason" -> provider.muteReason(player);
             case "muteExpiration" -> {
                 if(args.length == 1)
@@ -57,7 +57,7 @@ public class LibertyBansPlaceholders extends PlaceholderProvider{
             }
             
             // Ban-related placeholders
-            case "isBanned" -> String.valueOf(provider.banned(player));
+            case "isBanned" -> provider.banned(player);
             case "banReason" -> provider.banReason(player);
             case "banExpiration" -> {
                 if(args.length == 1)

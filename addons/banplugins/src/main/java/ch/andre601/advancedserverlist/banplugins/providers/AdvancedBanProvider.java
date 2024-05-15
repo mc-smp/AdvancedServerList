@@ -58,13 +58,13 @@ public class AdvancedBanProvider implements PunishmentProvider{
     }
     
     @Override
-    public boolean muted(GenericPlayer player){
-        return getAPI().isMuted(noDashesUUID(player.getUUID()));
+    public String muted(GenericPlayer player){
+        return String.valueOf(getAPI().isMuted(noDashesUUID(player.getUUID())));
     }
     
     @Override
-    public boolean banned(GenericPlayer player){
-        return getAPI().isBanned(noDashesUUID(player.getUUID()));
+    public String banned(GenericPlayer player){
+        return String.valueOf(getAPI().isBanned(noDashesUUID(player.getUUID())));
     }
     
     @Override

@@ -53,13 +53,13 @@ public class LibertyBansProvider implements PunishmentProvider{
     }
     
     @Override
-    public boolean muted(GenericPlayer player){
-        return punishment(player.getUUID(), PunishmentType.MUTE) != null;
+    public String muted(GenericPlayer player){
+        return String.valueOf(punishment(player.getUUID(), PunishmentType.MUTE) != null);
     }
     
     @Override
-    public boolean banned(GenericPlayer player){
-        return punishment(player.getUUID(), PunishmentType.BAN) != null;
+    public String banned(GenericPlayer player){
+        return String.valueOf(punishment(player.getUUID(), PunishmentType.BAN) != null);
     }
     
     @Override

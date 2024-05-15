@@ -32,9 +32,9 @@ import java.util.Date;
 
 public interface PunishmentProvider{
     
-    boolean muted(GenericPlayer player);
+    String muted(GenericPlayer player);
     
-    boolean banned(GenericPlayer player);
+    String banned(GenericPlayer player);
     
     String muteReason(GenericPlayer player);
     
