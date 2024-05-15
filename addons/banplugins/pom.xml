@@ -103,6 +103,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.gitlab.ruany</groupId>
+            <artifactId>LiteBansAPI</artifactId>
+            <version>0.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>ch.andre601.asl-api</groupId>
             <artifactId>api</artifactId>
             <version>${api.version}</version>

@@ -17,3 +17,6 @@ dependencies:
     LibertyBans:
       required: false
       load: BEFORE
+    LiteBans:
+      required: false
+      load: BEFORE

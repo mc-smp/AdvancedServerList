@@ -28,46 +28,58 @@ package ch.andre601.advancedserverlist.banplugins.placeholders;
 import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.api.objects.GenericPlayer;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
-import ch.andre601.advancedserverlist.banplugins.providers.LibertyBansProvider;
+import ch.andre601.advancedserverlist.banplugins.providers.LiteBansProvider;
 
-public class LibertyBansPlaceholders extends PlaceholderProvider{
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+
+public class LiteBansPlaceholders extends PlaceholderProvider{
     
-    private LibertyBansProvider provider = null;
+    private LiteBansProvider provider = null;
     
-    public LibertyBansPlaceholders(){
-        super("libertybans");
+    public LiteBansPlaceholders(){
+        super("litebans");
     }
     
     @Override
     public String parsePlaceholder(String placeholder, GenericPlayer player, GenericServer server){
         if(provider == null)
-            provider = LibertyBansProvider.create();
+            provider = new LiteBansProvider();
         
         String[] args = placeholder.split("\\s", 2);
         
-        return switch(args[0]){
-            // Mute-related placeholders
-            case "isMuted" -> String.valueOf(provider.muted(player));
-            case "muteReason" -> provider.muteReason(player);
-            case "muteExpiration" -> {
-                if(args.length == 1)
-                    yield provider.muteExpirationDate(player);
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> 
+            switch(args[0]){
+                // Mute-related placeholders
+                case "isMuted" -> String.valueOf(provider.muted(player));
+                case "muteReason" -> provider.muteReason(player);
+                case "muteExpiration" -> {
+                    if(args.length == 1)
+                        yield provider.muteExpirationDate(player);
+                    
+                    yield provider.muteExpirationDate(player, args[1]);
+                }
                 
-                yield provider.muteExpirationDate(player, args[1]);
-            }
-            
-            // Ban-related placeholders
-            case "isBanned" -> String.valueOf(provider.banned(player));
-            case "banReason" -> provider.banReason(player);
-            case "banExpiration" -> {
-                if(args.length == 1)
-                    yield provider.banExpirationDate(player);
+                // Ban-related placeholders
+                case "isBanned" -> String.valueOf(provider.banned(player));
+                case "banReason" -> provider.banReason(player);
+                case "banExpiration" -> {
+                    if(args.length == 1)
+                        yield provider.banExpirationDate(player);
+                    
+                    yield provider.banExpirationDate(player, args[1]);
+                }
                 
-                yield provider.banExpirationDate(player,  args[1]);
+                //Unknown/Invalid placeholder
+                default -> null;
             }
-            
-            // Unknown/Invalid placeholder
-            default -> null;
-        };
+        );
+        
+        try{
+            return future.join();
+        }catch(CancellationException | CompletionException ex){
+            return null;
+        }
     }
 }

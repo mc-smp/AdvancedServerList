@@ -26,10 +26,8 @@
 package ch.andre601.advancedserverlist.banplugins.bungeecord;
 
 import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
-import ch.andre601.advancedserverlist.api.PlaceholderProvider;
+import ch.andre601.advancedserverlist.banplugins.BanPluginsList;
 import net.md_5.bungee.api.plugin.Plugin;
-
-import java.util.Map;
 
 public class BungeeCordBanPluginsAddon extends Plugin{
     
@@ -50,14 +48,16 @@ public class BungeeCordBanPluginsAddon extends Plugin{
     
     private int loadPlaceholderProviders(){
         int loaded = 0;
-        Map<String, PlaceholderProvider> banPlugins = BungeeCordBanPlugins.getBanPlugins();
         AdvancedServerListAPI api = AdvancedServerListAPI.get();
         
-        for(Map.Entry<String, PlaceholderProvider> entry : banPlugins.entrySet()){
-            if(getProxy().getPluginManager().getPlugin(entry.getKey()) != null){
-                getLogger().info("Registering Placeholders for " + entry.getKey() + "...");
-                api.addPlaceholderProvider(entry.getValue());
-                getLogger().info("Placeholder successfully registered!");
+        for(BanPluginsList entry : BanPluginsList.values()){
+            if(!entry.supportsBungeeCord())
+                continue;
+            
+            if(getProxy().getPluginManager().getPlugin(entry.getName()) != null){
+                getLogger().info("Registering Placeholders for " + entry.getName() + "...");
+                api.addPlaceholderProvider(entry.getPlaceholderProvider());
+                getLogger().info("Placeholders successfully registered!");
                 
                 loaded++;
             }

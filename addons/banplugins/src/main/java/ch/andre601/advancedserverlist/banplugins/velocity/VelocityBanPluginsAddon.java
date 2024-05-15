@@ -26,15 +26,15 @@
 package ch.andre601.advancedserverlist.banplugins.velocity;
 
 import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
-import ch.andre601.advancedserverlist.api.PlaceholderProvider;
+import ch.andre601.advancedserverlist.banplugins.BanPluginsList;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import net.md_5.bungee.api.ProxyServer;
+import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
+import java.util.Locale;
 
 public class VelocityBanPluginsAddon{
     
@@ -49,7 +49,7 @@ public class VelocityBanPluginsAddon{
     
     @Subscribe
     public void init(ProxyInitializeEvent event){
-        if(proxy.getPluginManager().getPlugin("advancedserverlist") == null){
+        if(!proxy.getPluginManager().isLoaded("advancedserverlist")){
             logger.warn("AdvancedServerList is not enabled. This plugin requires it to function!");
             return;
         }
@@ -64,14 +64,16 @@ public class VelocityBanPluginsAddon{
     
     private int loadPlaceholderProviders(){
         int loaded = 0;
-        Map<String, PlaceholderProvider> banPlugins = VelocityBanPlugins.getBanPlugins();
         AdvancedServerListAPI api = AdvancedServerListAPI.get();
         
-        for(Map.Entry<String, PlaceholderProvider> entry : banPlugins.entrySet()){
-            if(proxy.getPluginManager().getPlugin(entry.getKey()) != null){
-                logger.info("Registering placeholders for {}...", entry.getKey());
-                api.addPlaceholderProvider(entry.getValue());
-                logger.info("Placeholder successfully registered!");
+        for(BanPluginsList entry : BanPluginsList.values()){
+            if(!entry.supportsVelocity())
+                continue;
+            
+            if(proxy.getPluginManager().isLoaded(entry.getName().toLowerCase(Locale.ROOT))){
+                logger.info("Registering Placeholders for " + entry.getName() + "...");
+                api.addPlaceholderProvider(entry.getPlaceholderProvider());
+                logger.info("Placeholders successfully registered!");
                 
                 loaded++;
             }

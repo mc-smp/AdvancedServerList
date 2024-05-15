@@ -26,10 +26,8 @@
 package ch.andre601.advancedserverlist.banplugins.paper;
 
 import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
-import ch.andre601.advancedserverlist.api.PlaceholderProvider;
+import ch.andre601.advancedserverlist.banplugins.BanPluginsList;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Map;
 
 public class PaperBanPluginsAddon extends JavaPlugin{
     
@@ -53,14 +51,16 @@ public class PaperBanPluginsAddon extends JavaPlugin{
     
     private int loadPlaceholderProviders(){
         int loaded = 0;
-        Map<String, PlaceholderProvider> banPlugins = PaperBanPlugins.getBanPlugins();
         AdvancedServerListAPI api = AdvancedServerListAPI.get();
         
-        for(Map.Entry<String, PlaceholderProvider> entry : banPlugins.entrySet()){
-            if(getServer().getPluginManager().isPluginEnabled(entry.getKey())){
-                getLogger().info("Registering Placeholders for " + entry.getKey() + "...");
-                api.addPlaceholderProvider(entry.getValue());
-                getLogger().info("Placeholder successfully registered!");
+        for(BanPluginsList entry : BanPluginsList.values()){
+            if(!entry.supportsPaper())
+                continue;
+            
+            if(getServer().getPluginManager().isPluginEnabled(entry.getName())){
+                getLogger().info("Registering Placeholders for " + entry.getName() + "...");
+                api.addPlaceholderProvider(entry.getPlaceholderProvider());
+                getLogger().info("Placeholders successfully registered!");
                 
                 loaded++;
             }

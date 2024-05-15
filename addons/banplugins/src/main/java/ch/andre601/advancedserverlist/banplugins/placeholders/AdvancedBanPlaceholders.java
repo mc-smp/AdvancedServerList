@@ -32,7 +32,7 @@ import ch.andre601.advancedserverlist.banplugins.providers.AdvancedBanProvider;
 
 public class AdvancedBanPlaceholders extends PlaceholderProvider{
     
-    private final AdvancedBanProvider provider = new AdvancedBanProvider();
+    private AdvancedBanProvider provider = null;
     
     public AdvancedBanPlaceholders(){
         super("advancedban");
@@ -40,6 +40,9 @@ public class AdvancedBanPlaceholders extends PlaceholderProvider{
     
     @Override
     public String parsePlaceholder(String placeholder, GenericPlayer player, GenericServer server){
+        if(provider == null)
+            provider = new AdvancedBanProvider();
+        
         String[] args = placeholder.split("\\s", 2);
         
         return switch(args[0]) {

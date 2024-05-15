@@ -7,5 +7,6 @@ softDepends:
   - AdvancedServerList
   - AdvancedBan
   - LibertyBans
+  - LiteBans
 
 main: 'ch.andre601.advancedserverlist.banplugins.bungeecord.BungeeCordBanPluginsAddon'

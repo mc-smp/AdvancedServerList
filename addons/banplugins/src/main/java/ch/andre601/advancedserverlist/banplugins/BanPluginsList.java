@@ -23,35 +23,48 @@
  *
  */
 
-package ch.andre601.advancedserverlist.banplugins.paper;
+package ch.andre601.advancedserverlist.banplugins;
 
 import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.banplugins.placeholders.AdvancedBanPlaceholders;
 import ch.andre601.advancedserverlist.banplugins.placeholders.LibertyBansPlaceholders;
+import ch.andre601.advancedserverlist.banplugins.placeholders.LiteBansPlaceholders;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public enum PaperBanPlugins{
+public enum BanPluginsList{
     
-    ADVANCED_BAN("AdvancedBan", new AdvancedBanPlaceholders()),
-    LIBERTY_BANS("LibertyBans", new LibertyBansPlaceholders());
+    ADVANCED_BAN("AdvancedBan", new AdvancedBanPlaceholders(), true, true, false),
+    LIBERTY_BANS("LibertyBans", new LibertyBansPlaceholders(), true, true, true),
+    LITE_BANS("LiteBans", new LiteBansPlaceholders(), true, true, true);
     
-    private final String plugin;
+    private final String name;
     private final PlaceholderProvider placeholderProvider;
+    private final boolean paper, bungeecord, velocity;
     
-    PaperBanPlugins(String plugin, PlaceholderProvider placeholderProvider){
-        this.plugin = plugin;
+    BanPluginsList(String name, PlaceholderProvider placeholderProvider, boolean paper, boolean bungeecord, boolean velocity){
+        this.name = name;
         this.placeholderProvider = placeholderProvider;
+        this.paper = paper;
+        this.bungeecord = bungeecord;
+        this.velocity = velocity;
     }
     
-    public static Map<String, PlaceholderProvider> getBanPlugins(){
-        Map<String, PlaceholderProvider> content = new HashMap<>();
-        
-        for(PaperBanPlugins paperBanPlugins : PaperBanPlugins.values()){
-            content.put(paperBanPlugins.plugin, paperBanPlugins.placeholderProvider);
-        }
-        
-        return content;
+    public String getName(){
+        return name;
+    }
+    
+    public PlaceholderProvider getPlaceholderProvider(){
+        return placeholderProvider;
+    }
+    
+    public boolean supportsPaper(){
+        return paper;
+    }
+    
+    public boolean supportsBungeeCord(){
+        return bungeecord;
+    }
+    
+    public boolean supportsVelocity(){
+        return velocity;
     }
 }
