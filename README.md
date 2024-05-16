@@ -1,119 +1,113 @@
-# AdvancedServerList
+<center><strong><u><font size="6">AdvancedServerList</font ></u></strong></center>
 
-AdvancedServerList is a plugin that allows you to customize your server's MOTD, favicon, Player count text and player count hover displayed in a player's multiplayer server list based on conditions and priorities.
+AdvancedServerList is a plugin designed to allow the largest possible customization for your server's appearance in a Player's multiplayer screen.  
+The plugin offers extensive customization including changing the MOTD, player count text, player count hover and favicon of your server. All while also allowing you to create multiple profiles with priorities and conditions to set when a specific profile should be displayed.
 
 ## Downloads
 
 <a href="https://modrinth.com/plugin/advancedserverlist" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact/available/modrinth_vector.svg" height="46" alt="modrinth" title="Available on Modrinth">
+  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact/available/modrinth_vector.svg" height="48" alt="modrinth" title="Available on Modrinth">
 </a>
 <br>
 <a href="https://hangar.papermc.io/Andre_601/AdvancedServerList" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact/available/hangar_vector.svg" height="46" alt="hangar" title="Available on Hangar">
+  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact/available/hangar_vector.svg" height="48" alt="hangar" title="Available on Hangar">
 </a>
 
 ## Supported Platforms
 
 <a href="https://papermc.io" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/supported/paper_vector.svg" height="64" alt="platform-paper" title="Tested on Paper">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg" height="48" alt="platform-paper" title="Tested on Paper">
 </a>
+<br>
 <a href="https://www.spigotmc.org" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/supported/bungeecord_vector.svg" height="64" alt="platform-bungeecord" title="Tested on BungeeCord">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/bungeecord_vector.svg" height="48" alt="platform-bungeecord" title="Tested on BungeeCord">
 </a>
+<br>
 <a href="https://www.papermc.io" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/supported/waterfall_vector.svg" height="64" alt="platform-waterfall" title="Tested on Waterfall">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/waterfall_vector.svg" height="48" alt="platform-waterfall" title="Tested on Waterfall">
 </a>
+<br>
 <a href="https://velocitypowered.com" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/supported/velocity_vector.svg" height="64" alt="platform-velocity" title="Tested on Velocity">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/velocity_vector.svg" height="48" alt="platform-velocity" title="Tested on Velocity">
 </a>
 
-## What is a Server List Profile?
+## Server List Profiles
 
-A Server List Profile refers to a YAML file located in the plugin's `profiles` directory.  
-It allows you to configure specific aspects of the server display in the MC-Client's multiplayer server list, such as the MOTD, player count text, player count hover or Favicon.
+A Server List Profile is a single YAML file located in the plugin's `profiles` folder. It contains settings that allow you to modify the server's appearance within a Player's multiplayer screen.
 
-> [*Read More*][profiles]
+### Priority and Conditions
 
-### Conditions
+Each file has a priority and optional condition. The priority is used to determine what file AdvancedServerList should use first - starting from highest number to lowest - with conditions being used to set when the profile should be used.  
+Once a profile has been found with a condition returning true - which is the default should there be no condition - will AdvancedServerList use said profile.
 
-Thanks to conditions can you determine when a profile should be displayed in the player's server list, to allow displaying specific text (i.e. a warning when they are using an outdated version).
-
-When multiple profiles exist that have valid conditions will the one with the highest priority (Higher number = higher priority) be selected. Having no conditions makes it automatically true.
-
-> [*Read More*][conditions]
+> *Read more about [Priority](https://asl.andre601.ch/profiles/#priority) and [Conditions](https://asl.andre601.ch/profiles/#condition)*
 
 ### Placeholders
 
-Placeholders can be used within conditions to further customize them. They can also be used in any other text option to display their respective values.
-The format is `${<target> <identifier>}` which was adopted from BungeeTabListPlus. Depending on what platform you use the plugin on are only specific placeholders available.
+AdvancedServerList supports two sets of placeholders. The first one being its own placeholders using the `${<type> <values>}` format adobted from BungeeTabListPlus and the second one being placeholders from PlaceholderAPI using its `%<identifier>_<values>%` placeholder format.
 
-When using the SpigotMC/PaperMC version, or while [PAPIProxyBridge][papiproxybridge] is installed on your proxy, can you also use placeholders from [PlaceholderAPI][placeholderapi] using its `%<identifier>_<values>%` placeholder format. PlaceholderAPI needs to be installed on the server (not proxy) for that.
+Note that internal placeholders can be used in all text-based options of a profile, while PlaceholderAPI placeholders can be used in all text-based options except the `condition` one.  
+As a final note can plugins provide their own placeholders to use within AdvancedServerList by using its API.
 
-If you're a plugin dev can you even add your own custom placeholders through AdvancedServerList's own API.
-
-> [*Read More*][placeholders]
+> *Read more about [Placeholders](https://asl.andre601.ch/profiles/placeholders/)*
 
 ### Formatting
 
-The plugin uses the MiniMessage format for a consistent, easy way of formatting your text.
-Only certain options are usable for each option. As an example does motd support HEX colours and gradients, while the other options only support default colour codes.
+AdvancedServerList utilizes the MiniMessage formatting to handle colors and formatting of text. This option was chosen over legacy formatting - using `&` character - for being more clear and readable in its design, not to mention having an easier way for more complex features such as RGB gradients.
 
-> [*Read More*][minimessage]
+> *Read more about [Formatting](https://asl.andre601.ch/profiles/formatting/)*
 
 ## Dependencies
 
-All listed dependencies are optional.
+AdvancedServerList soft-depends on the following plugins, meaning their inclusion is not required.
 
-| Dependency        | Platforms            |
-|-------------------|----------------------|
-| [PlaceholderAPI]  | Paper                |
-| [ViaVersion]      | Paper                |
-| [PAPIProxyBridge] | BungeeCord, Velocity |
-| [Maintenance]     | All                  |
+| Plugin                                                                  | Supported Platforms                    |
+|-------------------------------------------------------------------------|----------------------------------------|
+| [PlaceholderAPI](https://hangar.papermc.io/HelpChat/PlaceholderAPI)     | Paper                                  |
+| [ViaVersion](https://hangar.papermc.io/ViaVersion/ViaVersion)           | Paper                                  |
+| [PAPIProxyBridge](https://hangar.papermc.io/William278/PAPIProxyBridge) | BungeeCord, Waterfall, Velocity        |
+| [Maintenance](https://hangar.papermc.io/kennytv/Maintenance)            | Paper, BungeeCord, Waterfall, Velocity |
 
 ## Statistics
 
-This plugin sends statistics to [bStats] to display.  
-You can disable this in the global bStats config file located in `/plugins/bstats/`
+The plugin sends statistics to [bStats](https://bstats.org) to show.  
+You can disable the sending of statistics in the global bStats config located inside `/plugins/bstats/`.
 
-- [BungeeCord][bstats-bungee]
-- [Paper/Spigot][bstats-spigot]
-- [Velocity][bstats-velocity]
+You can find the bStats pages of the plugin for the following platforms:
+
+- [Paper](https://bstats.org/plugin/bungeecord/AdvancedServerList/15584)
+- [BungeeCord, Waterfall](https://bstats.org/plugin/bungeecord/AdvancedServerList/15585)
+- [Velocity](https://bstats.org/plugin/velocity/AdvancedServerList/15587)
+
+## Videos
+
+Below can you find a collection of videos made for my plugin. If you made a video and it isn't shown here, let me know and I'll add it.
+
+<details><summary>Click to show/hide Videos</summary>
+<p>
+
+Spanish Video by Ajneb97
+<iframe width="560" height="auto" src="https://www.youtube.com/embed/rIbljm_4HVI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+</p>
+</details>
 
 ## Screenshots
 
 <a href="https://modrinth.com/plugin/advancedserverlist/gallery" target="_blank">
-  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/modrinth-gallery_vector.svg" height="64" alt="gallery" title="Check out the Gallery">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/modrinth-gallery_vector.svg" height="48" alt="gallery" title="Check out the Gallery">
 </a>
 
 ## Support
 
 <a href="https://discord.gg/MyPTjpsgGH" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/discord-singular_vector.svg" height="64" alt="discord" title="Join the M.O.S.S. Discord Server">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-singular_vector.svg" height="48" alt="discord" title="Join the M.O.S.S. Discord Server">
 </a>
+<br>
 <a href="https://app.revolt.chat/invite/74TpERXA" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/revolt-singular_vector.svg" height="64" alt="revolt" title="Join my Revolt Server">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/revolt-singular_vector.svg" height="48" alt="revolt" title="Join my Revolt Server">
 </a>
+<br>
 <a href="https://blobfox.coffee/@andre_601" target="_blank">
-  <img src="https://cdn.jsdelivr.net/gh/Andre601/devins-badges@13e0142/assets/compact-minimal/social/mastodon-singular_vector.svg" height="64" alt="mastodon" title="Chat with me on Mastodon">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/mastodon-singular_vector.svg" height="48" alt="revolt" title="Chat with me on Mastodon">
 </a>
-
-<!-- Links -->
-[profiles]: https://asl.andre601.ch/profiles/
-[conditions]: https://asl.andre601.ch/profiles/#condition
-[placeholders]: https://asl.andre601.ch/profiles/placeholders/
-[minimessage]: https://asl.andre601.ch/profiles/formatting/
-
-[modrinth]: https://modrinth.com/plugin/advancedserverlist
-
-[placeholderapi]: https://hangar.papermc.io/HelpChat/PlaceholderAPI
-[viaversion]: https://hangar.papermc.io/ViaVersion/ViaVersion
-[papiproxybridge]: https://hangar.papermc.io/William278/PAPIProxyBridge
-[maintenance]: https://hangar.papermc.io/kennytv/Maintenance
-
-[bstats]: https://bstats.org
-[bstats-bungee]: https://bstats.org/plugin/bungeecord/AdvancedServerList/15585
-[bstats-spigot]: https://bstats.org/plugin/bukkit/AdvancedServerList/15584
-[bstats-velocity]: https://bstats.org/plugin/velocity/AdvancedServerList/15587
-
-[gallery]: https://modrinth.com/mod/advancedserverlist/gallery
