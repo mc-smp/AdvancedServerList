@@ -1,4 +1,4 @@
-<center><strong><u><font size="6">AdvancedServerList</font ></u></strong></center>
+# AdvancedServerList
 
 AdvancedServerList is a plugin designed to allow the largest possible customization for your server's appearance in a Player's multiplayer screen.  
 The plugin offers extensive customization including changing the MOTD, player count text, player count hover and favicon of your server. All while also allowing you to create multiple profiles with priorities and conditions to set when a specific profile should be displayed.
