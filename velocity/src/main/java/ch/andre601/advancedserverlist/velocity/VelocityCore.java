@@ -145,13 +145,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     }
     
     @Override
-    public String getPlatformName(){
-        return getProxy().getVersion().getName();
-    }
-    
-    @Override
-    public String getPlatformVersion(){
-        return getProxy().getVersion().getVersion();
+    public String getPlatformInfo(){
+        return getProxy().getVersion().getName() + " " + getProxy().getVersion().getVersion();
     }
     
     @Override

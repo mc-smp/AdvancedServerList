@@ -52,9 +52,7 @@ public interface PluginCore<F>{
     
     FaviconHandler<F> getFaviconHandler();
     
-    String getPlatformName();
-    
-    String getPlatformVersion();
+    String getPlatformInfo();
     
     String getLoader();
     

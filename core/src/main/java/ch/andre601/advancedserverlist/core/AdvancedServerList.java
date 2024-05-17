@@ -125,7 +125,7 @@ public class AdvancedServerList<F>{
         resolveVersion();
     
         getPlugin().getPluginLogger().info("Starting AdvancedServerList v%s...", version);
-        getPlugin().getPluginLogger().info("Platform: " + plugin.getPlatformName() + " " + plugin.getPlatformVersion());
+        getPlugin().getPluginLogger().info("Platform: %s", plugin.getPlatformInfo());
         
         if(getFileHandler().loadConfig()){
             getPlugin().getPluginLogger().info("Successfully loaded config.yml!");

@@ -36,6 +36,7 @@ import ch.andre601.advancedserverlist.paper.objects.WorldCache;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PAPIPlaceholders;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PaperPlayerPlaceholders;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PaperServerPlaceholders;
+import io.papermc.paper.ServerBuildInfo;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
@@ -49,6 +50,7 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 
 public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon>{
     
@@ -150,13 +152,14 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
-    public String getPlatformName(){
-        return getServer().getName();
-    }
-    
-    @Override
-    public String getPlatformVersion(){
-        return getServer().getVersion();
+    public String getPlatformInfo(){
+        try{
+            Class.forName("io.papermc.paper.ServerBuildInfo");
+            return getNewVersion();
+        }catch(ClassNotFoundException ignored){
+            // Old Paper versions (Before 16th of May 2024)
+            return getOldVersion();
+        }
     }
     
     @Override
@@ -215,5 +218,23 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         getPluginLogger().warn("======================================================================================");
         
         Bukkit.getPluginManager().disablePlugin(this);
+    }
+    
+    private String getNewVersion(){
+        ServerBuildInfo info = ServerBuildInfo.buildInfo();
+        
+        String name = info.brandName();
+        String id = info.brandId().asString();
+        String version = info.minecraftVersionName();
+        
+        OptionalInt build = info.buildNumber();
+        if(build.isEmpty())
+            return String.format("%s (%s, Version: %s)", name, id, version);
+        
+        return String.format("%s (ID: %s, Version: %s, Build: %d)", name, id, version, build.getAsInt());
+    }
+    
+    private String getOldVersion(){
+        return getServer().getName() + " " + getServer().getVersion();
     }
 }

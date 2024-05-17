@@ -143,13 +143,8 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
-    public String getPlatformName(){
-        return getProxy().getName();
-    }
-    
-    @Override
-    public String getPlatformVersion(){
-        return getProxy().getVersion();
+    public String getPlatformInfo(){
+        return getProxy().getName() + " " + getProxy().getVersion();
     }
     
     @Override
