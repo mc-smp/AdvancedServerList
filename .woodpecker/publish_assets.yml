@@ -4,7 +4,7 @@ when:
 
 steps:
   - name: "Build Jar and Upload"
-    image: maven:3.9.6-eclipse-temurin-17
+    image: maven:3.9.6-eclipse-temurin-21
     secrets:
       - modrinth_api_token
       - hangar_api_token
