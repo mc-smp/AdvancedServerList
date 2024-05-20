@@ -7,7 +7,7 @@
   ],
   "packageRules": [
     {
-      "description": "Use Jitpack registry for AdvancedBan",
+      "description": "Use Jitpack registry for various Libs",
       "matchPackageNames": [
         "com.github.DevLeoko:AdvancedBan",
         "com.github.LeonMangler:PremiumVanishAPI",
