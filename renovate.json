@@ -52,11 +52,6 @@
       "addLabels": ["PR Target/Velocity"]
     },
     {
-      "description": "Apply label for GitHub Actions",
-      "matchFileNames": [".github/workflows/*.yml"],
-      "addLabels": ["PR Target/GitHub Action"]
-    },
-    {
       "description": "Apply label for MkDocs",
       "matchFileNames": ["requirements.txt"],
       "addLabels": ["PR Target/MkDocs"]
