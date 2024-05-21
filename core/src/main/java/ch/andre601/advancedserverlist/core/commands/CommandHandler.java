@@ -28,6 +28,7 @@ package ch.andre601.advancedserverlist.core.commands;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.PluginCommand;
+import ch.andre601.advancedserverlist.core.migration.minimotd.MiniMOTDConfigMigrator;
 import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
 
 import java.util.Arrays;
@@ -160,6 +161,7 @@ public class CommandHandler{
                 sender.sendErrorMsg("<red>Insufficient arguments! Please provide a plugin to migrate from.");
                 sender.sendErrorMsg("<red>Available options:");
                 sender.sendErrorMsg(" - ServerListPlus");
+                sender.sendErrorMsg(" - MiniMOTD");
                 return;
             }
             
@@ -178,9 +180,19 @@ public class CommandHandler{
                 }else{
                     sender.sendPrefixedMsg("<green>Migration complete!");
                 }
+            }else
+            if(args[0].equalsIgnoreCase("minimotd")){
+                sender.sendPrefixedMsg("Migrating MiniMOTD configuration file...");
+                
+                if(MiniMOTDConfigMigrator.migrate(core, sender)){
+                    sender.sendPrefixedMsg("<green>Migration complete!");
+                }else{
+                    sender.sendErrorMsg("<red>Unable to migrate MiniMOTD configuration. Check console for details!");
+                }
             }else{
                 sender.sendErrorMsg("<red>Unknown plugin <grey>%s</grey>. Available Options:", args[0]);
                 sender.sendErrorMsg(" - ServerListPlus");
+                sender.sendErrorMsg(" - MiniMOTD");
             }
         }
     }

@@ -27,12 +27,18 @@ package ch.andre601.advancedserverlist.paper.objects.impl;
 
 import ch.andre601.advancedserverlist.api.bukkit.objects.BukkitPlayer;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
-import ch.andre601.advancedserverlist.core.profiles.players.GenericPlayerImpl;
 import org.bukkit.OfflinePlayer;
 
-public class PaperPlayerImpl extends GenericPlayerImpl implements BukkitPlayer{
+import java.util.UUID;
+
+public class PaperPlayerImpl implements BukkitPlayer{
     
     private final OfflinePlayer player;
+    
+    private final String name;
+    private int protocol;
+    private final UUID uuid;
+    
     private boolean playedBefore = false;
     private boolean banned = false;
     private boolean whitelisted = false;
@@ -50,6 +56,21 @@ public class PaperPlayerImpl extends GenericPlayerImpl implements BukkitPlayer{
         this.playedBefore = player.hasPlayedBefore();
         this.banned = player.isBanned();
         this.whitelisted = player.isWhitelisted();
+    }
+    
+    @Override
+    public String getName(){
+        return name;
+    }
+    
+    @Override
+    public int getProtocol(){
+        return protocol;
+    }
+    
+    @Override
+    public UUID getUUID(){
+        return uuid;
     }
     
     @Override

@@ -28,7 +28,7 @@ package ch.andre601.advancedserverlist.paper;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
-import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.paper.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.paper.listeners.LoadEvent;
 import ch.andre601.advancedserverlist.paper.logging.PaperLogger;
@@ -36,6 +36,8 @@ import ch.andre601.advancedserverlist.paper.objects.WorldCache;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PAPIPlaceholders;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PaperPlayerPlaceholders;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PaperServerPlaceholders;
+import com.alessiodp.libby.Library;
+import com.alessiodp.libby.PaperLibraryManager;
 import io.papermc.paper.ServerBuildInfo;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -60,6 +62,8 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     private FaviconHandler<CachedServerIcon> faviconHandler = null;
     private PAPIPlaceholders papiPlaceholders = null;
     private WorldCache worldCache = null;
+    
+    private PaperLibraryManager libraryManager = null;
     
     @Override
     public void onEnable(){
@@ -126,6 +130,23 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
             return;
         
         faviconHandler.cleanCache();
+    }
+    
+    @Override
+    public void downloadLibrary(String groupId, String artifactId, String version){
+        if(libraryManager == null){
+            libraryManager = new PaperLibraryManager(this);
+            libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+        }
+        
+        Library lib = Library.builder()
+            .groupId(groupId)
+            .artifactId(artifactId)
+            .version(version)
+            .resolveTransitiveDependencies(true)
+            .build();
+        
+        libraryManager.loadLibrary(lib);
     }
     
     @Override

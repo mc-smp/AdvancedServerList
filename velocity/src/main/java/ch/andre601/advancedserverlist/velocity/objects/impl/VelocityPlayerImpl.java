@@ -27,10 +27,15 @@ package ch.andre601.advancedserverlist.velocity.objects.impl;
 
 import ch.andre601.advancedserverlist.api.velocity.objects.VelocityPlayer;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
-import ch.andre601.advancedserverlist.core.profiles.players.GenericPlayerImpl;
 import com.velocitypowered.api.network.ProtocolVersion;
 
-public class VelocityPlayerImpl extends GenericPlayerImpl implements VelocityPlayer{
+import java.util.UUID;
+
+public class VelocityPlayerImpl implements VelocityPlayer{
+    
+    private final String name;
+    private final int protocol;
+    private final UUID uuid;
     
     private final String version;
     
@@ -39,6 +44,21 @@ public class VelocityPlayerImpl extends GenericPlayerImpl implements VelocityPla
         this.protocol = protocol;
         this.uuid = player.uuid();
         this.version = ProtocolVersion.getProtocolVersion(protocol).getVersionIntroducedIn();
+    }
+    
+    @Override
+    public String getName(){
+        return name;
+    }
+    
+    @Override
+    public int getProtocol(){
+        return protocol;
+    }
+    
+    @Override
+    public UUID getUUID(){
+        return uuid;
     }
     
     @Override

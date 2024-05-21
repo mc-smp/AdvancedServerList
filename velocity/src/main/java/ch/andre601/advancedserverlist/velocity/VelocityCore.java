@@ -28,13 +28,15 @@ package ch.andre601.advancedserverlist.velocity;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
-import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
+import com.alessiodp.libby.Library;
+import com.alessiodp.libby.VelocityLibraryManager;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
@@ -65,6 +67,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
+    
+    private VelocityLibraryManager<VelocityCore> libraryManager = null;
     
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
@@ -119,6 +123,24 @@ public class VelocityCore implements PluginCore<Favicon>{
             return;
     
         faviconHandler.cleanCache();
+    }
+    
+    @Override
+    public void downloadLibrary(String groupId, String artifactId, String version){
+        if(libraryManager == null){
+            libraryManager = new VelocityLibraryManager<>(this, LoggerFactory.getLogger("AdvancedServerList"),
+                getFolderPath(), getProxy().getPluginManager());
+            libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+        }
+        
+        Library lib = Library.builder()
+            .groupId(groupId)
+            .artifactId(artifactId)
+            .version(version)
+            .resolveTransitiveDependencies(true)
+            .build();
+        
+        libraryManager.loadLibrary(lib);
     }
     
     @Override

@@ -25,14 +25,35 @@
 
 package ch.andre601.advancedserverlist.bungeecord.objects.impl;
 
+import ch.andre601.advancedserverlist.api.bungeecord.objects.BungeePlayer;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
-import ch.andre601.advancedserverlist.core.profiles.players.GenericPlayerImpl;
 
-public class BungeePlayerImpl extends GenericPlayerImpl{
+import java.util.UUID;
+
+public class BungeePlayerImpl implements BungeePlayer{
+    
+    private final String name;
+    private final int protocol;
+    private final UUID uuid;
     
     public BungeePlayerImpl(CachedPlayer player, int protocol){
         this.name = player.name();
         this.protocol = protocol;
         this.uuid = player.uuid();
+    }
+    
+    @Override
+    public String getName(){
+        return name;
+    }
+    
+    @Override
+    public int getProtocol(){
+        return protocol;
+    }
+    
+    @Override
+    public UUID getUUID(){
+        return uuid;
     }
 }

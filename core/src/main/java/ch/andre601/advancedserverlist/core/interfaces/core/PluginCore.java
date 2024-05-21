@@ -27,7 +27,7 @@ package ch.andre601.advancedserverlist.core.interfaces.core;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
-import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -43,6 +43,8 @@ public interface PluginCore<F>{
     void loadFaviconHandler(AdvancedServerList<F> core);
     
     void clearFaviconCache();
+    
+    void downloadLibrary(String groupId, String artifactId, String version);
     
     AdvancedServerList<F> getCore();
     
