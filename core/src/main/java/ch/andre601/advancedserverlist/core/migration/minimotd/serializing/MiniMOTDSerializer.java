@@ -31,6 +31,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
 
 public class MiniMOTDSerializer implements TypeSerializer<MiniMOTDConfig>{
@@ -52,7 +53,15 @@ public class MiniMOTDSerializer implements TypeSerializer<MiniMOTDConfig>{
     
     @Override
     public void serialize(Type type, @Nullable MiniMOTDConfig obj, ConfigurationNode node) throws SerializationException{
+        if(obj == null){
+            node.raw(null);
+            return;
+        }
         
+        node.node("icon-enabled").set(obj.iconEnabled());
+        node.node("motd-enable").set(obj.motdEnabled());
+        node.node("motds").setList(MiniMOTDConfig.Motd.class, obj.motds());
+        node.node("player-count-settings").set(MiniMOTDConfig.PlayerCount.class, obj.playerCount());
     }
     
     public static class MotdSerializer implements TypeSerializer<MiniMOTDConfig.Motd>{
@@ -95,7 +104,26 @@ public class MiniMOTDSerializer implements TypeSerializer<MiniMOTDConfig>{
         
         @Override
         public void serialize(Type type, MiniMOTDConfig.@Nullable PlayerCount obj, ConfigurationNode node) throws SerializationException{
+            if(obj == null){
+                node.raw(null);
+                return;
+            }
             
+            node.node("allow-exceeding-maximum").set(false);
+            node.node("disable-player-list-hover").set(false);
+            
+            node.node("fake-players", "fake-players").set("25%");
+            node.node("fake-players", "fake-players-enabled").set(false);
+            
+            node.node("hide-player-count").set(obj.hidePlayers());
+            
+            node.node("just-x-more-settings", "just-x-more-enabled").set(obj.xMoreEnabled());
+            node.node("just-x-more-settings", "x-value").set(obj.xMore());
+            
+            node.node("max-players").set(obj.maxPlayers());
+            node.node("max-players-enabled").set(obj.maxPlayersEnabled());
+            
+            node.node("servers").setList(String.class, Collections.emptyList());
         }
     }
 }
