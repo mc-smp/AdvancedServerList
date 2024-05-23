@@ -95,6 +95,14 @@
             <version>2.9.0-4</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Other -->
+        <dependency>
+            <groupId>com.alessiodp.libby</groupId>
+            <artifactId>libby-velocity</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     
     <build>
@@ -121,6 +129,10 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.alessiodp.libby</pattern>
+                            <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.libby</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

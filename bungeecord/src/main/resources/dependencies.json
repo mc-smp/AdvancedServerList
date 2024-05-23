@@ -1,7 +1,4 @@
 {
-  "repositories": [
-    "https://repo.papermc.io/repository/maven-public"
-  ],
   "libraries": [
     {
       "groupId": "net{}kyori",

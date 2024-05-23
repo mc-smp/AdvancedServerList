@@ -139,7 +139,8 @@ public class SLPConfigMigrator{
             .map(ProfileEntry.Builder::build)
             .toList();
         
-        if(entry.isInvalid() && profileEntries.isEmpty()){
+        boolean profilesInvalid = profileEntries.isEmpty() || profileEntries.stream().anyMatch(ProfileEntry::isInvalid);
+        if(entry.isInvalid() && profilesInvalid){
             logger.warn("[Migrator - ServerListPlus] Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.getName());
             sender.sendErrorMsg(" -> <red>Received invalid Configuration.");
             
@@ -208,7 +209,7 @@ public class SLPConfigMigrator{
             
             node.set(entry);
         }catch(SerializationException ex){
-            logger.warn("Encountered a SerializationException while setting values.", ex);
+            logger.warn("[Migrator - ServerListPlus] Encountered a SerializationException while setting values.", ex);
             sender.sendErrorMsg(" -> <red>Error while updating file</red> %s<red>.", type.getFile());
             
             return 0;

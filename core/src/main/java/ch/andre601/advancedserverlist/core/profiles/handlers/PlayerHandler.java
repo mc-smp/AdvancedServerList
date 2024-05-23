@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2024 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  *
  */
 
-package ch.andre601.advancedserverlist.core.profiles.players;
+package ch.andre601.advancedserverlist.core.profiles.handlers;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
@@ -66,7 +66,7 @@ public class PlayerHandler{
     }
     
     public void load(){
-        if(!cache.toFile().exists()){
+        if(!Files.exists(cache)){
             logger.info("No playercache.json file present. Skipping...");
             return;
         }
@@ -82,7 +82,7 @@ public class PlayerHandler{
             logger.warn("Encountered IOException while reading the playercache.json file!", ex);
             return;
         }catch(JsonIOException | JsonSyntaxException ex){
-            logger.warn("Encountered Json exception while parsing playercache.json file!", ex);
+            logger.warn("Encountered JsonSyntaxException while parsing playercache.json file!", ex);
             return;
         }
         

@@ -119,6 +119,7 @@ nav:
   - Migration:
     - migration/index.md
     - Other Plugins:
+      - MiniMOTD: migration/minimotd.md
       - ServerListPlus: migration/serverlistplus.md
     - AdvancedServerList:
       - v3.8.0 to v3.9.0: migration/v3_8_0-to-v3_9_0.md

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2024 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,13 @@
  *
  */
 
-package ch.andre601.advancedserverlist.core.profiles.players;
+package ch.andre601.advancedserverlist.core.migration.minimotd.serializing;
 
-import ch.andre601.advancedserverlist.api.objects.GenericPlayer;
+import java.util.List;
 
-import java.util.UUID;
-
-public abstract class GenericPlayerImpl implements GenericPlayer{
+public record MiniMOTDConfig(boolean iconEnabled, boolean motdEnabled, List<Motd> motds, PlayerCount playerCount){
     
-    protected String name = null;
-    protected int protocol = 0;
-    protected UUID uuid = null;
+    public record Motd(String icon, String line1, String line2){}
     
-    @Override
-    public String getName(){
-        return name;
-    }
-    
-    @Override
-    public int getProtocol(){
-        return protocol;
-    }
-    
-    @Override
-    public UUID getUUID(){
-        return uuid;
-    }
+    public record PlayerCount(boolean hidePlayers, boolean xMoreEnabled, int xMore, boolean maxPlayersEnabled, int maxPlayers){}
 }

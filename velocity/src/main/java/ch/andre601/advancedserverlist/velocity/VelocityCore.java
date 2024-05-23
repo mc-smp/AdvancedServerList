@@ -28,13 +28,15 @@ package ch.andre601.advancedserverlist.velocity;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
-import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
+import com.alessiodp.libby.Library;
+import com.alessiodp.libby.VelocityLibraryManager;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
@@ -48,6 +50,7 @@ import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
@@ -58,7 +61,9 @@ import java.util.Locale;
 
 public class VelocityCore implements PluginCore<Favicon>{
     
-    private final PluginLogger logger;
+    private final Logger logger = LoggerFactory.getLogger("AdvancedServerList");
+    
+    private final PluginLogger pluginLogger;
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
@@ -66,9 +71,11 @@ public class VelocityCore implements PluginCore<Favicon>{
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
     
+    private VelocityLibraryManager<VelocityCore> libraryManager = null;
+    
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
-        this.logger = new VelocityLogger(this, LoggerFactory.getLogger("AdvancedServerList"));
+        this.pluginLogger = new VelocityLogger(this, this.logger);
         
         this.proxy = proxy;
         this.path = path;
@@ -122,6 +129,23 @@ public class VelocityCore implements PluginCore<Favicon>{
     }
     
     @Override
+    public void downloadLibrary(String groupId, String artifactId, String version){
+        if(libraryManager == null){
+            libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
+            libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+        }
+        
+        Library lib = Library.builder()
+            .groupId(groupId)
+            .artifactId(artifactId)
+            .version(version)
+            .resolveTransitiveDependencies(true)
+            .build();
+        
+        libraryManager.loadLibrary(lib);
+    }
+    
+    @Override
     public AdvancedServerList<Favicon> getCore(){
         return core;
     }
@@ -133,7 +157,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Override
     public PluginLogger getPluginLogger(){
-        return logger;
+        return pluginLogger;
     }
     
     @Override

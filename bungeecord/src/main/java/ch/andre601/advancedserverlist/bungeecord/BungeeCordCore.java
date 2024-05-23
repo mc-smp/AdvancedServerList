@@ -34,8 +34,9 @@ import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeServ
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
-import ch.andre601.advancedserverlist.core.profiles.favicon.FaviconHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import com.alessiodp.libby.BungeeLibraryManager;
+import com.alessiodp.libby.Library;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.Favicon;
@@ -52,12 +53,15 @@ import java.util.List;
 
 public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
+    private final PluginLogger logger = new BungeeLogger(this);
+    
     private boolean successfulLoad = false;
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
     private BungeeAudiences audiences = null;
-    private final PluginLogger logger = new BungeeLogger(this);
+    
+    private BungeeLibraryManager libraryManager = null;
     
     @Override
     public void onLoad(){
@@ -120,6 +124,23 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
+    public void downloadLibrary(String groupId, String artifactId, String version){
+        if(libraryManager == null){
+            libraryManager = new BungeeLibraryManager(this);
+            libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+        }
+        
+        Library lib = Library.builder()
+            .groupId(groupId)
+            .artifactId(artifactId)
+            .version(version)
+            .resolveTransitiveDependencies(true)
+            .build();
+        
+        libraryManager.loadLibrary(lib);
+    }
+    
+    @Override
     public AdvancedServerList<Favicon> getCore(){
         return core;
     }
@@ -179,7 +200,11 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     private boolean loadLibs(){
         try{
-            BungeeLibraryManager libraryManager = new BungeeLibraryManager(this);
+            if(libraryManager == null){
+                libraryManager = new BungeeLibraryManager(this);
+                libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+            }
+            
             libraryManager.configureFromJSON("dependencies.json");
             
             return true;

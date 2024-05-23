@@ -32,7 +32,7 @@ import ch.andre601.advancedserverlist.core.commands.CommandHandler;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
-import ch.andre601.advancedserverlist.core.profiles.players.PlayerHandler;
+import ch.andre601.advancedserverlist.core.profiles.handlers.PlayerHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
