@@ -56,7 +56,7 @@ public class MiniMOTDConfigMigrator{
         
         Path mainConf = core.getPlugin().getFolderPath().getParent().resolve(isVelocity ? "minimotd" : "MiniMOTD").resolve("main.conf");
         if(!Files.exists(mainConf)){
-            logger.warn("[Migrator - MiniMOTD] Cannot find a main.conf file in /plugins/%s/ folder.", isVelocity ? "minimotd" : "MiniMOTD");
+            logger.warn("[Migrator - MiniMOTD] Cannot find a main.conf file in /plugins/%s/ folder.", isVelocity ? "minimotd-velocity" : "MiniMOTD");
             sender.sendErrorMsg(" -> <red>No main.conf file found.");
             return false;
         }
