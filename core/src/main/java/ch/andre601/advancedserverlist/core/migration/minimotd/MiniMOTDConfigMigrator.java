@@ -52,11 +52,11 @@ public class MiniMOTDConfigMigrator{
         core.getPlugin().downloadLibrary("org.spongepowered", "configurate-hocon", "4.1.2");
         
         PluginLogger logger = core.getPlugin().getPluginLogger();
-        boolean isVelocity = core.getPlugin().getLoader().equals("velocity");
+        String folder = core.getPlugin().getLoader().equals("velocity") ? "minimotd-velocity" : "MiniMOTD";
         
-        Path mainConf = core.getPlugin().getFolderPath().getParent().resolve(isVelocity ? "minimotd-velocity" : "MiniMOTD").resolve("main.conf");
+        Path mainConf = core.getPlugin().getFolderPath().getParent().resolve(folder).resolve("main.conf");
         if(!Files.exists(mainConf)){
-            logger.warn("[Migrator - MiniMOTD] Cannot find a main.conf file in /plugins/%s/ folder.", isVelocity ? "minimotd-velocity" : "MiniMOTD");
+            logger.warn("[Migrator - MiniMOTD] Cannot find a main.conf file in /plugins/%s/ folder.", folder);
             sender.sendErrorMsg(" -> <red>No main.conf file found.");
             return false;
         }
