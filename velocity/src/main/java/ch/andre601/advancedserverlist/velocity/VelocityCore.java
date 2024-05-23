@@ -50,6 +50,7 @@ import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
@@ -60,7 +61,9 @@ import java.util.Locale;
 
 public class VelocityCore implements PluginCore<Favicon>{
     
-    private final PluginLogger logger;
+    private final Logger logger = LoggerFactory.getLogger("AdvancedServerList");
+    
+    private final PluginLogger pluginLogger;
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
@@ -72,7 +75,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
-        this.logger = new VelocityLogger(this, LoggerFactory.getLogger("AdvancedServerList"));
+        this.pluginLogger = new VelocityLogger(this, this.logger);
         
         this.proxy = proxy;
         this.path = path;
@@ -128,8 +131,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public void downloadLibrary(String groupId, String artifactId, String version){
         if(libraryManager == null){
-            libraryManager = new VelocityLibraryManager<>(this, LoggerFactory.getLogger("AdvancedServerList"),
-                getFolderPath(), getProxy().getPluginManager());
+            libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
             libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
         }
         
@@ -155,7 +157,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Override
     public PluginLogger getPluginLogger(){
-        return logger;
+        return pluginLogger;
     }
     
     @Override

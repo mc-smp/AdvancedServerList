@@ -11,11 +11,17 @@ These pages may include important information about the migration process and wh
 
 <div class="grid cards" markdown>
 
+-   [**MiniMOTD**](minimotd.md)
+    
+    ----
+    
+    Migrate from the Plugin [MiniMOTD](https://github.com/jpenilla/MiniMOTD){ target="_blank" rel="nofollow" }
+
 -   [**ServerListPlus**](serverlistplus.md)
     
     ----
     
-    Migrate from the Plugin [ServerListPlus](https://github.com/Minecrell/ServerListPlus).
+    Migrate from the Plugin [ServerListPlus](https://github.com/Minecrell/ServerListPlus){ target="_blank" rel="nofollow" }.
 
 </div>
 
