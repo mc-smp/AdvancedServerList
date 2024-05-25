@@ -19,8 +19,9 @@ The following subcommands are available (Subcommands are case-insensitive):
 - [`reload`](#reload)
 - [`clearCache`](#clearcache)
 - [`migrate <plugin>`](#migrate)
+- [`profiles <add <profile> | copy <profile> <name> | list>`](#profiles)
 
-### help
+### `help`
 
 **Permission:** `advancedserverlist.command.help`
 
@@ -28,7 +29,7 @@ Shows a list of all available [subcommands](#subcommands) for AdvancedServerList
 
 ----
 
-### reload
+### `reload`
 
 **Permission:** `advancedserverlist.command.reload`
 
@@ -36,7 +37,7 @@ Reloads the plugin's `config.yml` and all available YAML files in the `profiles`
 
 ----
 
-### clearCache
+### `clearcache`
 
 **Permission:** `advancedserverlist.command.clearcache`
 
@@ -44,7 +45,7 @@ Clears the currently cached favicons and players.
 
 ----
 
-### migrate &lt;plugin&gt; { #migrate }
+### `migrate <plugin>` { #migrate }
 
 **Permission:** `advancedserverlist.command.migrate`
 
@@ -54,3 +55,17 @@ Clears the currently cached favicons and players.
 
 Migrates files from one plugin over to AdvancedServerList.  
 Check the [Migration Page](../migration/index.md) for a list of supported plugins.
+
+----
+
+### `profiles <add <profile> | copy <profile> <name> | list>` { #profiles }
+
+**Permission:** `advancedserverlist.command.profiles`
+
+**Arguments:**
+
+- `add <profile>` - Creates a new profile with name `<profile>` using the default profile values.
+- `copy <profile> <name>` - Creates a copy of `<profile>` and saves it as `<name>`.
+- `list` - Lists all loaded profiles. The entries have hover text for extra info.
+
+Creates, copies or shows profiles in AdvancedServerList.
