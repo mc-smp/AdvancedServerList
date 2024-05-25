@@ -25,14 +25,26 @@
 
 package ch.andre601.advancedserverlist.core.commands;
 
+import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.PluginCommand;
 import ch.andre601.advancedserverlist.core.migration.minimotd.MiniMOTDConfigMigrator;
 import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
+import ch.andre601.advancedserverlist.core.profiles.ServerListProfile;
+import ch.andre601.advancedserverlist.core.profiles.profile.ProfileSerializer;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.NodeStyle;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class CommandHandler{
     
@@ -40,11 +52,16 @@ public class CommandHandler{
     
     public CommandHandler(AdvancedServerList<?> core){
         subCommands = List.of(
-            new Help(),
+            new Help(core),
             new Reload(core),
             new ClearCache(core),
-            new Migrate(core)
+            new Migrate(core),
+            new Profiles(core)
         );
+    }
+    
+    public List<PluginCommand> getSubCommands(){
+        return subCommands;
     }
     
     public void handle(CmdSender sender, String[] args){
@@ -54,11 +71,11 @@ public class CommandHandler{
         }
         
         for(PluginCommand subCommand : subCommands){
-            if(subCommand.getArgument().equalsIgnoreCase(args[0])){
-                if(!sender.hasPermission(subCommand.getPermission())){
+            if(subCommand.name().equalsIgnoreCase(args[0])){
+                if(!sender.hasPermission(subCommand.permission())){
                     sender.sendErrorMsg(
                         "<red>You do not have the permission <grey>%s</grey> to execute this command.",
-                        subCommand.getPermission()
+                        subCommand.permission()
                     );
                     return;
                 }
@@ -73,21 +90,54 @@ public class CommandHandler{
     
     private static class Help extends PluginCommand{
         
-        public Help(){
+        private final AdvancedServerList<?> core;
+        
+        public Help(AdvancedServerList<?> core){
             super("help");
+            
+            this.core = core;
         }
     
         @Override
         public void handle(CmdSender sender, String[] args){
-            sender.sendPrefixedMsg("- Commands");
-            sender.sendMsg();
-            sender.sendMsg("<aqua>/asl <white>help <grey>- Shows this help");
-            sender.sendMsg();
-            sender.sendMsg("<aqua>/asl <white>reload <grey>- Reloads the config.yml and profiles");
-            sender.sendMsg();
-            sender.sendMsg("<aqua>/asl <white>clearCache <grey>- Clears the Player and Favicon cache");
-            sender.sendMsg();
-            sender.sendMsg("<aqua>/asl <white>migrate <grey><</grey>plugin<grey>> - Migrates configuration of another plugin");
+            sender.sendPrefixedMsg("- Commands. Hover for details.");
+            for(PluginCommand command : core.getCommandHandler().getSubCommands()){
+                sender.sendPrefixedMsg("");
+                sender.sendPrefixedMsg(
+                    "<aqua><hover:show_text:\"%s\">" +
+                    "<click:suggest_command:/asl %s>" +
+                    "/asl <white>%s</white>" +
+                    "</click>" +
+                    "</hover></aqua>",
+                    getCommandHover(command),
+                    command.name(),
+                    command.name()
+                );
+            }
+        }
+        
+        @Override
+        public String usage(){
+            return "<aqua>/asl <white>help</white></aqua>";
+        }
+        
+        @Override
+        public String description(){
+            return "Shows all available commands.";
+        }
+        
+        private String getCommandHover(PluginCommand command){
+            return String.format(
+                """
+                <grey>Usage: %s
+                Permission: <white>%s</white>
+                
+                <white>%s</white>
+                """,
+                command.usage(),
+                command.permission(),
+                command.description()
+            );
         }
     }
     
@@ -119,6 +169,16 @@ public class CommandHandler{
             
             sender.sendPrefixedMsg("<green>Reload complete!");
         }
+        
+        @Override
+        public String usage(){
+            return "<aqua>/asl <white>reload</white></aqua>";
+        }
+        
+        @Override
+        public String description(){
+            return "Reloads the main config and all profiles.";
+        }
     }
     
     private static class ClearCache extends PluginCommand{
@@ -126,7 +186,7 @@ public class CommandHandler{
         private final AdvancedServerList<?> core;
         
         public ClearCache(AdvancedServerList<?> core){
-            super("clearCache");
+            super("clearcache");
             
             this.core = core;
         }
@@ -142,6 +202,16 @@ public class CommandHandler{
             sender.sendPrefixedMsg("<green>Successfully cleared Player Cache!");
             
             sender.sendPrefixedMsg("<green>Cache clearing complete!");
+        }
+        
+        @Override
+        public String usage(){
+            return "<aqua>/asl <white>clearcache</white></aqua>";
+        }
+        
+        @Override
+        public String description(){
+            return "Clears the Favicon and Player Cache.";
         }
     }
     
@@ -194,6 +264,192 @@ public class CommandHandler{
                 sender.sendErrorMsg(" - ServerListPlus");
                 sender.sendErrorMsg(" - MiniMOTD");
             }
+        }
+        
+        @Override
+        public String usage(){
+            return "<aqua>/asl <white>migrate <grey>\\<</grey>Plugin<grey>></grey></white></aqua>";
+        }
+        
+        @Override
+        public String description(){
+            return "Migrates the configuration from supported Plugins to AdvancedServerList.";
+        }
+    }
+    
+    private static class Profiles extends PluginCommand{
+        
+        private final AdvancedServerList<?> core;
+        
+        public Profiles(AdvancedServerList<?> core){
+            super("profiles");
+            
+            this.core = core;
+        }
+        
+        @Override
+        public void handle(CmdSender sender, String[] args){
+            if(args.length == 0){
+                sender.sendErrorMsg("<red>Invalid command usage.");
+                sender.sendErrorMsg("<red>Usage:</red> %s", usage());
+                return;
+            }
+            
+            switch(args[0].toLowerCase(Locale.ROOT)){
+                case "list" -> {
+                    List<ServerListProfile> profiles = core.getFileHandler().getProfiles().stream()
+                        .sorted(Comparator.comparing(ServerListProfile::priority).reversed())
+                        .toList();
+                    
+                    sender.sendPrefixedMsg("Available Profiles:");
+                    for(ServerListProfile profile : profiles){
+                        sender.sendPrefixedMsg("- <white><hover:show_text:\"%s\">%s</hover></white>", getHover(profile), profile.file());
+                    }
+                }
+                case "add" -> {
+                    if(args.length == 1){
+                        sender.sendErrorMsg("<red>Insufficient arguments.");
+                        sender.sendErrorMsg("<red>Usage:</red> /asl profiles add <name>");
+                        return;
+                    }
+                    
+                    String name = getProfileName(args[1]);
+                    
+                    if(core.getFileHandler().getProfiles().stream().anyMatch(profile -> profile.file().equalsIgnoreCase(name))){
+                        sender.sendErrorMsg("<red>A profile with file name</red> %s <red>already exists!");
+                        return;
+                    }
+                    
+                    if(core.getFileHandler().createFile(name)){
+                        sender.sendPrefixedMsg("<green>Successfully created</green> %s<green>!", name);
+                        sender.sendPrefixedMsg("<green>Load the file using</green> /asl reload");
+                    }else{
+                        sender.sendErrorMsg("<red>Error while trying to create</red> %s<red>!", name);
+                        sender.sendErrorMsg("<red>Check console for further details.");
+                    }
+                }
+                case "copy" -> {
+                    if(args.length < 3){
+                        sender.sendErrorMsg("<red>Insufficient arguments.");
+                        sender.sendErrorMsg("<red>Usage:</red> /asl profiles copy <profile> <name>");
+                        return;
+                    }
+                    
+                    String name = getProfileName(args[1]);
+                    String copy = getProfileName(args[2]);
+                    
+                    ServerListProfile targetProfile = core.getFileHandler().getProfiles().stream()
+                        .filter(file -> file.file().equalsIgnoreCase(name))
+                        .findFirst()
+                        .orElse(null);
+                    boolean copyExists = core.getFileHandler().getProfiles().stream()
+                        .anyMatch(profile -> profile.file().equals(copy));
+                    
+                    if(targetProfile == null){
+                        sender.sendErrorMsg("<red>There is no file with name</red> %s<red>!", name);
+                        return;
+                    }
+                    
+                    if(copyExists){
+                        sender.sendErrorMsg("<red>A profile with file name</red> %s <red>already exists!", copy);
+                        return;
+                    }
+                    
+                    Path profilePath = core.getPlugin().getFolderPath().resolve("profiles").resolve(copy);
+                    try{
+                        Files.createFile(profilePath);
+                    }catch(IOException ex){
+                        sender.sendErrorMsg("<red>There was an error while creating the file</red> %s<red>!");
+                        sender.sendErrorMsg("<red>Check console for further details.");
+                        
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while creating file %s", ex, copy);
+                        return;
+                    }
+                    
+                    YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+                        .path(profilePath)
+                        .indent(2)
+                        .nodeStyle(NodeStyle.BLOCK)
+                        .defaultOptions(options -> options.serializers(builder -> builder.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
+                        .build();
+                    
+                    ConfigurationNode node;
+                    try{
+                        node = loader.load();
+                    }catch(IOException ex){
+                        sender.sendErrorMsg("<red>There was an error while loading the file</red> %s<red>!");
+                        sender.sendErrorMsg("<red>Check console for further details.");
+                        
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file %s", ex, copy);
+                        return;
+                    }
+                    
+                    if(node == null){
+                        sender.sendErrorMsg("Cannot copy</red> %s <red>to</red> %s<red>. ConfigurationNode was null.", name, copy);
+                        return;
+                    }
+                    
+                    try{
+                        node.node("priority").set(targetProfile.priority());
+                        node.node("condition").set(targetProfile.condition());
+                        
+                        node.node("profiles").setList(ProfileEntry.class, targetProfile.profiles());
+                        
+                        node.set(ProfileEntry.class, targetProfile.defaultProfile());
+                    }catch(SerializationException ex){
+                        sender.sendErrorMsg("<red>There was an Error while copying values from</red> %s <red>to</red> %s<red>.", name, copy);
+                        sender.sendErrorMsg("<red>Check console for details.");
+                        return;
+                    }
+                    
+                    try{
+                        loader.save(node);
+                        sender.sendPrefixedMsg("<green>Successfully created copy of</green> %s <green>as</green> %s<green>!", name, copy);
+                        sender.sendPrefixedMsg("<green>Load the file using</green> /asl reload");
+                    }catch(IOException ex){
+                        sender.sendErrorMsg("<red>There was an Error while trying to save</red> %s<red>!", copy);
+                        sender.sendErrorMsg("<red>Check console for details.");
+                    }
+                }
+                default -> {
+                    sender.sendErrorMsg("<red>Unknown argument</red> %s<red>!", args[0]);
+                    sender.sendErrorMsg("<red>Usage:</red> %s", usage());
+                }
+            }
+        }
+        
+        @Override
+        public String usage(){
+            return "<aqua>/asl <white>profiles</white> <grey><" +
+                "<white>add</white> <<white>name</white>> | " +
+                "<white>copy</white> <<white>profile</white>> <<white>name</white>> | " +
+                "<white>list</white>" +
+                "></grey></aqua>";
+        }
+        
+        @Override
+        public String description(){
+            return "Creates a new profile, copies one from an existing file, or lists all available profiles.";
+        }
+        
+        private String getHover(ServerListProfile profile){
+            return String.format(
+                """
+                <grey>Priority: <white>%s</white>
+                Condition: <white>%s</white>
+                
+                Valid profile: %s
+                """,
+                profile.priority(),
+                profile.condition() == null || profile.condition().isEmpty() ? "<i>None</i>" : profile.condition(),
+                profile.isInvalidProfile() ? "<red>No</red>" : "<green>Yes</green>"
+            );
+        }
+        
+        private String getProfileName(String name){
+            String fileName = name.toLowerCase(Locale.ROOT);
+            
+            return fileName.endsWith(".yml") ? fileName : fileName + ".yml";
         }
     }
 }

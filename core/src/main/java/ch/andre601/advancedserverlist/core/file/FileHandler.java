@@ -99,23 +99,36 @@ public class FileHandler{
     
     public boolean loadProfiles(){
         logger.info("Loading profiles...");
-        if(!profilesFolder.toFile().exists() && profilesFolder.toFile().mkdirs()){
+        
+        if(createFile("default.yml")){
+            return reloadProfiles();
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean createFile(String name){
+        if(Files.notExists(profilesFolder) && profilesFolder.toFile().mkdirs()){
             logger.info("Successfully created profiles folder.");
-            
-            try(InputStream stream = plugin.getClass().getResourceAsStream("/profiles/default.yml")){
-                if(stream == null){
-                    logger.warn("Cannot retrieve default.yml from Plugin.");
-                    return false;
-                }
-                
-                Files.copy(stream, profilesFolder.resolve("default.yml"));
-            }catch(IOException ex){
-                logger.warn("Cannot create default.yml for plugin.", ex);
-                return false;
-            }
         }
         
-        return reloadProfiles();
+        File file = new File(profilesFolder.toFile(), name);
+        if(file.exists()){
+            return true;
+        }
+        
+        try(InputStream stream = plugin.getClass().getResourceAsStream("/profiles/default.yml")){
+            if(stream == null){
+                logger.warn("Cannot retrieve content of internal default.yml file.");
+                return false;
+            }
+            
+            Files.copy(stream, profilesFolder.resolve(name));
+            return true;
+        }catch(IOException ex){
+            logger.warn("Encountered IOException while trying to create file %s", ex, name);
+            return false;
+        }
     }
     
     public boolean migrateConfig(){

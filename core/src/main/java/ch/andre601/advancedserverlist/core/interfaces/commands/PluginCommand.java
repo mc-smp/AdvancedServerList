@@ -35,13 +35,17 @@ public abstract class PluginCommand{
         this.argument = argument;
     }
     
-    public String getArgument(){
+    public String name(){
         return argument;
     }
     
-    public String getPermission(){
-        return "advancedserverlist.command." + getArgument().toLowerCase(Locale.ROOT);
+    public String permission(){
+        return "advancedserverlist.command." + name().toLowerCase(Locale.ROOT);
     }
     
     public abstract void handle(CmdSender sender, String[] args);
+    
+    public abstract String usage();
+    
+    public abstract String description();
 }
