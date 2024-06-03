@@ -86,8 +86,8 @@ Below can you find a collection of videos made for my plugin. If you made a vide
 <details><summary>Click to show/hide Videos</summary>
 <p>
 
-Spanish Video by Ajneb97
-<iframe width="560" height="auto" src="https://www.youtube.com/embed/rIbljm_4HVI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+Spanish Video by Ajneb97  
+[![video thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI)
 
 </p>
 </details>
