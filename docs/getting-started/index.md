@@ -502,16 +502,14 @@ motd:
 
 ### Additional profiles
 
-To add additional profiles, create a new YAML file inside the `profiles` folder. The name can be whatever you like, but it is recommended to keep it simple and only use alphanumeric characters (`a-z` and `0-9`), underlines and hyphens.
+Additional profiles can be created to display different content under specific situations. To create a new file, either manually create a YAML file in the `profiles` folder, or use [`/asl profiles add <name>`](../commands/index.md#profiles) to have one created for you. In either case is it recommended to only use alphanummeric (`a-z` abd `0-9`) characters, dashes and underscores for the file name. You should also choose a name that fits the purpose of the file (i.e. for a profile that displays stuff when someone is banned, name it `banned.yml`).
 
-Inside the file, add a priority and at least one setting, similar to the above shown example.  
-This would already be enough to have a valid profile, but depending on the priority and file name may the file not be used, or used over other profiles.
+In case you manually created a YAML file, make sure it contains the [`priority`](../profiles/index.md#priority) setting and one of the other settings, to have a valid profile.  
+You should also add a [`condition`](../profiles/index.md#condition) to ensure that the profile is only loaded when needed. The [Expressions page](../profiles/expressions.md) covers what counts as valid expressions and conditions.  
+Do note that the plugin goes through the profiles in order of priority, starting with the highest number first, picking the first one that returns a `condition` returning true.
 
-If you want to only show this file under specific situations can you use the [`condition`](../profiles/index.md#condition) option to apply conditions that need to be met to show the profile.  
-The condition option would have a single String containing one or multiple [Expressions](../profiles/expressions.md). Only if the condition would return true, would the profile be displayed, granted that it has a higher priority than any other valid file with a true condition output.
-
-/// info | Note
-Files without a condition or an empty condition will be treated as always having a true condition.
+/// info | Note about Condition
+The Condition option, if not set or empty, will always return true.
 ///
 
 Here is another example profile using conditions to show it when the player was banned on the server:
