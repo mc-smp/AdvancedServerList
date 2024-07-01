@@ -1,5 +1,5 @@
 document$.subscribe(async () => {
-    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/')}`
+    const url = 'https://api.allorigins.win/get?url='
     const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')}`
 
     const repo_stats = document.querySelector('[data-md-component="source"] .md-source__repository');
@@ -51,7 +51,7 @@ document$.subscribe(async () => {
             .then(_ => _.json());
         
         const data = {
-            "version": tag.name
+            "version": tag.tag_name
         };
         
         __md_set("__api_tag", data, sessionStorage);
@@ -60,14 +60,14 @@ document$.subscribe(async () => {
     
     async function fetchInfo() {
         const [release, repo] = await Promise.all([
-            fetch(`${url}${encodeURIComponent('releases/latest')}`).then(_ => _.json()),
-            fetch(`${url}`).then(_ => _.json()),
+            fetch(`${url}${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/releases/latest')}`).then(_ => _.json()),
+            fetch(`${url}${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList')}`).then(_ => _.json()),
         ]);
         
         const data = {
-            "version": release.name,
-            "stars": repo.stars,
-            "forks": repo.forks
+            "version": release.tag_name,
+            "stars": repo.stars_count,
+            "forks": repo.forks_count
         };
         
         __md_set("__git_repo", data, sessionStorage);
