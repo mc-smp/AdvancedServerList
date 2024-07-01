@@ -1,6 +1,6 @@
 document$.subscribe(async () => {
-    const url = 'https://api.allorigins.win/get?url='
-    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')}`
+    const url = 'https://api.allorigins.win/raw?url='
+    const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')}`
 
     const repo_stats = document.querySelector('[data-md-component="source"] .md-source__repository');
     
