@@ -1,5 +1,7 @@
 document$.subscribe(async () => {
-    const url = 'https://codeberg-stats-proxy.vercel.app'
+    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/')}`
+    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')}`
+
     const repo_stats = document.querySelector('[data-md-component="source"] .md-source__repository');
     
     function loadCodebergInfo(data) {
@@ -45,7 +47,8 @@ document$.subscribe(async () => {
     }
     
     async function fetchApiInfo() {
-        const tag = await fetch(`${url}/api/latest-release`).then(_ => _.json());
+        const tag = await fetch(`${apiUrl}`)
+            .then(_ => _.json());
         
         const data = {
             "version": tag.name
@@ -57,8 +60,8 @@ document$.subscribe(async () => {
     
     async function fetchInfo() {
         const [release, repo] = await Promise.all([
-            fetch(`${url}/repo/latest-release`).then(_ => _.json()),
-            fetch(`${url}/repo/stats`).then(_ => _.json()),
+            fetch(`${url}${encodeURIComponent('releases/latest')}`).then(_ => _.json()),
+            fetch(`${url}`).then(_ => _.json()),
         ]);
         
         const data = {
