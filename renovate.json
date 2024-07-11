@@ -32,6 +32,33 @@
       ]
     },
     {
+      "description": "Use Paper Repo for Paper API",
+      "matchPackageNames": [
+        "io.papermc.paper:paper-api"
+      ],
+      "registryUrls": [
+        "https://papermc.io/repo/repository/maven-public"
+      ]
+    },
+    {
+      "description": "Use PlaceholderAPI Repo for PlaceholderAPI",
+      "matchPackageNames": [
+        "me.clip:placeholderapi"
+      ],
+      "registryUrls": [
+        "https://repo.extendedclip.com/content/repositories/placeholderapi"
+      ]
+    },
+    {
+      "description": "Use ViaVersion Repo for ViaVersion",
+      "matchPackageNames": [
+        "com.viaversion:viaversion-api"
+      ],
+      "registryUrls": [
+        "https://repo.viaversion.com"
+      ]
+    },
+    {
       "description": "Apply label for Bukkit platform",
       "matchFileNames": ["bukkit/pom.xml"],
       "addLabels": ["PR Target/Bukkit"]
