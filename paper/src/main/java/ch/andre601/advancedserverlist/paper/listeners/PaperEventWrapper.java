@@ -48,6 +48,8 @@ import org.bukkit.util.CachedServerIcon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, PaperPlayerImpl>{
     
@@ -90,24 +92,13 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     
     @Override
     public void setPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
-        event.getPlayerSample().clear();
-        List<PlayerProfile> players = new ArrayList<>(lines.size());
-        
-        for(String line : lines){
-            String parsed = ComponentParser.text(line)
-                .modifyText(text -> StringReplacer.replace(text, player, server))
-                .modifyText(text -> {
-                    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
-                        return PlaceholderAPI.setPlaceholders(player.getPlayer(), text);
-                    
-                    return text;
-                })
-                .toString();
-            
-            players.add(FakePlayerProfile.create(parsed));
+        try{
+            event.getListedPlayers();
+            setListedPlayers(lines, player, server);
+        }catch(NoSuchMethodError ex){
+            // Version before latest 1.20.6 builds(?)
+            setPlayerSample(lines, player, server);
         }
-        
-        event.getPlayerSample().addAll(players);
     }
     
     @Override
@@ -186,5 +177,40 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     @Override
     public GenericServer createGenericServer(int playersOnline, int playersMax, String host){
         return new PaperServerImpl(plugin.getWorldCache().worlds(), playersOnline, playersMax, host);
+    }
+    
+    private void setListedPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
+        event.getListedPlayers().clear();
+        List<PaperServerListPingEvent.ListedPlayerInfo> playerList = getPlayerList(lines, player, server,
+            text -> new PaperServerListPingEvent.ListedPlayerInfo(text, UUID.randomUUID()));
+        
+        event.getListedPlayers().addAll(playerList);
+    }
+    
+    @SuppressWarnings({"Deprecation", "removal"})
+    private void setPlayerSample(List<String> lines, PaperPlayerImpl player, GenericServer server){
+        event.getPlayerSample().clear();
+        List<PlayerProfile> playerProfiles = getPlayerList(lines, player, server, FakePlayerProfile::create);
+        
+        event.getPlayerSample().addAll(playerProfiles);
+    }
+    
+    private <T> List<T> getPlayerList(List<String> lines, PaperPlayerImpl player, GenericServer server, Function<String, T> function){
+        List<T> playerList = new ArrayList<>(lines.size());
+        for(String line : lines){
+            String parsed = ComponentParser.text(line)
+                .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> {
+                    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
+                        return PlaceholderAPI.setPlaceholders(player.getPlayer(), text);
+                    
+                    return text;
+                })
+                .toString();
+            
+            playerList.add(function.apply(parsed));
+        }
+        
+        return playerList;
     }
 }
