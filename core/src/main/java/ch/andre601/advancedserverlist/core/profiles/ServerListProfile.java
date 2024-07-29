@@ -28,8 +28,8 @@ package ch.andre601.advancedserverlist.core.profiles;
 import ch.andre601.advancedserverlist.api.objects.GenericPlayer;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
+import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
-import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.expressionparser.ParseWarnCollector;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -41,13 +41,14 @@ import java.util.Random;
 public record ServerListProfile(int priority, String condition, ProfileEntry defaultProfile, List<ProfileEntry> profiles, String file){
     private static final Random random = new Random();
     
-    public boolean evalConditions(ProfileConditionParser parser, PluginLogger logger, GenericPlayer player, GenericServer server){
+    public boolean evalConditions(AdvancedServerList<?> core, GenericPlayer player, GenericServer server){
         if(condition == null || condition.isEmpty())
             return true;
         
         ParseWarnCollector collector = new ParseWarnCollector(condition);
+        PluginLogger logger = core.getPlugin().getPluginLogger();
         
-        boolean result = parser.evaluate(condition, player, server, collector);
+        boolean result = core.getParser().evaluate(condition, player, server, collector);
         
         if(collector.hasWarnings()){
             logger.warn("Encountered %d Error(s) while parsing condition for file '%s':", collector.getWarnings().size(), file);
@@ -117,13 +118,6 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             this.fileName = fileName;
             this.node = node;
             this.priority = node.node("priority").getInt();
-            this.logger = logger;
-        }
-        
-        public Builder(String filename, int priority, PluginLogger logger){
-            this.fileName = filename;
-            this.node = null;
-            this.priority = priority;
             this.logger = logger;
         }
         

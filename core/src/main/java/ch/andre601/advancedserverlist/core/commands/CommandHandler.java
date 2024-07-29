@@ -297,14 +297,12 @@ public class CommandHandler{
             
             switch(args[0].toLowerCase(Locale.ROOT)){
                 case "list" -> {
-                    List<ServerListProfile> profiles = core.getFileHandler().getProfiles().stream()
-                        .sorted(Comparator.comparing(ServerListProfile::priority).reversed())
-                        .toList();
-                    
                     sender.sendPrefixedMsg("Available Profiles:");
-                    for(ServerListProfile profile : profiles){
-                        sender.sendPrefixedMsg("- <white><hover:show_text:\"%s\">%s</hover></white>", getHover(profile), profile.file());
-                    }
+                    core.getFileHandler().getProfiles().stream()
+                        .sorted(Comparator.comparingInt(ServerListProfile::priority).reversed())
+                        .forEach(
+                            profile -> sender.sendPrefixedMsg("- <white><hover:show_text:\"%s\">%s</hover></white>", getHover(profile), profile.file())
+                        );
                 }
                 case "add" -> {
                     if(args.length == 1){
@@ -316,7 +314,7 @@ public class CommandHandler{
                     String name = getProfileName(args[1]);
                     
                     if(core.getFileHandler().getProfiles().stream().anyMatch(profile -> profile.file().equalsIgnoreCase(name))){
-                        sender.sendErrorMsg("<red>A profile with file name</red> %s <red>already exists!");
+                        sender.sendErrorMsg("<red>A profile with file name</red> %s <red>already exists!", name);
                         return;
                     }
                     
@@ -359,7 +357,7 @@ public class CommandHandler{
                     try{
                         Files.createFile(profilePath);
                     }catch(IOException ex){
-                        sender.sendErrorMsg("<red>There was an error while creating the file</red> %s<red>!");
+                        sender.sendErrorMsg("<red>There was an error while creating the file</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for further details.");
                         
                         core.getPlugin().getPluginLogger().warn("Encountered IOException while creating file %s", ex, copy);
@@ -377,7 +375,7 @@ public class CommandHandler{
                     try{
                         node = loader.load();
                     }catch(IOException ex){
-                        sender.sendErrorMsg("<red>There was an error while loading the file</red> %s<red>!");
+                        sender.sendErrorMsg("<red>There was an error while loading the file</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for further details.");
                         
                         core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file %s", ex, copy);
@@ -399,6 +397,8 @@ public class CommandHandler{
                     }catch(SerializationException ex){
                         sender.sendErrorMsg("<red>There was an Error while copying values from</red> %s <red>to</red> %s<red>.", name, copy);
                         sender.sendErrorMsg("<red>Check console for details.");
+                        
+                        core.getPlugin().getPluginLogger().warn("Encountered SerializationException while set values for %s!", ex, copy);
                         return;
                     }
                     
@@ -409,6 +409,8 @@ public class CommandHandler{
                     }catch(IOException ex){
                         sender.sendErrorMsg("<red>There was an Error while trying to save</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for details.");
+                        
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while saving ConfigurationNode for %s!", ex, copy);
                     }
                 }
                 default -> {
@@ -420,9 +422,9 @@ public class CommandHandler{
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>profiles</white> <grey><" +
-                "<white>add</white> <<white>name</white>> | " +
-                "<white>copy</white> <<white>profile</white>> <<white>name</white>> | " +
+            return "<aqua>/asl <white>profiles</white> <grey>\\<" +
+                "<white>add</white> \\<<white>name</white>> | " +
+                "<white>copy</white> \\<<white>profile</white>> \\<<white>name</white>> | " +
                 "<white>list</white>" +
                 "></grey></aqua>";
         }
