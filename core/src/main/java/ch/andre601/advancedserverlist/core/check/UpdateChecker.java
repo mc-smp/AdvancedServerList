@@ -32,7 +32,6 @@ import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.Strictness;
 import com.unascribed.flexver.FlexVerComparator;
 import io.leangen.geantyref.TypeToken;
 
@@ -60,7 +59,6 @@ public class UpdateChecker{
     private final Gson gson = new GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .setPrettyPrinting()
-        .setStrictness(Strictness.LENIENT)
         .create();
     
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new UpdateCheckThread());
