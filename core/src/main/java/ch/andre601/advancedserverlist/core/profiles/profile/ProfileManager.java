@@ -36,6 +36,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class ProfileManager{
     
@@ -44,22 +45,21 @@ public class ProfileManager{
      * If the random profile's value is not null will it be used instead of the default one.
      */
     public static ProfileEntry merge(ServerListProfile profile){
-        ProfileEntry entry = profile.getRandomProfile();
         ProfileEntry defEntry = profile.defaultProfile();
+        ProfileEntry entry = profile.getRandomProfile();
         
-        List<String> motd = resolveMOTD(entry, defEntry);
-        List<String> players = resolvePlayers(entry, defEntry);
-        String playerCountText = resolvePlayerCountText(entry, defEntry);
-        String favicon = resolveFavicon(entry, defEntry);
-        boolean isHidePlayersEnabled = resolveHidePlayersEnabled(entry, defEntry);
-        boolean isExtraPlayersEnabled = resolveExtraPlayersEnabled(entry, defEntry);
-        boolean isMaxPlayersEnabled = resolveMaxPlayersEnabled(entry, defEntry);
-        Integer extraPlayersCount = resolveExtraPlayersCount(entry, defEntry);
-        Integer maxPlayersCount = resolveMaxPlayersCount(entry, defEntry);
+        List<String> motd = resolve(defEntry, entry, ProfileEntry::motd);
+        List<String> players = resolve(defEntry, entry, ProfileEntry::players);
+        String playerCountText = resolve(defEntry, entry, ProfileEntry::playerCountText);
+        String favicon = resolve(defEntry, entry, ProfileEntry::favicon);
+        NullBool hidePlayersEnabled = resolve(defEntry, entry, ProfileEntry::hidePlayersEnabled);
+        NullBool extraPlayersEnabled = resolve(defEntry, entry, ProfileEntry::extraPlayersEnabled);
+        NullBool maxPlayersEnabled = resolve(defEntry, entry, ProfileEntry::maxPlayersEnabled);
+        Integer extraPlayersCount = resolve(defEntry, entry, ProfileEntry::extraPlayersCount);
+        Integer maxPlayersCount = resolve(defEntry, entry, ProfileEntry::maxPlayersCount);
         
-        return new ProfileEntry(motd, players, playerCountText, favicon, 
-            NullBool.resolve(isHidePlayersEnabled), NullBool.resolve(isExtraPlayersEnabled), NullBool.resolve(isMaxPlayersEnabled),
-            extraPlayersCount, maxPlayersCount);
+        return new ProfileEntry(motd, players, playerCountText, favicon, hidePlayersEnabled, extraPlayersEnabled,
+            maxPlayersEnabled, extraPlayersCount, maxPlayersCount);
     }
     
     public static ServerListProfile resolveProfile(AdvancedServerList<?> core, GenericPlayer player, GenericServer server){
@@ -67,7 +67,7 @@ public class ProfileManager{
             if(profile.isInvalidProfile())
                 continue;
             
-            if(profile.evalConditions(core.getParser(), core.getPlugin().getPluginLogger(), player, server))
+            if(profile.evalConditions(core, player, server))
                 return profile;
         }
         
@@ -115,67 +115,11 @@ public class ProfileManager{
         return false;
     }
     
-    private static List<String> resolveMOTD(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.motd()))
-            return defaultProfile.motd();
+    private static <T> T resolve(ProfileEntry defProfile, ProfileEntry profile, Function<ProfileEntry, T> function){
+        if(profile == null || !checkOption(function.apply(profile)))
+            return function.apply(defProfile);
         
-        return profile.motd();
-    }
-    
-    private static List<String> resolvePlayers(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.players()))
-            return defaultProfile.players();
-        
-        return profile.players();
-    }
-    
-    private static String resolvePlayerCountText(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.playerCountText()))
-            return defaultProfile.playerCountText();
-        
-        return profile.playerCountText();
-    }
-    
-    private static String resolveFavicon(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.favicon()))
-            return defaultProfile.favicon();
-        
-        return profile.favicon();
-    }
-    
-    private static boolean resolveHidePlayersEnabled(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.hidePlayersEnabled()))
-            return defaultProfile.hidePlayersEnabled().getOrDefault(false);
-        
-        return profile.hidePlayersEnabled().getOrDefault(false);
-    }
-    
-    private static boolean resolveExtraPlayersEnabled(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.extraPlayersEnabled()))
-            return defaultProfile.extraPlayersEnabled().getOrDefault(false);
-        
-        return profile.extraPlayersEnabled().getOrDefault(false);
-    }
-    
-    private static boolean resolveMaxPlayersEnabled(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || !checkOption(profile.maxPlayersEnabled()))
-            return defaultProfile.maxPlayersEnabled().getOrDefault(false);
-        
-        return profile.maxPlayersEnabled().getOrDefault(false);
-    }
-    
-    private static Integer resolveExtraPlayersCount(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || profile.extraPlayersCount() == null)
-            return defaultProfile.extraPlayersCount() == null ? 0 : defaultProfile.extraPlayersCount();
-        
-        return profile.extraPlayersCount();
-    }
-    
-    private static Integer resolveMaxPlayersCount(ProfileEntry profile, ProfileEntry defaultProfile){
-        if(profile == null || profile.maxPlayersCount() == null)
-            return defaultProfile.maxPlayersCount() == null ? 0 : defaultProfile.maxPlayersCount();
-        
-        return profile.maxPlayersCount();
+        return function.apply(profile);
     }
     
     private static List<String> resolveList(ConfigurationNode node, Object... path){

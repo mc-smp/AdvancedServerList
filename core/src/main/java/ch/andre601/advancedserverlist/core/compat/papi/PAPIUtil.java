@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class PAPIUtil{
@@ -88,8 +87,7 @@ public class PAPIUtil{
     
     public String parse(String text, UUID carrier, UUID player){
         try{
-            CompletableFuture<String> future = papi.formatPlaceholders(text, carrier, player);
-            return future.getNow(text);
+            return papi.formatPlaceholders(text, carrier, player).getNow(text);
         }catch(IllegalArgumentException | CancellationException | CompletionException ex){
             return text;
         }

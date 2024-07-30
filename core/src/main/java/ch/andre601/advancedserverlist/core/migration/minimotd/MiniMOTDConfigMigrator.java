@@ -145,7 +145,7 @@ public class MiniMOTDConfigMigrator{
             .map(ProfileEntry.Builder::build)
             .toList();
         
-        boolean profilesInvalid = profiles.isEmpty() || profiles.stream().anyMatch(ProfileEntry::isInvalid);
+        boolean profilesInvalid = profiles.isEmpty() || profiles.stream().allMatch(ProfileEntry::isInvalid);
         if(entry.isInvalid() && profilesInvalid){
             logger.warn("[Migrator - MiniMOTD] Main ProfileEntry was invalid and profiles were empty.");
             sender.sendErrorMsg(" -> <red>Received invalid configuration.");
@@ -187,7 +187,7 @@ public class MiniMOTDConfigMigrator{
         }
         
         if(migrated == null){
-            logger.warn("[Migrator - MiniMOTD] Cannot migrate Configuration. ConfiguationNode was null.");
+            logger.warn("[Migrator - MiniMOTD] Cannot migrate Configuration. ConfigurationNode was null.");
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return false;

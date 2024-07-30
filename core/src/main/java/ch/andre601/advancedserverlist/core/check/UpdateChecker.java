@@ -54,54 +54,61 @@ public class UpdateChecker{
     @SuppressWarnings("FieldCanBeLocal")
     // 'https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=["%s"]' URL encoded.
     private final String url = "https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=%%5B%%22%s%%22%%5D";
-    private final HttpClient client = HttpClient.newHttpClient();
     
     private final Type listType = new TypeToken<ArrayList<ModrinthVersion>>(){}.getType();
     private final Gson gson = new GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .setPrettyPrinting()
-        .setLenient()
         .create();
     
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new UpdateCheckThread());
     
-    private final CacheUtil<ModrinthVersion> cache = new CacheUtil<>(Duration.ofMinutes(5));
+    private final CacheUtil<CompletableFuture<ModrinthVersion>> cache = new CacheUtil<>(Duration.ofMinutes(5));
     
     private final AdvancedServerList<?> core;
     private final PluginLogger logger;
     private final String loader;
+    private final HttpClient client;
     
     public UpdateChecker(AdvancedServerList<?> core){
         this.core = core;
         this.logger = core.getPlugin().getPluginLogger();
         this.loader = core.getPlugin().getLoader();
+        this.client = HttpClient.newBuilder().executor(Executors.newSingleThreadExecutor(new UpdateCheckThread())).build();
         
         startUpdateChecker();
     }
     
     public void performCachedUpdateCheck(CmdSender sender){
-        ModrinthVersion version = cache.get(() -> {
-            try{
-                return performUpdateCheck().join();
-            }catch(Exception ex){
-                return null;
+        CompletableFuture<ModrinthVersion> modrinthVersion = cache.get(this::performUpdateCheck);
+        
+        modrinthVersion.whenComplete((version, throwable) -> {
+            if(throwable != null){
+                logger.warn("Encountered an Exception while checking for an update!", throwable);
+                sender.sendErrorMsg("There was an exception while checking for an update. Please check the console for details.");
+                return;
+            }
+            
+            if(version == null)
+                return;
+            
+            int result = version.compare(core.getVersion());
+            if(result == -1){
+                sender.sendPrefixedMsg("<green>A new Version of AdvancedServerList is available!");
+                sender.sendPrefixedMsg("<green>Your version: <white>%s", core.getVersion());
+                sender.sendPrefixedMsg("<green>Version on Modrinth: <white>%s", version.versionNumber());
+                sender.sendPrefixedMsg(
+                    "<click:open_url:'https://modrinth.com/plugin/advancedserverlist/version/%s'>" +
+                    "<green>[<white>Download Page</white>]" +
+                    "</click>",
+                    version.id()
+                );
+            }else
+            if(result == 1){
+                sender.sendPrefixedMsg("You seem to run a newer Version (<white>%</white>) than what is available on Modrinth (<white>%s</white>).", core.getVersion(), version.versionNumber());
+                sender.sendPrefixedMsg("Are you running a development build?");
             }
         });
-        
-        if(version == null)
-            return;
-        
-        int result = version.compare(core.getVersion());
-        if(result == -1){
-            sender.sendPrefixedMsg("<green>A new version of AdvancedServerList is available!");
-            sender.sendPrefixedMsg("<green>Your version: <white>%s", core.getVersion());
-            sender.sendPrefixedMsg("<green>Modrinth: <white>%s", version.versionNumber());
-            sender.sendPrefixedMsg("<click:open_url:'https://modrinth.com/plugin/advancedserverlist/version/%s'><green>[<white>Download Page</white>]</click>", version.id());
-        }else
-        if(result == 1){
-            sender.sendPrefixedMsg("Your version (<white>%s</white>) seems newer than the latest release on Modrinth (<white>%s</white>)", core.getVersion(), version.versionNumber);
-            sender.sendPrefixedMsg("Are you running a dev-build?");
-        }
     }
     
     public void disable(){
@@ -157,6 +164,7 @@ public class UpdateChecker{
         try{
             request = HttpRequest.newBuilder()
                 .uri(new URI(finalUrl))
+                .timeout(Duration.ofSeconds(5))
                 .header("User-Agent", "AdvancedServerList-" + loader + "/" + core.getVersion())
                 .build();
         }catch(URISyntaxException ex){
