@@ -28,7 +28,8 @@ package ch.andre601.advancedserverlist.velocity.listeners;
 import ch.andre601.advancedserverlist.api.events.GenericServerListEvent;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
+import ch.andre601.advancedserverlist.core.compat.papi.PAPIUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
@@ -44,7 +45,10 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class VelocityEventWrapper implements GenericEventWrapper<Favicon, VelocityPlayerImpl>{
@@ -133,7 +137,7 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
         if(!plugin.getProxy().getPluginManager().isLoaded("maintenance"))
             return false;
         
-        return PingEventHandler.getMaintenanceUtil().isMaintenanceEnabled();
+        return MaintenanceUtil.get().isMaintenanceEnabled();
     }
     
     @Override
@@ -165,10 +169,10 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
         if(!plugin.getProxy().getPluginManager().isLoaded("papiproxybridge"))
             return text;
         
-        if(!PingEventHandler.getPAPIUtil().isCompatible())
+        if(!PAPIUtil.get().isCompatible())
             return text;
         
-        String server = PingEventHandler.getPAPIUtil().getServer();
+        String server = PAPIUtil.get().getServer();
         if(server == null || server.isEmpty())
             return text;
         
@@ -176,11 +180,11 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
         if(registeredServer == null || registeredServer.getPlayersConnected().isEmpty())
             return text;
         
-        Player carrier = PingEventHandler.getPAPIUtil().getPlayer(registeredServer.getPlayersConnected());
+        Player carrier = PAPIUtil.get().getPlayer(registeredServer.getPlayersConnected());
         if(carrier == null)
             return text;
         
-        return PingEventHandler.getPAPIUtil().parse(text, carrier.getUniqueId(), player.getUUID());
+        return PAPIUtil.get().parse(text, carrier.getUniqueId(), player.getUUID());
     }
     
     @Override

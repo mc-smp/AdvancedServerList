@@ -51,10 +51,6 @@ import java.util.concurrent.TimeUnit;
 
 public class UpdateChecker{
     
-    @SuppressWarnings("FieldCanBeLocal")
-    // 'https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=["%s"]' URL encoded.
-    private final String url = "https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=%%5B%%22%s%%22%%5D";
-    
     private final Type listType = new TypeToken<ArrayList<ModrinthVersion>>(){}.getType();
     private final Gson gson = new GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -151,7 +147,11 @@ public class UpdateChecker{
     }
     
     private CompletableFuture<ModrinthVersion> performUpdateCheck(){
-        String finalUrl = String.format(url, loader);
+        String finalUrl = String.format(
+            // 'https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=["%s"]' URL encoded.
+            "https://api.modrinth.com/v2/project/advancedserverlist/version?loaders=%%5B%%22%s%%22%%5D",
+            loader
+        );
         
         logger.debug(UpdateChecker.class, "Checking '%s' for updates...", finalUrl);
         

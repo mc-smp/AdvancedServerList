@@ -38,12 +38,20 @@ import java.util.concurrent.CompletionException;
 
 public class PAPIUtil{
     
-    private final PlaceholderAPI papi;
+    private static PAPIUtil instance;
     
     private final CacheUtil<String> cache = new CacheUtil<>(Duration.ofSeconds(5));
+    private final PlaceholderAPI papi;
     
-    public PAPIUtil(){
+    private PAPIUtil(){
         this.papi = PlaceholderAPI.createInstance();
+    }
+    
+    public static PAPIUtil get(){
+        if(instance != null)
+            return instance;
+        
+        return (instance = new PAPIUtil());
     }
     
     // Make sure the version of PAPIProxyBridge we get has the required methods we need...

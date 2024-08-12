@@ -30,10 +30,19 @@ import eu.kennytv.maintenance.api.MaintenanceProvider;
 
 public class MaintenanceUtil{
     
+    private static MaintenanceUtil instance;
+    
     private final Maintenance api;
     
-    public MaintenanceUtil(){
+    private MaintenanceUtil(){
         this.api = MaintenanceProvider.get();
+    }
+    
+    public static MaintenanceUtil get(){
+        if(instance != null)
+            return instance;
+        
+        return (instance = new MaintenanceUtil());
     }
     
     public boolean isMaintenanceEnabled(){

@@ -64,8 +64,6 @@ public class StringReplacer{
     
     private static String parsePlaceholder0(String input, ParsePosition position, GenericPlayer player, GenericServer server, ParseWarnCollector collector){
         AdvancedServerListAPI api = AdvancedServerList.getApi();
-        
-        int placeholderStart = position.getIndex() - 2;
         int index = position.getIndex();
         
         StringBuilder identifier = new StringBuilder();
@@ -113,7 +111,7 @@ public class StringReplacer{
                 raw.append(' ').append(valuesStr);
             
             if(collector != null)
-                collector.appendWarningFormatted(placeholderStart, "Placeholder '%s' does not have a closing bracket (})", raw.toString());
+                collector.appendWarningFormatted(index, "Placeholder '%s' does not have a closing bracket (})", raw.toString());
             
             return raw.toString();
         }
@@ -128,7 +126,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(placeholderStart, "Placeholder '%s' does not have any available PlaceholderProvider", raw.toString());
+                collector.appendWarningFormatted(index, "Placeholder '%s' does not have any available PlaceholderProvider", raw.toString());
             
             return raw.toString();
         }
@@ -143,7 +141,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(placeholderStart, "Placeholder '%s' has an invalid value String '%s'", raw.toString(), valuesStr);
+                collector.appendWarningFormatted(index, "Placeholder '%s' has an invalid value String '%s'", raw.toString(), valuesStr);
             
             return raw.toString();
         }

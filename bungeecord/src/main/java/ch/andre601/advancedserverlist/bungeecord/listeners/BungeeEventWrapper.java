@@ -31,7 +31,8 @@ import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeePlayerImpl;
 import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeeProxyImpl;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
+import ch.andre601.advancedserverlist.core.compat.papi.PAPIUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
@@ -137,7 +138,7 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
         if(plugin.getProxy().getPluginManager().getPlugin("Maintenance") == null)
             return false;
         
-        return PingEventHandler.getMaintenanceUtil().isMaintenanceEnabled();
+        return MaintenanceUtil.get().isMaintenanceEnabled();
     }
     
     @Override
@@ -165,10 +166,10 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
         if(plugin.getProxy().getPluginManager().getPlugin("PAPIProxyBridge") == null)
             return text;
         
-        if(!PingEventHandler.getPAPIUtil().isCompatible())
+        if(!PAPIUtil.get().isCompatible())
             return text;
         
-        String server = PingEventHandler.getPAPIUtil().getServer();
+        String server = PAPIUtil.get().getServer();
         if(server == null || server.isEmpty())
             return text;
         
@@ -176,11 +177,11 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
         if(serverInfo == null || serverInfo.getPlayers().isEmpty())
             return text;
         
-        ProxiedPlayer carrier = PingEventHandler.getPAPIUtil().getPlayer(serverInfo.getPlayers());
+        ProxiedPlayer carrier = PAPIUtil.get().getPlayer(serverInfo.getPlayers());
         if(carrier == null)
             return text;
         
-        return PingEventHandler.getPAPIUtil().parse(text, carrier.getUniqueId(), player.getUUID());
+        return PAPIUtil.get().parse(text, carrier.getUniqueId(), player.getUUID());
     }
     
     @Override

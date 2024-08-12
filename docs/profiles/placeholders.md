@@ -11,7 +11,7 @@ It also has built-in [PlaceholderAPI support](#placeholderapi) for Spigot and Pa
 
 The following placeholders are available in AdvancedServerList itself. Please note that not all placeholders are available on all platforms.
 
-### Player Placeholders
+### Player
 
 These placeholders use the player who pinged the server, to return values. They may require the player to be cached in order to work.
 
@@ -51,6 +51,14 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
 [^6]:
     An optional server name can be provided to display the IP/Domain associated with that server. This only works on BungeeCord or Velocity.  
     **Example:** `${server host survival}` would display the IP/Domain associated with the `survival` server.
+
+### Maintenance
+
+These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/Maintenance) plugin to work.
+
+| Placeholder                         | Description                                                    |
+|-------------------------------------|----------------------------------------------------------------|
+| `${maintenance maintenanceEnabled}` | Returns whether the Global maintenance mode is enabled or not. |
 
 ## PlaceholderAPI
 

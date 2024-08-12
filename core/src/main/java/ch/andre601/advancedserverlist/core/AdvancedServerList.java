@@ -29,6 +29,7 @@ import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
 import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.core.check.UpdateChecker;
 import ch.andre601.advancedserverlist.core.commands.CommandHandler;
+import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
@@ -59,13 +60,26 @@ public class AdvancedServerList<F>{
         this.commandHandler = new CommandHandler(this);
         this.playerHandler = new PlayerHandler(this);
         
-        placeholders.forEach(AdvancedServerList.getApi()::addPlaceholderProvider);
+        plugin.getPluginLogger().info("Registering internal Placeholders...");
+        
+        placeholders.forEach(this::addPlaceholder);
+        
+        if(plugin.isPluginEnabled("Maintenance")){
+            plugin.getPluginLogger().info("Found Maintenance Plugin. Registering extra Placeholder...");
+            addPlaceholder(new MaintenancePlaceholder(this));
+        }
+        
+        plugin.getPluginLogger().info("Completed internal Placeholder registration!");
         
         load();
     }
     
     public static <F> AdvancedServerList<F> init(PluginCore<F> plugin, PlaceholderProvider... placeholders){
         return new AdvancedServerList<>(plugin, Arrays.asList(placeholders));
+    }
+    
+    public static AdvancedServerListAPI getApi(){
+        return api;
     }
     
     public PluginCore<F> getPlugin(){
@@ -86,10 +100,6 @@ public class AdvancedServerList<F>{
     
     public String getVersion(){
         return version;
-    }
-    
-    public static AdvancedServerListAPI getApi(){
-        return api;
     }
     
     public ProfileConditionParser getParser(){
@@ -194,5 +204,10 @@ public class AdvancedServerList<F>{
         }catch(IOException ex){
             version = "UNKNOWN";
         }
+    }
+    
+    private void addPlaceholder(PlaceholderProvider placeholderProvider){
+        getPlugin().getPluginLogger().info("Registering %s Placeholders...", placeholderProvider.getIdentifier());
+        AdvancedServerList.getApi().addPlaceholderProvider(placeholderProvider);
     }
 }

@@ -28,7 +28,7 @@ package ch.andre601.advancedserverlist.paper.listeners;
 import ch.andre601.advancedserverlist.api.events.GenericServerListEvent;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
@@ -126,7 +126,7 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
         if(!Bukkit.getPluginManager().isPluginEnabled("Maintenance"))
             return false;
         
-        return PingEventHandler.getMaintenanceUtil().isMaintenanceEnabled();
+        return MaintenanceUtil.get().isMaintenanceEnabled();
     }
     
     @Override
