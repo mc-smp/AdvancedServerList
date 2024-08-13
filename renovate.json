@@ -18,7 +18,7 @@
       ]
     },
     {
-      "description": "Use Codeberg packages for asl-api",
+      "description": "Use Codeberg packages for Own API stuff",
       "matchPackageNames": [
         "ch.andre601.asl-api:api",
         "ch.andre601.asl-api:parent",
@@ -58,6 +58,17 @@
         "https://repo.viaversion.com"
       ]
     },
+    {
+      "description": "Use Sonatype for Libby",
+      "matchPackageNames": [
+        "com.alessiodp.libby:libby-bungee",
+        "com.alessiodp.libby:libby-paper",
+        "com.alessiodp.libby:libby-velocity"
+      ],
+      "registryUrls": [
+        "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+      ]
+    }
     {
       "description": "Apply label for Bukkit platform",
       "matchFileNames": ["bukkit/pom.xml"],
