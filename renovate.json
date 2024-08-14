@@ -68,7 +68,7 @@
       "registryUrls": [
         "https://s01.oss.sonatype.org/content/repositories/snapshots/"
       ]
-    }
+    },
     {
       "description": "Apply label for Bukkit platform",
       "matchFileNames": ["bukkit/pom.xml"],
