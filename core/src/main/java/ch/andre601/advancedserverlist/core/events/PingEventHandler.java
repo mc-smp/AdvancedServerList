@@ -70,15 +70,15 @@ public class PingEventHandler{
         
         logger.debug(PingEventHandler.class, "Received valid Server List Profile. Calling PreServerListSetEvent...");
         
-        GenericServerListEvent e = event.callEvent(ProfileManager.merge(profile));
-        if(e == null || e.isCancelled()){
+        GenericServerListEvent slEvent = event.callEvent(ProfileManager.merge(profile));
+        if(slEvent == null || slEvent.isCancelled()){
             logger.debug(PingEventHandler.class, "PreServerListSetEvent was cancelled. Stopping ping handling...");
             return null;
         }
         
         logger.debug(PingEventHandler.class, "PreServerListSetEvent completed. Proceeding with ping handling...");
         
-        ProfileEntry entry = e.getEntry();
+        ProfileEntry entry = slEvent.getEntry();
         if(entry.isInvalid()){
             logger.debugWarn(PingEventHandler.class, "No valid ProfileEntry retrieved. Cancelling ping handling...");
             return null;

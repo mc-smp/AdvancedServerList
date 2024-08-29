@@ -70,11 +70,20 @@ public class FaviconHandler<F>{
     }
     
     public F getFavicon(String input){
-        if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT).split("\\.")[0])){
-            return localFavicons.get(input.toLowerCase(Locale.ROOT).split("\\.")[0]);
+        if(localFavicons.size() > 0){
+            logger.debug(FaviconHandler.class, "Current Local Favicons:");
+            for(String key : localFavicons.keySet()){
+                logger.debug(FaviconHandler.class, "  - %s", key);
+            }
+        }
+        
+        if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
+            logger.debug(FaviconHandler.class, "Input matches local favicon Image. Returning it...");
+            return localFavicons.get(input.toLowerCase(Locale.ROOT));
         }
         
         try{
+            logger.debug(FaviconHandler.class, "Getting Favicon image from cache...");
             return faviconCache.get(input, () -> getFuture(input)).getNow(null);
         }catch(ExecutionException ex){
             logger.warn("Received ExecutionException while retrieving Favicon for '%s'.", ex, input);
@@ -94,7 +103,7 @@ public class FaviconHandler<F>{
         }else
         if(input.toLowerCase(Locale.ROOT).endsWith(".png")){
             logger.debug(FaviconHandler.class, "Resolving image file '%s'...", input);
-            return CompletableFuture.completedFuture(localFavicons.get(input.toLowerCase(Locale.ROOT).split("\\.")[0]));
+            return CompletableFuture.completedFuture(localFavicons.get(input.toLowerCase(Locale.ROOT)));
         }else{
             logger.debug(FaviconHandler.class, "Resolving Name/UUID as https://mc-heads.net/avatar/%s/64...", input);
             return CompletableFuture.supplyAsync(() -> fromURL(core, "https://mc-heads.net/avatar/" + input + "/64"), this.faviconThreadPool);
@@ -134,7 +143,7 @@ public class FaviconHandler<F>{
                 return;
             }
             
-            localFavicons.put(path.getFileName().toString().split("\\.")[0], favicon);
+            localFavicons.put(path.getFileName().toString().toLowerCase(Locale.ROOT), favicon);
             logger.info("Loaded file '%s' as Favicon.", path.getFileName().toString());
         }catch(IOException ex){
             logger.warn("Cannot create Favicon from file '%s'. Encountered IOException.", ex);
