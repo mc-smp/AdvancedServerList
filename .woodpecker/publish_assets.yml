@@ -34,7 +34,7 @@ steps:
     when:
       - status: ["success"]
     settings:
-      server_url: https://blobfox.coffee
+      server_url: https://swiss.social
       access_token:
         from_secret: mastodon_token
       status: |-
