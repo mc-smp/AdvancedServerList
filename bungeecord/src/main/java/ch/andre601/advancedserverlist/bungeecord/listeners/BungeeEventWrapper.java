@@ -32,19 +32,20 @@ import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeePlayerImpl;
 import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeeProxyImpl;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
-import ch.andre601.advancedserverlist.core.compat.papi.PAPIUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
+import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 
 import java.net.InetSocketAddress;
@@ -163,25 +164,35 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     
     @Override
     public String parsePAPIPlaceholders(String text, BungeePlayerImpl player){
-        if(plugin.getProxy().getPluginManager().getPlugin("PAPIProxyBridge") == null)
+        plugin.getProxy().getServers().values().forEach(serverInfo -> {
+            ByteArrayDataOutput output = ByteStreams.newDataOutput();
+            output.writeUTF("findPlugins");
+            
+            serverInfo.sendData("advancedserverlist:action", output.toByteArray());
+        });
+        
+        List<String> knownServers = PluginMessageUtil.get().getKnownServers();
+        if(knownServers.isEmpty())
             return text;
         
-        if(!PAPIUtil.get().isCompatible())
+        String serverName = knownServers.get(0);
+        ServerInfo server = plugin.getProxy().getServerInfo(serverName);
+        if(server == null)
             return text;
         
-        String server = PAPIUtil.get().getServer();
-        if(server == null || server.isEmpty())
-            return text;
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("parse");
+        output.writeUTF(player.getUUID().toString());
+        output.writeUTF(text);
         
-        ServerInfo serverInfo = plugin.getProxy().getServerInfo(server);
-        if(serverInfo == null || serverInfo.getPlayers().isEmpty())
-            return text;
+        server.sendData("advancedserverlist:action", output.toByteArray());
+        PluginMessageUtil.get().putInQueue(player.getUUID().toString(), text);
         
-        ProxiedPlayer carrier = PAPIUtil.get().getPlayer(serverInfo.getPlayers());
-        if(carrier == null)
-            return text;
-        
-        return PAPIUtil.get().parse(text, carrier.getUniqueId(), player.getUUID());
+        if(PluginMessageUtil.get().hasParsed(player.getUUID().toString())){
+            return PluginMessageUtil.get().getAndRemoveParsed(player.getUUID().toString());
+        }else{
+            return PluginMessageUtil.get().getQueuedValue(player.getUUID().toString());
+        }
     }
     
     @Override

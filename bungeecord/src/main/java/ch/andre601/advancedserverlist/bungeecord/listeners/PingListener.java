@@ -25,37 +25,27 @@
 
 package ch.andre601.advancedserverlist.bungeecord.listeners;
 
+import ch.andre601.advancedserverlist.api.bungeecord.events.PostServerListSetEvent;
+import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
-import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCmdSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PostLoginEvent;
+import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.net.InetSocketAddress;
-
-public class JoinEvent implements Listener{
+public class PingListener implements Listener{
+    
     private final BungeeCordCore plugin;
     
-    public JoinEvent(BungeeCordCore plugin){
+    public PingListener(BungeeCordCore plugin){
         this.plugin = plugin;
         plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
     
-    @EventHandler
-    public void onJoin(PostLoginEvent event){
-        InetSocketAddress address = (InetSocketAddress)event.getPlayer().getPendingConnection().getSocketAddress();
-        ProxiedPlayer player = event.getPlayer();
+    @EventHandler(priority = 90) // Maintenance has Event Priority 80, so we need to be AFTER it.
+    public void onProxyPing(ProxyPingEvent event){
+        ProfileEntry entry = PingEventHandler.handleEvent(new BungeeEventWrapper(plugin, event));
         
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
-        
-        if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getAudiences() == null || plugin.getCore().getUpdateChecker() == null)
-                return;
-            
-            BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
-            
-            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
-        }
+        plugin.getProxy().getPluginManager().callEvent(new PostServerListSetEvent(entry));
     }
 }

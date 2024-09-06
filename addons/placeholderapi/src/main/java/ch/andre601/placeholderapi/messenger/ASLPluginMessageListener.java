@@ -36,26 +36,27 @@ public class ASLPluginMessageListener implements PluginMessageListener{
         try{
             String action = in.readUTF();
             switch(action){
-                case "findPlugins" -> sendPluginMessage("hasPlugin", "yes");
+                case "findPlugins" -> sendPluginMessage("hasPlugin", plugin.serverName());
                 case "parsePlaceholder" -> {
                     UUID playerUuid = UUID.fromString(in.readUTF());
                     String text = in.readUTF();
                     if(!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                        sendPluginMessage("parsed", text);
+                        sendPluginMessage("parsed", playerUuid.toString(), text);
                         return;
                     }
                     
                     OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(playerUuid);
                     String parsed = PlaceholderAPI.setPlaceholders(targetPlayer, text);
-                    sendPluginMessage("parsed", parsed);
+                    sendPluginMessage("parsed", playerUuid.toString(), parsed);
                 }
+                default -> plugin.getLogger().warning("Received unknown plugin Message sub channel: " + action);
             }
         }catch(Exception ex){
             plugin.getLogger().log(Level.WARNING, "Encountered an Exception while handling a plugin message.", ex);
         }
     }
     
-    private void sendPluginMessage(String channel, String value){
+    private void sendPluginMessage(String channel, String... values){
         plugin.waitUntil(
             () -> !Bukkit.getOnlinePlayers().isEmpty() && plugin.serverName() != null,
             () -> {
@@ -64,7 +65,9 @@ public class ASLPluginMessageListener implements PluginMessageListener{
                 DataOutputStream dataOut = new DataOutputStream(outStream);
                 try{
                     dataOut.writeUTF(channel);
-                    dataOut.writeUTF(value);
+                    for(String value : values){
+                        dataOut.writeUTF(value);
+                    }
                 }catch(Exception ex){
                     plugin.getLogger().log(Level.WARNING, "Encountered an Exception while writiing data for plugin message.", ex);
                 }

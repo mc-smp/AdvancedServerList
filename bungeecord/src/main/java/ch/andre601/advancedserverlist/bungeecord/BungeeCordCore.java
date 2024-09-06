@@ -26,8 +26,9 @@
 package ch.andre601.advancedserverlist.bungeecord;
 
 import ch.andre601.advancedserverlist.bungeecord.commands.CmdAdvancedServerList;
-import ch.andre601.advancedserverlist.bungeecord.listeners.JoinEvent;
-import ch.andre601.advancedserverlist.bungeecord.listeners.PingEvent;
+import ch.andre601.advancedserverlist.bungeecord.listeners.JoinListener;
+import ch.andre601.advancedserverlist.bungeecord.listeners.PingListener;
+import ch.andre601.advancedserverlist.bungeecord.listeners.PluginMessageListener;
 import ch.andre601.advancedserverlist.bungeecord.logging.BungeeLogger;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeePlayerPlaceholders;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeServerPlaceholders;
@@ -98,8 +99,9 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     @Override
     public void loadEvents(){
-        new JoinEvent(this);
-        new PingEvent(this);
+        new JoinListener(this);
+        new PingListener(this);
+        new PluginMessageListener();
     }
     
     @Override
