@@ -33,11 +33,11 @@ import com.velocitypowered.api.proxy.Player;
 
 import java.net.InetSocketAddress;
 
-public class JoinEvent{
+public class JoinListener{
     
     private final VelocityCore plugin;
     
-    public JoinEvent(VelocityCore plugin){
+    public JoinListener(VelocityCore plugin){
         this.plugin = plugin;
         plugin.getProxy().getEventManager().register(plugin, this);
     }

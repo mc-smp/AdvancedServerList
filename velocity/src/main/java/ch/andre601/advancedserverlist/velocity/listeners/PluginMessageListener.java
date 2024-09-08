@@ -1,22 +1,25 @@
-package ch.andre601.advancedserverlist.bungeecord.listeners;
+package ch.andre601.advancedserverlist.velocity.listeners;
 
-import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
+import ch.andre601.advancedserverlist.velocity.VelocityCore;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.PluginMessageEvent;
+import com.velocitypowered.api.proxy.ServerConnection;
 
-public class PluginMessageListener implements Listener{
+public class PluginMessageListener{
     
-    public PluginMessageListener(BungeeCordCore plugin){
-        plugin.getProxy().getPluginManager().registerListener(plugin, this);
+    public PluginMessageListener(VelocityCore plugin){
+        plugin.getProxy().getEventManager().register(plugin, this);
     }
     
-    @EventHandler
+    @Subscribe
     public void onPluginMessage(PluginMessageEvent event){
-        if(!event.getTag().equals("advancedserverlist:action"))
+        if(!(event.getSource() instanceof ServerConnection))
+            return;
+        
+        if(event.getIdentifier() != VelocityCore.ASL_IDENTIFIER)
             return;
         
         ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());

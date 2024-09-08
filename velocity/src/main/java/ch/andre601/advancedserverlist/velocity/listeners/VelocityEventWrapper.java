@@ -29,22 +29,25 @@ import ch.andre601.advancedserverlist.api.events.GenericServerListEvent;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
-import ch.andre601.advancedserverlist.core.compat.papi.PAPIUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
+import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
+import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
 import ch.andre601.advancedserverlist.velocity.VelocityCore;
 import ch.andre601.advancedserverlist.velocity.objects.impl.VelocityPlayerImpl;
 import ch.andre601.advancedserverlist.velocity.objects.impl.VelocityProxyImpl;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
-import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +55,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class VelocityEventWrapper implements GenericEventWrapper<Favicon, VelocityPlayerImpl>{
+    
+    private final CacheUtil<Integer> knownServerCache = new CacheUtil<>(Duration.ofMinutes(1));
     
     private final VelocityCore plugin;
     private final ProxyPingEvent event;
@@ -166,25 +171,38 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     
     @Override
     public String parsePAPIPlaceholders(String text, VelocityPlayerImpl player){
-        if(!plugin.getProxy().getPluginManager().isLoaded("papiproxybridge"))
+        knownServerCache.get(() -> {
+            plugin.getProxy().getAllServers().forEach(registeredServer -> {
+                ByteArrayDataOutput output = ByteStreams.newDataOutput();
+                output.writeUTF("findPlugins");
+                
+                registeredServer.sendPluginMessage(VelocityCore.ASL_IDENTIFIER, output.toByteArray());
+            });
+            // Returning a dummy value here.
+            return 1;
+        });
+        
+        List<String> knownServers = PluginMessageUtil.get().getKnownServers();
+        if(knownServers.isEmpty())
             return text;
         
-        if(!PAPIUtil.get().isCompatible())
+        String serverName = knownServers.get(0);
+        RegisteredServer server = plugin.getProxy().getServer(serverName).orElse(null);
+        if(server == null)
             return text;
         
-        String server = PAPIUtil.get().getServer();
-        if(server == null || server.isEmpty())
-            return text;
+        ByteArrayDataOutput output = ByteStreams.newDataOutput();
+        output.writeUTF("parse");
+        output.writeUTF(player.getUUID().toString());
+        output.writeUTF(text);
         
-        RegisteredServer registeredServer = plugin.getProxy().getServer(server).orElse(null);
-        if(registeredServer == null || registeredServer.getPlayersConnected().isEmpty())
-            return text;
-        
-        Player carrier = PAPIUtil.get().getPlayer(registeredServer.getPlayersConnected());
-        if(carrier == null)
-            return text;
-        
-        return PAPIUtil.get().parse(text, carrier.getUniqueId(), player.getUUID());
+        server.sendPluginMessage(VelocityCore.ASL_IDENTIFIER, output.toByteArray());
+        PluginMessageUtil.get().putInQueue(player.getUUID().toString(), text);
+        if(PluginMessageUtil.get().hasParsed(player.getUUID().toString())){
+            return PluginMessageUtil.get().getAndRemoveParsed(player.getUUID().toString());
+        }else{
+            return PluginMessageUtil.get().getQueuedValue(player.getUUID().toString());
+        }
     }
     
     @Override

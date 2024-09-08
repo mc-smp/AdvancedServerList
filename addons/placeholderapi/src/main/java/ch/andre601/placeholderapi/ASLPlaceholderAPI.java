@@ -18,19 +18,20 @@ public final class ASLPlaceholderAPI extends JavaPlugin{
     @Override
     public void onEnable(){
         // Own Plugin Channel
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(this, pluginChannel());
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, pluginChannel(), new ASLPluginMessageListener(this));
+        getServer().getMessenger().registerOutgoingPluginChannel(this, pluginChannel());
+        getServer().getMessenger().registerIncomingPluginChannel(this, pluginChannel(), new ASLPluginMessageListener(this));
         
         // BungeeCord Plugin Channel
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeCordMessageListener(this));
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeCordMessageListener(this));
         
         requestServerName();
     }
     
     @Override
     public void onDisable(){
-        Bukkit.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
-        Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(this);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        getServer().getMessenger().unregisterIncomingPluginChannel(this);
     }
     
     public void serverName(String serverName){

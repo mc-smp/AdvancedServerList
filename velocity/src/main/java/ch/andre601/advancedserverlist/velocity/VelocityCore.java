@@ -30,8 +30,9 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
-import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
-import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
+import ch.andre601.advancedserverlist.velocity.listeners.JoinListener;
+import ch.andre601.advancedserverlist.velocity.listeners.PingListener;
+import ch.andre601.advancedserverlist.velocity.listeners.PluginMessageListener;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
@@ -45,6 +46,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
@@ -61,6 +63,7 @@ import java.util.Locale;
 
 public class VelocityCore implements PluginCore<Favicon>{
     
+    public static final MinecraftChannelIdentifier ASL_IDENTIFIER = MinecraftChannelIdentifier.from("advancedserverlist:action");
     private final Logger logger = LoggerFactory.getLogger("AdvancedServerList");
     
     private final PluginLogger pluginLogger;
@@ -75,6 +78,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
+        proxy.getChannelRegistrar().register(ASL_IDENTIFIER);
         this.pluginLogger = new VelocityLogger(this, this.logger);
         
         this.proxy = proxy;
@@ -104,8 +108,9 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Override
     public void loadEvents(){
-        new JoinEvent(this);
-        new PingEvent(this);
+        new JoinListener(this);
+        new PingListener(this);
+        new PluginMessageListener(this);
     }
     
     @Override

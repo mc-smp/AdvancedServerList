@@ -101,7 +101,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     public void loadEvents(){
         new JoinListener(this);
         new PingListener(this);
-        new PluginMessageListener();
+        new PluginMessageListener(this);
     }
     
     @Override

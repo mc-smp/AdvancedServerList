@@ -34,6 +34,7 @@ import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeeProxyImpl;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
+import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
@@ -49,11 +50,14 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 
 import java.net.InetSocketAddress;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePlayerImpl>{
+    
+    private final CacheUtil<Integer> knownServerCache = new CacheUtil<>(Duration.ofMinutes(1));
     
     private final BungeeCordCore plugin;
     private final ProxyPingEvent event;
@@ -164,11 +168,15 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     
     @Override
     public String parsePAPIPlaceholders(String text, BungeePlayerImpl player){
-        plugin.getProxy().getServers().values().forEach(serverInfo -> {
-            ByteArrayDataOutput output = ByteStreams.newDataOutput();
-            output.writeUTF("findPlugins");
-            
-            serverInfo.sendData("advancedserverlist:action", output.toByteArray());
+        knownServerCache.get(() -> {
+            plugin.getProxy().getServers().values().forEach(serverInfo -> {
+                ByteArrayDataOutput output = ByteStreams.newDataOutput();
+                output.writeUTF("findPlugins");
+                
+                serverInfo.sendData("advancedserverlist:action", output.toByteArray());
+            });
+            // We return some random dummy value here
+            return 1;
         });
         
         List<String> knownServers = PluginMessageUtil.get().getKnownServers();

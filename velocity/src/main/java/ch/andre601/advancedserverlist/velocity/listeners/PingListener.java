@@ -33,11 +33,11 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 
-public class PingEvent{
+public class PingListener{
     
     private final VelocityCore plugin;
     
-    public PingEvent(VelocityCore plugin){
+    public PingListener(VelocityCore plugin){
         this.plugin = plugin;
         plugin.getProxy().getEventManager().register(plugin, this);
     }
