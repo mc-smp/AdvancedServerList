@@ -4,6 +4,11 @@ import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.api.objects.GenericPlayer;
 import ch.andre601.advancedserverlist.api.objects.GenericServer;
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
+import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BungeeProxyPlaceholders extends PlaceholderProvider{
     
-    private final Map<String, Boolean> serverStates = new ConcurrentHashMap<>();
+    private final Map<String, ServerPing> serverStates = new ConcurrentHashMap<>();
     private final BungeeCordCore plugin;
     
     private BungeeProxyPlaceholders(BungeeCordCore plugin){
@@ -31,11 +36,33 @@ public class BungeeProxyPlaceholders extends PlaceholderProvider{
         if(args.length < 2)
             return null;
         
-        if(!args[0].equals("status"))
-            return null;
+        ServerPing ping = serverStates.get(args[1]);
         
-        Boolean bool = serverStates.get(args[1]);
-        return bool == null ? "Pinging..." : bool.toString();
+        return switch(args[0]){
+            case "status" -> ping == null ? "offline" : "online";
+            case "motd" -> {
+                if(ping == null)
+                    yield "none";
+                
+                BaseComponent[] components = new BaseComponent[]{ping.getDescriptionComponent()};
+                Component component = BungeeComponentSerializer.get().deserialize(components);
+                
+                yield ComponentParser.toMMString(component);
+            }
+            case "players" -> {
+                if(ping == null)
+                    yield "0";
+                
+                yield String.valueOf(ping.getPlayers().getOnline());
+            }
+            case "maxPlayers" -> {
+                if(ping == null)
+                    yield "0";
+                
+                yield String.valueOf(ping.getPlayers().getMax());
+            }
+            default -> null;
+        };
     }
     
     private void fetchServerStates(){
@@ -46,7 +73,7 @@ public class BungeeProxyPlaceholders extends PlaceholderProvider{
                 return;
             }
             
-            serverStates.put(name, ping != null);
+            serverStates.put(name, ping);
         }));
     }
 }
