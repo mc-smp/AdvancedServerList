@@ -52,6 +52,14 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
     An optional server name can be provided to display the IP/Domain associated with that server. This only works on BungeeCord or Velocity.  
     **Example:** `${server host survival}` would display the IP/Domain associated with the `survival` server.
 
+### Proxy
+
+These placeholders are only available on the BungeeCord and Velocity versions of AdvancedServerList.
+
+| Placeholders             | Description                                                                                                                          |
+|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `${proxy status <name>}` | Returns true/false based on wether the provided server is online. Returns `Pinging...` should the server state not be available yet. |
+
 ### Maintenance
 
 These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/Maintenance) plugin to work.
