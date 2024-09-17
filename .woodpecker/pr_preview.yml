@@ -11,7 +11,7 @@ variables:
 
 steps:
   - name: "Clone Preview Repository"
-    image: alpine:3.18.4
+    image: alpine:3.20.3
     commands:
       - chmod -R a+w .
       - <<: *setup_git
@@ -24,7 +24,7 @@ steps:
     settings:
       pip_install_file: requirements.txt
   - name: "Commit and Push"
-    image: alpine:3.18.4
+    image: alpine:3.20.3
     secrets:
       - bot_token
     commands:
