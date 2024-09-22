@@ -34,6 +34,7 @@ import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
+import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityProxyPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
 import com.alessiodp.libby.Library;
 import com.alessiodp.libby.VelocityLibraryManager;
@@ -84,7 +85,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Subscribe
     public void init(ProxyInitializeEvent event){
-        this.core = AdvancedServerList.init(this, VelocityPlayerPlaceholders.init(), VelocityServerPlaceholders.init(this));
+        this.core = AdvancedServerList.init(this,
+            VelocityPlayerPlaceholders.init(), VelocityServerPlaceholders.init(this), VelocityProxyPlaceholders.init(this));
     }
     
     @Subscribe

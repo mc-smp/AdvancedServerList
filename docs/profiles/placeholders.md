@@ -52,6 +52,23 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
     An optional server name can be provided to display the IP/Domain associated with that server. This only works on BungeeCord or Velocity.  
     **Example:** `${server host survival}` would display the IP/Domain associated with the `survival` server.
 
+### Proxy
+
+These placeholders are only available on the BungeeCord and Velocity versions of AdvancedServerList.
+
+/// note
+Servers are pinged every 10 seconds by the plugin and cached for that time period.
+///
+
+| Placeholders                 | Description                                                       | Default[^7] |
+|------------------------------|-------------------------------------------------------------------|-------------|
+| `${proxy status <name>}`     | Returns `online` or `offline` based on the Server's availability. | `offline`   |
+| `${proxy motd <name>}`       | Returns the Server's MOTD as MiniMessage String.                  | `none`      |
+| `${proxy players <name>}`    | Returns the number of online Players on the Server.               | `0`         |
+| `${proxy maxPlayers <name>}` | Returns the max number of Players allowed to join the Server.     | `0`         |
+
+[^7]: The default value returned, should the Server or parts of it not be available.
+
 ### Maintenance
 
 These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/Maintenance) plugin to work.
