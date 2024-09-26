@@ -44,7 +44,8 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
 
 [^4]:
     A comma-separated list of world (On Paper) or Server (On BungeeCord/Velocity) names can be provided to display the added numbers of players in these worlds/servers.  
-    **Example:** `${server playersOnline lobby1,lobby2}` will display the collective numbers of players in the servers `lobby1` and `lobby2`.
+    **Example:** `${server playersOnline lobby1,lobby2}` will display the collective numbers of players in the servers `lobby1` and `lobby2`.  
+    Using the [onlinePlayers' `amount`](index.md#onlineplayers-amount) option will modify the output of this placeholder, except when used in [`condition`](index.md#condition).
 [^5]:
     Using either the [extraPlayers' `amount`](index.md#extraplayers-amount) or [maxPlayers' `amount`](index.md#maxplayers-amount) option will make this placeholder return the modified max players count.  
     Only exception to this rule is when the placeholder is used in the [`condition`](index.md#condition) option in which case it returns the actual max player count of the proxy/server.
