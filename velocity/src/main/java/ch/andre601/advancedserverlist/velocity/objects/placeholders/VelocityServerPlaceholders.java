@@ -80,18 +80,18 @@ public class VelocityServerPlaceholders extends PlaceholderProvider{
             }
             case "playersMax" -> {
                 if(args.length >= 2)
-                    yield null;
+                    yield "";
                 
                 yield String.valueOf(proxy.getPlayersMax());
             }
             case "host" -> {
                 if(args.length > 2)
-                    yield null;
+                    yield "";
                 
                 if(args.length == 2 && args[1] != null && !args[1].isEmpty()){
                     RegisteredServer info = proxy.getServers().get(args[1]);
                     if(info == null)
-                        yield null;
+                        yield "";
                     
                     yield info.getServerInfo().getAddress().getHostString();
                 }
