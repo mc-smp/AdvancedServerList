@@ -127,7 +127,7 @@ The Value can be one of three possible options, each being checked for in order:
 
 Note that for the name/UUID, the site https://mc-heads.net is being used.  
 Use the URL option with the `${player uuid}` placeholder if you want to use another service.
- 
+
 /// details | Example
     type: example
 
@@ -161,7 +161,7 @@ When set to true will the player count be replaced with `???`.
 In addition are the [`playerCount -> text`](#text) and [`playerCount -> hover`](#hover) options ignored.
 
 If you want to not show any text at all, set this option to `false` (or remove it) and instead use the [`playerCount -> text`](#text) option.
- 
+
 /// details | Example
     type: example
 
@@ -227,7 +227,7 @@ Please take note of the following caveats:
 If you want to not show any text, just use a single color (i.e. `text: '<grey>'`) to do so.
 
 This option only supports basic colors and no HEX colors.
- 
+
 /// details | Example
     type: example
 
@@ -267,7 +267,9 @@ Use the [`playerCount -> extraPlayers -> amount`](#extraplayers-amount) option t
 The `playerCount -> extraPlayers -> amount` option defines how much should be added to the current online player count to then use as max player count.
 
 Example: Setting this option to `1` while currently 10 players are online will result in `10/11` being displayed on the player count (Assuming it is not being overriden by the [`playerCount -> text`](#text) option).
- 
+
+You can use placeholders that resolve into numbers for this option.
+
 /// details | Example
     type: example
 
@@ -309,7 +311,9 @@ Use the [`playerCount -> maxPlayers -> amount`](#maxplayers-amount) option to se
 
 The `playerCount -> maxPlayers -> amount` option defines the number to use as the server's max players count.  
 Unlike the [`playerCount -> extraPlayers -> amount`](#extraplayers-amount) option does this one not first add the current online player count to the number to then set.
- 
+
+You can use placeholders that resolve into numbers for this option.
+
 /// details | Example
     type: example
 
@@ -329,6 +333,45 @@ playerCount:
 <div class="result" markdown>
 
 ![maxplayers-example](../assets/images/examples/maxplayers-example.jpg){ loading="lazy" }
+
+</div>
+///
+
+### OnlinePlayers
+
+<!-- admo:warning Using this option alters the output of <code>playerCount -> extraPlayers</code> -->
+
+The `playerCount -> onlinePlayers` option contains settings to enable and set the number of players online on the server.
+
+#### Enabled { #onlineplayers-enabled }
+
+Enables the online players feature.  
+Use the [`playerCount -> onlinePlayers -> amount`](#onlineplayers-amount) option to set the online players value itself.
+
+#### Amount { #onlineplayers-amount }
+
+Sets the number to display as the server's only player count.  
+You can use placeholders that resolve into numbers for this option.
+
+/// details | Example
+    type: example
+
+```yaml title="YAML file
+priority: 0
+
+# Hides the MOTD for demonstration purposes
+motd:
+  - '<grey>'
+  - '<grey>'
+
+playerCount:
+  onlinePlayers:
+    enabled: true
+    amount: 10
+```
+<div class="result" markdown>
+
+![onlineplayers-example](../assets/images/examples/onlineplayers-example.png)
 
 </div>
 ///

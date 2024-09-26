@@ -119,6 +119,34 @@ methods:
     throws:
       - name: 'IllegalArgumentException'
         description: 'Thrown by the <code>CheckUtil</code> in case <code>null</code> has been provided as parameter.'
+  - name: 'onlinePlayersCount'
+    description: |
+      Sets the value to resolve into a number by AdvancedServerList.<br>
+      Strings not resolving into valid numbers will be treated as this option not being set.
+    parameters:
+      - name: 'onlinePlayersCount'
+        description: 'The number of online players to set.'
+        type: 'String'
+        attribute:
+          - 'nullable'
+    returns: 'This Builder after the max player count has been set. Useful for chaining.'
+  - name: 'onlinePlayersEnabled'
+    description: |
+      Sets whether the online players feature should be enabled.<br>
+      <br>
+      Set to <a href="../../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a> to not set this.<br>
+      <br>
+      An <code>IllegalArgumentException</code> may be thrown by the <code>CheckUtil</code> should onlinePlayersEnabled be null.
+    parameters:
+      - name: 'onlinePlayersEnabled'
+        description: 'Whether the extra players feature should be enabled or not.'
+        type: 'NullBool'
+        attribute:
+          - 'notnull'
+    returns: 'This Builder after the NullBool has been set. Useful for chaining.'
+    throws:
+      - name: 'IllegalArgumentException'
+        description: 'Thrown by the <code>CheckUtil</code> in case <code>null</code> has been provided as parameter.'
   - name: 'playerCountText'
     description: |
       Sets the text to override the player count with.<br>

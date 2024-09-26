@@ -94,16 +94,22 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
         
         ProfileEntry entry = ProfileManager.merge(profile);
         
+        Integer onlinePlayers = null;
+        if(ProfileManager.checkOption(entry.onlinePlayersEnabled())){
+            onlinePlayers = parseNumberOption(entry.onlinePlayersCount(), pl, player, server);
+            online = onlinePlayers == null ? online : onlinePlayers;
+        }
+        
         Integer maxPlayers = null;
         if(ProfileManager.checkOption(entry.maxPlayersEnabled())){
-            max = entry.maxPlayersCount() == null ? 0 : entry.maxPlayersCount();
-            maxPlayers = entry.maxPlayersCount();
+            maxPlayers = parseNumberOption(entry.maxPlayersCount(), pl, player, server);
+            max = maxPlayers == null ? 0 : maxPlayers;
         }
         
         Integer extraPlayers = null;
         if(ProfileManager.checkOption(entry.extraPlayersEnabled())){
-            max = online + (entry.extraPlayersCount() == null ? 0 : entry.extraPlayersCount());
-            extraPlayers = entry.extraPlayersCount();
+            extraPlayers = parseNumberOption(entry.extraPlayersCount(), pl, player, server);
+            max = online + (extraPlayers == null ? 0 : extraPlayers);
         }
         
         BukkitServer finalServer = new PaperServerImpl(plugin.getWorldCache().worlds(), online, max, host);
@@ -114,6 +120,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
             case "playercount_text" -> getOption(entry.playerCountText(), pl, player, finalServer);
             case "playercount_extraplayers" -> extraPlayers == null ? "null" : String.valueOf(extraPlayers);
             case "playercount_maxplayers" -> maxPlayers == null ? "null" : String.valueOf(maxPlayers);
+            case "playercount_onlineplayers" -> onlinePlayers == null ? "null" : String.valueOf(onlinePlayers);
             case "server_playersmax" -> String.valueOf(max);
             default -> null;
         };
@@ -134,8 +141,21 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
     
     private String getOption(List<String> list, Player pl, BukkitPlayer player, BukkitServer server){
         return ComponentParser.list(list)
-            .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
             .modifyText(text -> StringReplacer.replace(text, player, server))
+            .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
             .toString();
+    }
+    
+    private Integer parseNumberOption(String option, Player pl, BukkitPlayer player, BukkitServer server){
+        String parsed = ComponentParser.text(option)
+            .modifyText(text -> StringReplacer.replace(text, player, server))
+            .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
+            .toString();
+        
+        try{
+            return Integer.parseInt(parsed);
+        }catch(NumberFormatException ex){
+            return null;
+        }
     }
 }

@@ -134,6 +134,7 @@ playerCount:
     enabled: false
     #
     # Set the number that should be added to the online player count to then use as the new max player count.
+    # Placeholders resolving to numbers can be used here.
     #
     # Example: Setting this to 1 will result in ${server playersMax} displaying 11 while 10 players are online,
     #          9 when 8 are online and so on.
@@ -162,9 +163,34 @@ playerCount:
     enabled: false
     #
     # Set the number that should be used as the new max players count.
+    # Placeholders resolving to numbers can be used here.
     #
     # If not present, defaults to 0.
     #
     # Read more: https://asl.andre601.ch/profiles/#maxplayers-amount
+    #
+    amount: 0
+  #
+  # The onlinePlayers feature allows to set a number to use as the online player count to display.
+  #
+  # Read more: https://asl.andre601.ch/profiles/#onlineplayers
+  #
+  onlinePlayers:
+    #
+    # Set whether the onlinePlayers feature should be enabled or not.
+    # When set to true, the max player count will be set to the 'amount' value.
+    #
+    # If not present, defaults to false.
+    #
+    # Read more: https://asl.andre601.ch/profiles/#onlineplayers-enabled
+    #
+    enabled: false
+    #
+    # Set the number that should be used as the new online players count.
+    # Placeholders resolving to numbers can be used here.
+    #
+    # If not present, defaults to current online player count.
+    #
+    # Read more: https://asl.andre601.ch/profiles/#onlineplayers-amount
     #
     amount: 0

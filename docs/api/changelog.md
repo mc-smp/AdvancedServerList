@@ -7,6 +7,23 @@ icon: octicons/log-24
 This page lists the recent changes made towards the AdvancedServerListAPI.  
 They are ordered newest to oldest.
 
+## v4.0.0 { #v4.0.0 }
+
+### :octicons-alert-24:{ .changelog-breaking title="Breaking Changes" } Breaking Changes { #v4.0.0-breaking }
+
+- Changed `extraPlayersCount()` and `maxPlayersCount()` from using an Integer to using a String instead.
+    - This also affects their corresponding `ProfileEntry.Builder` methods.
+- Removed all previously deprecated methods.
+
+### :octicons-plus-circle-24:{ .changelog-added title="Added" } Added { #v4.0.0-added }
+
+- New setter methods added to [`ProfileEntry.Builder`][profilentry.builder] class:
+    - [`onlinePlayersCount(String)`][onlinePlayersCount]
+    - [`onlinePlayersEnabled(NullBool)`][onlinePlayersEnabled]
+
+[onlinePlayersCount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#onlineplayerscount(integer)
+[onlinePlayersEnabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#onlineplayersenabled(nullbool)
+
 ## v3.3.0 { #v3.3.0 }
 
 ### :octicons-plus-circle-24:{ .changelog-added title="Added" } Added { #v3.3.0-added }

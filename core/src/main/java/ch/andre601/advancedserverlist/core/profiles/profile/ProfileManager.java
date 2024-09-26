@@ -55,11 +55,13 @@ public class ProfileManager{
         NullBool hidePlayersEnabled = resolve(defEntry, entry, ProfileEntry::hidePlayersEnabled);
         NullBool extraPlayersEnabled = resolve(defEntry, entry, ProfileEntry::extraPlayersEnabled);
         NullBool maxPlayersEnabled = resolve(defEntry, entry, ProfileEntry::maxPlayersEnabled);
-        Integer extraPlayersCount = resolve(defEntry, entry, ProfileEntry::extraPlayersCount);
-        Integer maxPlayersCount = resolve(defEntry, entry, ProfileEntry::maxPlayersCount);
+        NullBool onlinePlayersEnabled = resolve(defEntry, entry, ProfileEntry::onlinePlayersEnabled);
+        String extraPlayersCount = resolve(defEntry, entry, ProfileEntry::extraPlayersCount);
+        String maxPlayersCount = resolve(defEntry, entry, ProfileEntry::maxPlayersCount);
+        String onlinePlayersCount = resolve(defEntry, entry, ProfileEntry::onlinePlayersCount);
         
         return new ProfileEntry(motd, players, playerCountText, favicon, hidePlayersEnabled, extraPlayersEnabled,
-            maxPlayersEnabled, extraPlayersCount, maxPlayersCount);
+            maxPlayersEnabled, onlinePlayersEnabled, extraPlayersCount, maxPlayersCount, onlinePlayersCount);
     }
     
     public static ServerListProfile resolveProfile(AdvancedServerList<?> core, GenericPlayer player, GenericServer server){
@@ -82,8 +84,10 @@ public class ProfileManager{
         NullBool hidePlayers = resolveNullBool(node, "playerCount", "hidePlayers");
         NullBool extraPlayersEnabled = resolveNullBool(node, "playerCount", "extraPlayers", "enabled");
         NullBool maxPlayersEnabled = resolveNullBool(node, "playerCount", "maxPlayers", "enabled");
-        Integer extraPlayers = resolveNullableInt(node, "playerCount", "extraPlayers", "amount");
-        Integer maxPlayers = resolveNullableInt(node, "playerCount", "maxPlayers", "amount");
+        NullBool onlinePlayersEnabled = resolveNullBool(node, "playerCount", "onlinePlayers", "enabled");
+        String extraPlayers = resolveNullableString(node, "playerCount", "extraPlayers", "amount");
+        String maxPlayers = resolveNullableString(node, "playerCount", "maxPlayers", "amount");
+        String onlinePlayers = resolveNullableString(node, "playerCount", "onlinePlayers", "amount");
         
         return new ProfileEntry.Builder()
             .motd(motd)
@@ -93,8 +97,10 @@ public class ProfileManager{
             .hidePlayersEnabled(hidePlayers)
             .extraPlayersEnabled(extraPlayersEnabled)
             .maxPlayersEnabled(maxPlayersEnabled)
+            .onlinePlayersEnabled(onlinePlayersEnabled)
             .extraPlayersCount(extraPlayers)
             .maxPlayersCount(maxPlayers)
+            .onlinePlayersCount(onlinePlayers)
             .build();
     }
     
@@ -137,10 +143,10 @@ public class ProfileManager{
         return NullBool.resolve(node.node(path).getBoolean());
     }
     
-    private static Integer resolveNullableInt(ConfigurationNode node, Object... path){
+    private static String resolveNullableString(ConfigurationNode node, Object... path){
         if(node.node(path).virtual())
             return null;
         
-        return node.node(path).getInt();
+        return node.node(path).getString();
     }
 }

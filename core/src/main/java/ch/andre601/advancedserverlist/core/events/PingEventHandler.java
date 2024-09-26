@@ -84,28 +84,61 @@ public class PingEventHandler{
             return null;
         }
         
-        boolean extraPlayers = ProfileManager.checkOption(entry.extraPlayersEnabled());
-        
-        if(extraPlayers && ignoreMaintenance(event, "extraPlayers")){
-            max = online + (entry.extraPlayersCount() == null ? 0 : entry.extraPlayersCount());
+        if(ProfileManager.checkOption(entry.onlinePlayersEnabled()) && ignoreMaintenance(event, "onlinePlayers")){
+            logger.debug(PingEventHandler.class, "'playerCount -> onlinePlayers -> enabled' option is true. Trying to apply '%s'...", entry.onlinePlayersCount());
+            String onlinePlayers = ComponentParser.text(entry.onlinePlayersCount())
+                .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> event.parsePAPIPlaceholders(text, player))
+                .toString();
             
-            logger.debug(PingEventHandler.class, "Extra Players enabled. Applying '%d' as max player count...", max);
-            
-            event.setMaxPlayers(max);
+            try{
+                online = onlinePlayers == null ? online : Integer.parseInt(onlinePlayers);
+                event.setOnlinePlayers(online);
+            }catch(NumberFormatException ex){
+                logger.warn("Option 'playerCount -> onlinePlayers -> amount' is not a valid Number!");
+            }
         }
         
-        if(ProfileManager.checkOption(entry.maxPlayersEnabled()) && !extraPlayers && ignoreMaintenance(event, "maxPlayers")){
-            max = (entry.maxPlayersCount() == null) ? 0 : entry.maxPlayersCount();
+        boolean extraPlayersEnabled = ProfileManager.checkOption(entry.extraPlayersEnabled());
+        
+        if(extraPlayersEnabled && ignoreMaintenance(event, "extraPlayers")){
+            logger.debug(PingEventHandler.class, "'playerCount -> extraPlayers -> enabled' option is true. Trying to apply '%s'...", entry.extraPlayersCount());
+            String extraPlayers = ComponentParser.text(entry.extraPlayersCount())
+                .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> event.parsePAPIPlaceholders(text, player))
+                .toString();
             
-            logger.debug(PingEventHandler.class, "Max Players enabled. Applying '%d' as max player count...", max);
+            try{
+                max = online + (extraPlayers == null ? 0 : Integer.parseInt(extraPlayers));
+                
+                logger.debug(PingEventHandler.class, "'playerCount -> extraPlayers -> amount' is a valid number. Applying it...");
+                event.setMaxPlayers(max);
+            }catch(NumberFormatException ex){
+                logger.warn("Option 'playerCount -> extraPlayers -> amount' is not a valid Number!");
+            }
+        }
+        
+        if(ProfileManager.checkOption(entry.maxPlayersEnabled()) && !extraPlayersEnabled && ignoreMaintenance(event, "maxPlayers")){
+            logger.debug(PingEventHandler.class, "'playerCount -> maxPlayers -> enabled' option is true. Trying to apply '%s'...", entry.maxPlayersCount());
+            String maxPlayers = ComponentParser.text(entry.maxPlayersCount())
+                .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> event.parsePAPIPlaceholders(text, player))
+                .toString();
             
-            event.setMaxPlayers(max);
+            try{
+                max = maxPlayers == null ? 0 : Integer.parseInt(maxPlayers);
+                
+                logger.debug(PingEventHandler.class, "'playerCount -> maxPlayers -> amount' is a valid number. Applying it...");
+                event.setMaxPlayers(max);
+            }catch(NumberFormatException ex){
+                logger.warn("Option 'playerCount -> maxPlayers -> amount' is not a valid Number!");
+            }
         }
         
         GenericServer finalServer = event.createGenericServer(online, max, host);
         
         if(ProfileManager.checkOption(entry.motd()) && ignoreMaintenance(event, "motd")){
-            logger.debug(PingEventHandler.class, "MOTD set. Applying '%s'...", String.join("\\n", entry.motd()));
+            logger.debug(PingEventHandler.class, "'motd' option present. Applying '%s'...", String.join("\\n", entry.motd()));
             
             event.setMotd(
                 ComponentParser.list(entry.motd())
@@ -118,13 +151,13 @@ public class PingEventHandler{
         boolean hidePlayers = ProfileManager.checkOption(entry.hidePlayersEnabled());
         
         if(hidePlayers && ignoreMaintenance(event, "hidePlayers")){
-            logger.debug(PingEventHandler.class, "Hide Players enabled. Hiding player count...");
+            logger.debug(PingEventHandler.class, "'playerCount -> hidePlayers' enabled. Hiding player count...");
             
             event.hidePlayers();
         }
         
         if(ProfileManager.checkOption(entry.playerCountText()) && !hidePlayers && ignoreMaintenance(event, "playerCountText")){
-            logger.debug(PingEventHandler.class, "Player Count Text set. Applying '%s'...", entry.playerCountText());
+            logger.debug(PingEventHandler.class, "'playerCount -> text' option set. Applying '%s'...", entry.playerCountText());
             
             event.setPlayerCount(
                 ComponentParser.text(entry.playerCountText())
@@ -135,13 +168,13 @@ public class PingEventHandler{
         }
         
         if(ProfileManager.checkOption(entry.players()) && !hidePlayers && ignoreMaintenance(event, "playerCountHover")){
-            logger.debug(PingEventHandler.class, "Player Count Hover set. Applying '%s'...", String.join("\\n", entry.players()));
+            logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying '%s'...", String.join("\\n", entry.players()));
             
             event.setPlayers(entry.players(), player, server);
         }
         
         if(ProfileManager.checkOption(entry.favicon()) && ignoreMaintenance(event, "favicon")){
-            logger.debug(PingEventHandler.class, "Favicon set. Resolving '%s'...", entry.favicon());
+            logger.debug(PingEventHandler.class, "'favicon' option set. Resolving '%s'...", entry.favicon());
             
             String faviconString = StringReplacer.replace(entry.favicon(), player, server);
             

@@ -135,9 +135,9 @@ public class MiniMOTDConfigMigrator{
             
             profileBuilder.hidePlayersEnabled(hidePlayers)
                 .extraPlayersEnabled(xMoreEnabled)
-                .extraPlayersCount(xMore)
+                .extraPlayersCount(String.valueOf(xMore))
                 .maxPlayersEnabled(maxPlayersEnabled)
-                .maxPlayersCount(maxPlayers);
+                .maxPlayersCount(String.valueOf(maxPlayers));
         }
         
         ProfileEntry entry = profileBuilder.build();
