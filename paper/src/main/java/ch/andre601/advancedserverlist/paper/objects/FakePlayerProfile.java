@@ -70,7 +70,7 @@ public record FakePlayerProfile(String name, UUID uuid) implements PlayerProfile
     
     @Override
     public @NotNull PlayerTextures getTextures(){
-        return new FakePlayeerTextures();
+        return new FakePlayerTextures();
     }
     
     @Override
@@ -153,7 +153,7 @@ public record FakePlayerProfile(String name, UUID uuid) implements PlayerProfile
         return Collections.emptyMap();
     }
     
-    private static record FakePlayeerTextures() implements PlayerTextures{
+    private record FakePlayerTextures() implements PlayerTextures{
         
         @Override
         public boolean isEmpty(){

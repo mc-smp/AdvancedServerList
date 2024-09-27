@@ -75,6 +75,11 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
+    public void setOnlinePlayers(int onlinePlayers){
+        event.setNumPlayers(onlinePlayers);
+    }
+    
+    @Override
     public void setMotd(Component component){
         event.motd(component);
     }

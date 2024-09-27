@@ -73,19 +73,19 @@ public class PaperServerPlaceholders extends PlaceholderProvider{
             }
             case "playersMax" -> {
                 if(args.length >= 2)
-                    yield null;
+                    yield "";
                 
                 yield String.valueOf(paperServer.getPlayersMax());
             }
             case "host" -> {
                 if(args.length >= 2)
-                    yield null;
+                    yield "";
                 
                 yield paperServer.getHost();
             }
             case "whitelistEnabled" -> {
                 if(args.length >= 2)
-                    yield null;
+                    yield "";
                 
                 yield String.valueOf(Bukkit.hasWhitelist());
             }

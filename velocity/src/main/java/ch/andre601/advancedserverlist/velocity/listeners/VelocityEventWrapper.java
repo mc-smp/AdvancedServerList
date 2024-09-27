@@ -83,6 +83,11 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
+    public void setOnlinePlayers(int onlinePlayers){
+        builder.onlinePlayers(onlinePlayers);
+    }
+    
+    @Override
     public void setMotd(Component component){
         builder.description(component);
     }

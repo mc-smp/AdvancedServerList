@@ -80,6 +80,11 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
+    public void setOnlinePlayers(int onlinePlayers){
+        ping.getPlayers().setOnline(onlinePlayers);
+    }
+    
+    @Override
     public void setMotd(Component component){
         ping.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(component)));
     }

@@ -79,18 +79,18 @@ public class BungeeServerPlaceholders extends PlaceholderProvider{
             case "playersMax" -> {
                 // ServerInfo doesn't provide the max players that could join, so we won't allow an extra argument
                 if(args.length >= 2)
-                    yield null;
+                    yield "";
                 
                 yield String.valueOf(proxy.getPlayersMax());
             }
             case "host" -> {
                 if(args.length > 2)
-                    yield null;
+                    yield "";
                 
                 if(args.length == 2 && args[1] != null && !args[1].isEmpty()){
                     ServerInfo info = proxy.getServers().get(args[1]);
                     if(info == null)
-                        yield null;
+                        yield "";
                     
                     yield String.valueOf(((InetSocketAddress)info.getSocketAddress()).getHostString());
                 }
