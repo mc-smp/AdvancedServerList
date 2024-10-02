@@ -1,0 +1,11 @@
+when:
+  event: push
+  branch: ${CI_REPO_DEFAULT_BRANCH}
+
+steps:
+  - name: "Manage Releases"
+    image: "woodpeckerci/plugin-ready-release-go"
+    settings:
+      git_email: andre_601-bot@noreply.codeber.org
+      forge_token:
+        from_secret: bot_token
