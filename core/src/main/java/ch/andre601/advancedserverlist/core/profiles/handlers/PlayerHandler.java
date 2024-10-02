@@ -114,8 +114,6 @@ public class PlayerHandler{
         }catch(IOException ex){
             logger.warn("Encountered IOException while saving cached players to playercache.json!", ex);
         }
-        
-        
     }
     
     public void addPlayer(String ip, String name, UUID uuid){

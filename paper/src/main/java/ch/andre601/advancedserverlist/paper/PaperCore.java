@@ -150,6 +150,11 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
+    public void startScheduler(){
+        // Unused
+    }
+    
+    @Override
     public AdvancedServerList<CachedServerIcon> getCore(){
         return core;
     }
