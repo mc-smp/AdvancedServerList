@@ -50,9 +50,9 @@ public class CodebergReleaseFetcher{
     
     public static CodebergRelease fetch(){
         String tag = System.getenv("CI_COMMIT_TAG");
-        String codbergToken = System.getenv("CODEBERG_API_TOKEN");
+        String codebergToken = System.getenv("CODEBERG_API_TOKEN");
         
-        if(tag == null || codbergToken == null || tag.isEmpty() || codbergToken.isEmpty()){
+        if(tag == null || codebergToken == null || tag.isEmpty() || codebergToken.isEmpty()){
             LOGGER.warn("Cannot fetch release data. Either Tag or Codeberg token was null/empty.");
             return null;
         }
@@ -64,7 +64,7 @@ public class CodebergReleaseFetcher{
             .url(url)
             .header("User-Agent", "VersionUploader-CodebergReleaseFetcher/v1.0.0")
             .header("Accept", "application/json")
-            .header("Authorization", "token " + codbergToken)
+            .header("Authorization", "token " + codebergToken)
             .build();
         
         try(Response response = CLIENT.newCall(request).execute()){

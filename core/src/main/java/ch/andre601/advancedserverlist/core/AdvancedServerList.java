@@ -177,6 +177,10 @@ public class AdvancedServerList<F>{
         getPlugin().getPluginLogger().info("Loading bStats metrics. Disable it in the global config under /plugins/bstats/");
         plugin.loadMetrics();
         getPlugin().getPluginLogger().info("Metrics loaded!");
+        
+        getPlugin().getPluginLogger().info("Enabling Schedulers...");
+        plugin.startScheduler();
+        getPlugin().getPluginLogger().info("Schedulers enabled.");
     
         getPlugin().getPluginLogger().info("AdvancedServerList is ready!");
         

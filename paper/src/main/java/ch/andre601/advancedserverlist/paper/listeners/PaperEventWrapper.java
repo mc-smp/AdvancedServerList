@@ -205,12 +205,7 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
         for(String line : lines){
             String parsed = ComponentParser.text(line)
                 .modifyText(text -> StringReplacer.replace(text, player, server))
-                .modifyText(text -> {
-                    if(plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
-                        return PlaceholderAPI.setPlaceholders(player.getPlayer(), text);
-                    
-                    return text;
-                })
+                .modifyText(text -> parsePAPIPlaceholders(text, player))
                 .toString();
             
             playerList.add(function.apply(parsed));

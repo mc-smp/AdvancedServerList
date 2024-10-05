@@ -10,20 +10,14 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
 public class BungeeProxyPlaceholders extends PlaceholderProvider{
     
-    private final Map<String, ServerPing> serverStates = new ConcurrentHashMap<>();
     private final BungeeCordCore plugin;
     
     private BungeeProxyPlaceholders(BungeeCordCore plugin){
         super("proxy");
         
         this.plugin = plugin;
-        plugin.getProxy().getScheduler().schedule(plugin, this::fetchServerStates, 0, 10, TimeUnit.SECONDS);
     }
     
     public static BungeeProxyPlaceholders init(BungeeCordCore plugin){
@@ -36,7 +30,7 @@ public class BungeeProxyPlaceholders extends PlaceholderProvider{
         if(args.length < 2)
             return null;
         
-        ServerPing ping = serverStates.get(args[1]);
+        ServerPing ping = plugin.getFetchedServers().get(args[1]);
         
         return switch(args[0]){
             case "status" -> ping == null ? "offline" : "online";
@@ -63,17 +57,5 @@ public class BungeeProxyPlaceholders extends PlaceholderProvider{
             }
             default -> null;
         };
-    }
-    
-    private void fetchServerStates(){
-        serverStates.clear();
-        plugin.getProxy().getServers().forEach((name, server) -> server.ping((ping, throwable) -> {
-            if(throwable != null){
-                plugin.getPluginLogger().warn("Encountered an exception while fetching status of Server %s", throwable, name);
-                return;
-            }
-            
-            serverStates.put(name, ping);
-        }));
     }
 }

@@ -60,8 +60,19 @@ public class ProfileManager{
         String maxPlayersCount = resolve(defEntry, entry, ProfileEntry::maxPlayersCount);
         String onlinePlayersCount = resolve(defEntry, entry, ProfileEntry::onlinePlayersCount);
         
-        return new ProfileEntry(motd, players, playerCountText, favicon, hidePlayersEnabled, extraPlayersEnabled,
-            maxPlayersEnabled, onlinePlayersEnabled, extraPlayersCount, maxPlayersCount, onlinePlayersCount);
+        return new ProfileEntry.Builder()
+            .motd(motd)
+            .players(players)
+            .playerCountText(playerCountText)
+            .favicon(favicon)
+            .hidePlayersEnabled(hidePlayersEnabled)
+            .extraPlayersEnabled(extraPlayersEnabled)
+            .maxPlayersEnabled(maxPlayersEnabled)
+            .onlinePlayersEnabled(onlinePlayersEnabled)
+            .extraPlayersCount(extraPlayersCount)
+            .maxPlayersCount(maxPlayersCount)
+            .onlinePlayersCount(onlinePlayersCount)
+            .build();
     }
     
     public static ServerListProfile resolveProfile(AdvancedServerList<?> core, GenericPlayer player, GenericServer server){

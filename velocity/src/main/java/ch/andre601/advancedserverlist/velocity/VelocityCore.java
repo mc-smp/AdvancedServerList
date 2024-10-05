@@ -47,6 +47,8 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerPing;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
 import org.bstats.charts.SimplePie;
@@ -59,10 +61,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class VelocityCore implements PluginCore<Favicon>{
     
     private final Logger logger = LoggerFactory.getLogger("AdvancedServerList");
+    private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private final PluginLogger pluginLogger;
     private final ProxyServer proxy;
@@ -73,6 +79,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     private FaviconHandler<Favicon> faviconHandler = null;
     
     private VelocityLibraryManager<VelocityCore> libraryManager = null;
+    
+    private ScheduledTask scheduledTask = null;
     
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
@@ -92,6 +100,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Subscribe
     public void pluginDisable(ProxyShutdownEvent event){
         core.disable();
+        if(scheduledTask != null)
+            scheduledTask.cancel();
     }
     
     @Override
@@ -145,6 +155,13 @@ public class VelocityCore implements PluginCore<Favicon>{
             .build();
         
         libraryManager.loadLibrary(lib);
+    }
+    
+    @Override
+    public void startScheduler(){
+        scheduledTask = getProxy().getScheduler().buildTask(this, this::fetchServers)
+            .repeat(10, TimeUnit.SECONDS)
+            .schedule();
     }
     
     @Override
@@ -209,5 +226,19 @@ public class VelocityCore implements PluginCore<Favicon>{
         }
         
         return players.size();
+    }
+    
+    public Map<String, ServerPing> getFetchedServers(){
+        return fetchedServers;
+    }
+    
+    private void fetchServers(){
+        fetchedServers.clear();
+        getProxy().getAllServers().forEach(server -> server.ping().whenComplete((ping, throwable) -> {
+            if(throwable != null)
+                return;
+            
+            fetchedServers.put(server.getServerInfo().getName(), ping);
+        }));
     }
 }
