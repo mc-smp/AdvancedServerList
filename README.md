@@ -108,6 +108,6 @@ Spanish Video by Ajneb97
   <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/revolt-singular_vector.svg" height="48" alt="revolt" title="Join my Revolt Server">
 </a>
 <br>
-<a href="https://blobfox.coffee/@andre_601" target="_blank">
+<a href="https://swiss.social/@andre_601" target="_blank">
   <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/mastodon-singular_vector.svg" height="48" alt="revolt" title="Chat with me on Mastodon">
 </a>
