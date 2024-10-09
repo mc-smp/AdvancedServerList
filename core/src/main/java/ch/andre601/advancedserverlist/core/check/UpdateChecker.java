@@ -28,7 +28,7 @@ package ch.andre601.advancedserverlist.core.check;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.objects.CacheUtil;
+import ch.andre601.advancedserverlist.core.objects.ValueCache;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -59,7 +59,7 @@ public class UpdateChecker{
     
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new UpdateCheckThread());
     
-    private final CacheUtil<CompletableFuture<ModrinthVersion>> cache = new CacheUtil<>(Duration.ofMinutes(5));
+    private final ValueCache<CompletableFuture<ModrinthVersion>> cache = new ValueCache<>(Duration.ofMinutes(5));
     
     private final AdvancedServerList<?> core;
     private final PluginLogger logger;

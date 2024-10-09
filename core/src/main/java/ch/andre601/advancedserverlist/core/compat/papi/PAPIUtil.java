@@ -25,22 +25,24 @@
 
 package ch.andre601.advancedserverlist.core.compat.papi;
 
-import ch.andre601.advancedserverlist.core.objects.CacheUtil;
+import ch.andre601.advancedserverlist.core.objects.ValueCache;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.william278.papiproxybridge.api.PlaceholderAPI;
 
 import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletionException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class PAPIUtil{
     
     private static PAPIUtil instance;
     
-    private final CacheUtil<String> cache = new CacheUtil<>(Duration.ofSeconds(5));
+    private final ValueCache<CompletableFuture<Set<String>>> serversCache = new ValueCache<>(Duration.ofSeconds(10));
+    private final Cache<UUID, CompletableFuture<String>> textCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(Duration.ofSeconds(10))
+        .build();
     private final PlaceholderAPI papi;
     
     private PAPIUtil(){
@@ -66,24 +68,11 @@ public class PAPIUtil{
     }
     
     public String getServer(){
-        return cache.get(() -> {
-            List<String> servers;
-            
-            try{
-                Set<String> value = papi.getServers().getNow(null);
-                if(value == null)
-                    return null;
-                
-                servers = List.copyOf(value);
-            }catch(CancellationException | CompletionException ex){
-                return null;
-            }
-            
-            if(servers == null || servers.isEmpty())
-                return null;
-            
-            return servers.get(0);
-        });
+        Set<String> values = serversCache.get(papi::getServers).getNow(Collections.emptySet());
+        if(values.isEmpty())
+            return null;
+        
+        return List.copyOf(values).get(0);
     }
     
     public <P> P getPlayer(Collection<P> players){
@@ -95,8 +84,8 @@ public class PAPIUtil{
     
     public String parse(String text, UUID carrier, UUID player){
         try{
-            return papi.formatPlaceholders(text, carrier, player).getNow(text);
-        }catch(IllegalArgumentException | CancellationException | CompletionException ex){
+            return textCache.get(player, () -> papi.formatPlaceholders(text, carrier, player)).getNow(text);
+        }catch(ExecutionException ex){
             return text;
         }
     }
