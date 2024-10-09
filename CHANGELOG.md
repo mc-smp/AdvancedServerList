@@ -8,4 +8,5 @@
 
 ### Misc
 
+- Improve PAPIProxyBridge support [[#353](https://codeberg.org/Andre601/AdvancedServerList/pulls/353)]
 - Add automatic release action [[#351](https://codeberg.org/Andre601/AdvancedServerList/pulls/351)]
