@@ -23,5 +23,6 @@ export default {
             default: true
         },
     ],
-    skipLabels: ["PR Target/MkDocs", "PR Target/Woodpecker-CI"]
+    skipLabels: ["PR Target/MkDocs", "PR Target/Woodpecker-CI"],
+    useVersionPrefixV: true
 };
