@@ -1,6 +1,6 @@
 # Changelog
 
-## [5.0.5](https://codeberg.org/Andre601/AdvancedServerList/releases/tag/v5.0.5) - 2024-10-09
+## [5.0.5](https://codeberg.org/Andre601/AdvancedServerList/releases/tag/v5.0.5) - 2024-10-10
 
 ### ❤️ Thanks to all contributors! ❤️
 
