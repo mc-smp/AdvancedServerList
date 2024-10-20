@@ -6,12 +6,14 @@ To ensure proper safety and support are only certain versions and Platforms of A
 
 | Major Version | Supported |
 |---------------|-----------|
-| v4            | Yes       |
-| v3            | Yes*      |
+| v5            | Yes       |
+| v4            | Yes*      |
+| v3            | Yes**     |
 | v2            | No        |
 | v1            | No        |
 
-\*Only receives support but no updates or bug fixes.
+\*Only receives support but no updates or bug fixes.  
+\*\*Support ends at the end of 2024.
 
 ## Supported Server/Proxy Versions
 
