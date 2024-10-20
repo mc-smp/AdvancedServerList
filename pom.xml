@@ -37,10 +37,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-        <plugin.version>4.13.1</plugin.version>
+        <plugin.version>5.0.5</plugin.version>
         <plugin.description>Create multiple Server lists based on conditions.</plugin.description>
         
-        <api.version>3.3.0</api.version>
+        <api.version>4.0.0</api.version>
 
         <dependency.adventure-api>4.17.0</dependency.adventure-api>
         <dependency.adventure-text-minimessage>4.17.0</dependency.adventure-text-minimessage>

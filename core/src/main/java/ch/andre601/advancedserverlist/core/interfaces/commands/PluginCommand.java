@@ -29,14 +29,14 @@ import java.util.Locale;
 
 public abstract class PluginCommand{
     
-    private final String argument;
+    private final String name;
     
-    public PluginCommand(String argument){
-        this.argument = argument;
+    public PluginCommand(String name){
+        this.name = name;
     }
     
     public String name(){
-        return argument;
+        return name;
     }
     
     public String permission(){

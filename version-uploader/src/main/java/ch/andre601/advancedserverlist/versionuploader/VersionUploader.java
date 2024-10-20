@@ -53,7 +53,7 @@ public class VersionUploader{
         
         if(args.length == 0){
             LOGGER.warn("MISSING ARGUMENT!");
-            LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar [--dryrun] --all | --modrinth | --hangar");
+            LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar --all | --modrinth | --hangar [--dryrun]");
             System.exit(1);
             return;
         }
@@ -84,7 +84,7 @@ public class VersionUploader{
             }
             default -> {
                 LOGGER.warn("Unknown argument '{}' provided.", args[0]);
-                LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar [--dryrun] --all | --modrinth | --hangar");
+                LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar --all | --modrinth | --hangar [--dryrun]");
                 System.exit(1);
                 return;
             }

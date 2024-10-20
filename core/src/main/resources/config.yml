@@ -107,6 +107,12 @@ disableDuringMaintenance:
   # Default: true
   #
   maxPlayers: true
+  #
+  # Whether the online players feature should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  onlinePlayers: true
 
 #
 # DO NOT EDIT!

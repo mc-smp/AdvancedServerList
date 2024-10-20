@@ -46,6 +46,8 @@ public interface PluginCore<F>{
     
     void downloadLibrary(String groupId, String artifactId, String version);
     
+    void startScheduler();
+    
     AdvancedServerList<F> getCore();
     
     Path getFolderPath();

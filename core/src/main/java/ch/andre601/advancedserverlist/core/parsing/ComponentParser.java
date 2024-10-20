@@ -65,6 +65,10 @@ public class ComponentParser{
         return mm.deserialize(text);
     }
     
+    public static String toMMString(Component component){
+        return mm.serialize(component);
+    }
+    
     @Override
     public String toString(){
         return legacy.serialize(toComponent());

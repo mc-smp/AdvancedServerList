@@ -31,8 +31,6 @@ import com.google.common.primitives.UnsignedLongs;
 import me.leoko.advancedban.manager.PunishmentManager;
 import me.leoko.advancedban.utils.Punishment;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 public class AdvancedBanProvider implements PunishmentProvider{

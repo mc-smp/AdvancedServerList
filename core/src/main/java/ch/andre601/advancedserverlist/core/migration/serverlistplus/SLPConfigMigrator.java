@@ -129,7 +129,7 @@ public class SLPConfigMigrator{
         apply(motds, builder, profiles, ProfileEntry.Builder::motd);
         apply(favicons, builder, profiles, ProfileEntry.Builder::favicon);
         apply(hovers, builder, profiles, ProfileEntry.Builder::players);
-        apply(maxPlayers, builder, profiles, (build, count) -> build.maxPlayersEnabled(NullBool.TRUE).maxPlayersCount(count));
+        apply(maxPlayers, builder, profiles, (build, count) -> build.maxPlayersEnabled(NullBool.TRUE).maxPlayersCount(String.valueOf(count)));
         apply(playerCount, builder, profiles, ProfileEntry.Builder::playerCountText);
         
         builder.hidePlayersEnabled(hidePlayers);

@@ -28,12 +28,12 @@ package ch.andre601.advancedserverlist.core.objects;
 import java.time.Duration;
 import java.util.function.Supplier;
 
-public class CacheUtil<T>{
+public class ValueCache<T>{
     
     private final Duration duration;
     private CacheValue<T> cache = null;
     
-    public CacheUtil(Duration duration){
+    public ValueCache(Duration duration){
         this.duration = duration;
     }
     

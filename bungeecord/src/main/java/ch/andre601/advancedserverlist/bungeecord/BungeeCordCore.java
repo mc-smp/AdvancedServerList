@@ -31,6 +31,7 @@ import ch.andre601.advancedserverlist.bungeecord.listeners.PingListener;
 import ch.andre601.advancedserverlist.bungeecord.listeners.PluginMessageListener;
 import ch.andre601.advancedserverlist.bungeecord.logging.BungeeLogger;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeePlayerPlaceholders;
+import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeProxyPlaceholders;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeServerPlaceholders;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
@@ -41,6 +42,7 @@ import com.alessiodp.libby.Library;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.Favicon;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -51,10 +53,14 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     private final PluginLogger logger = new BungeeLogger(this);
+    private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private boolean successfulLoad = false;
     
@@ -84,12 +90,14 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         }
         
         this.audiences = BungeeAudiences.create(this);
-        this.core = AdvancedServerList.init(this, BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this));
+        this.core = AdvancedServerList.init(this,
+            BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this), BungeeProxyPlaceholders.init(this));
     }
     
     @Override
     public void onDisable(){
         core.disable();
+        getProxy().getScheduler().cancel(this);
     }
     
     @Override
@@ -140,6 +148,11 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
             .build();
         
         libraryManager.loadLibrary(lib);
+    }
+    
+    @Override
+    public void startScheduler(){
+        getProxy().getScheduler().schedule(this, this::fetchServers, 0, 10, TimeUnit.SECONDS);
     }
     
     @Override
@@ -200,6 +213,10 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         return players.size();
     }
     
+    public Map<String, ServerPing> getFetchedServers(){
+        return fetchedServers;
+    }
+    
     private boolean loadLibs(){
         try{
             if(libraryManager == null){
@@ -214,5 +231,15 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
             logger.warn("Encountered an Exception while trying to load dependencies.", ex);
             return false;
         }
+    }
+    
+    private void fetchServers(){
+        fetchedServers.clear();
+        getProxy().getServers().forEach((name, server) -> server.ping((ping, throwable) -> {
+            if(throwable != null)
+                return;
+            
+            fetchedServers.put(name, ping);
+        }));
     }
 }

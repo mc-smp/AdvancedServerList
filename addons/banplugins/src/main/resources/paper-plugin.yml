@@ -2,7 +2,7 @@ name: 'ASLBanPluginsAddon'
 author: 'Andre_601'
 version: '${plugin.version}'
 
-main: 'ch.andre601.advancedserverlist.banplugins.paper.AdvancedBanPlaceholders'
+main: 'ch.andre601.advancedserverlist.banplugins.paper.PaperBanPluginsAddon'
 
 api-version: '1.19'
 
@@ -11,7 +11,7 @@ dependencies:
     AdvancedServerList:
       required: false
       load: BEFORE
-    AdvancedBans:
+    AdvancedBan:
       required: false
       load: BEFORE
     LibertyBans:

@@ -25,8 +25,8 @@
 
 package ch.andre601.advancedserverlist.versionuploader.modrinth;
 
-import ch.andre601.advancedserverlist.versionuploader.ReleaseHolder;
 import ch.andre601.advancedserverlist.versionuploader.PlatformInfo;
+import ch.andre601.advancedserverlist.versionuploader.ReleaseHolder;
 import ch.andre601.advancedserverlist.versionuploader.VersionUploader;
 import ch.andre601.advancedserverlist.versionuploader.data.CodebergRelease;
 import com.google.gson.Gson;
@@ -143,7 +143,8 @@ public class ModrinthVersionUploader{
                 String url = versionUrl + projectVersion.getId();
                 
                 logger.info("Created new release!");
-                logger.info("Link: {}", url);
+                logger.info("Link:     {}", url);
+                logger.info("Platform: {}", platforms.get(index).getPlatform());
                 
                 releaseHolder.addRelease(
                     "modrinth",

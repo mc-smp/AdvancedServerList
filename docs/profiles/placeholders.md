@@ -44,13 +44,31 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
 
 [^4]:
     A comma-separated list of world (On Paper) or Server (On BungeeCord/Velocity) names can be provided to display the added numbers of players in these worlds/servers.  
-    **Example:** `${server playersOnline lobby1,lobby2}` will display the collective numbers of players in the servers `lobby1` and `lobby2`.
+    **Example:** `${server playersOnline lobby1,lobby2}` will display the collective numbers of players in the servers `lobby1` and `lobby2`.  
+    Using the [onlinePlayers' `amount`](index.md#onlineplayers-amount) option will modify the output of this placeholder, except when used in [`condition`](index.md#condition).
 [^5]:
     Using either the [extraPlayers' `amount`](index.md#extraplayers-amount) or [maxPlayers' `amount`](index.md#maxplayers-amount) option will make this placeholder return the modified max players count.  
     Only exception to this rule is when the placeholder is used in the [`condition`](index.md#condition) option in which case it returns the actual max player count of the proxy/server.
 [^6]:
     An optional server name can be provided to display the IP/Domain associated with that server. This only works on BungeeCord or Velocity.  
     **Example:** `${server host survival}` would display the IP/Domain associated with the `survival` server.
+
+### Proxy
+
+These placeholders are only available on the BungeeCord and Velocity versions of AdvancedServerList.
+
+/// note
+Servers are pinged every 10 seconds by the plugin and cached for that time period.
+///
+
+| Placeholders                 | Description                                                       | Default[^7] |
+|------------------------------|-------------------------------------------------------------------|-------------|
+| `${proxy status <name>}`     | Returns `online` or `offline` based on the Server's availability. | `offline`   |
+| `${proxy motd <name>}`       | Returns the Server's MOTD as MiniMessage String.                  | `none`      |
+| `${proxy players <name>}`    | Returns the number of online Players on the Server.               | `0`         |
+| `${proxy maxPlayers <name>}` | Returns the max number of Players allowed to join the Server.     | `0`         |
+
+[^7]: The default value returned, should the Server or parts of it not be available.
 
 ### Maintenance
 

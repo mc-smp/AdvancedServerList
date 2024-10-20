@@ -46,10 +46,21 @@ public class ConfigMigrator{
     public static ConfigurationTransformation.Versioned create(){
         return ConfigurationTransformation.versionedBuilder()
             .versionKey("configVersion")
-            .addVersion(LATEST, fourToFive())
+            .addVersion(LATEST, fiveToSix())
+            .addVersion(5, fourToFive())
             .addVersion(4, threeToFour())
             .addVersion(3, twoToThree())
             .addVersion(2, oneToTwo())
+            .build();
+    }
+    
+    public static ConfigurationTransformation fiveToSix(){
+        return ConfigurationTransformation.builder()
+            .addAction(NodePath.path("disableDuringMaintenance"), (path, value) -> {
+                value.node("onlinePlayers").set(true);
+                
+                return null;
+            })
             .build();
     }
     

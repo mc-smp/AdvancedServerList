@@ -85,6 +85,11 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
+    public void setOnlinePlayers(int onlinePlayers){
+        ping.getPlayers().setOnline(onlinePlayers);
+    }
+    
+    @Override
     public void setMotd(Component component){
         ping.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(component)));
     }
@@ -107,6 +112,7 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
         for(int i = 0; i < players.length; i++){
             String parsed = ComponentParser.text(lines.get(i))
                 .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> parsePAPIPlaceholders(text, player))
                 .toString();
             
             ServerPing.PlayerInfo pi = new ServerPing.PlayerInfo(parsed, UUID.randomUUID());

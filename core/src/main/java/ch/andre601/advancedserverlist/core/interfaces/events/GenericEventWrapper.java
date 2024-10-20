@@ -42,6 +42,8 @@ public interface GenericEventWrapper<F, P extends GenericPlayer>{
     
     void setMaxPlayers(int maxPlayers);
     
+    void setOnlinePlayers(int onlinePlayers);
+    
     void setMotd(Component component);
     
     void hidePlayers();

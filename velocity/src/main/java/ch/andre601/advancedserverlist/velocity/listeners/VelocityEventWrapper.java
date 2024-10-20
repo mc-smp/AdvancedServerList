@@ -88,6 +88,11 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
+    public void setOnlinePlayers(int onlinePlayers){
+        builder.onlinePlayers(onlinePlayers);
+    }
+    
+    @Override
     public void setMotd(Component component){
         builder.description(component);
     }
@@ -109,6 +114,7 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
         for(int i = 0; i < players.length; i++){
             String parsed = ComponentParser.text(lines.get(i))
                 .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> parsePAPIPlaceholders(text, player))
                 .toString();
             
             players[i] = new ServerPing.SamplePlayer(parsed, UUID.randomUUID());
