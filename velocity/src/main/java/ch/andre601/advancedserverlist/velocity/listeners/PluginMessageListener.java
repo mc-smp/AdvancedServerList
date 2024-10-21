@@ -33,8 +33,7 @@ public class PluginMessageListener{
                 String uuid = input.readUTF();
                 String parsed = input.readUTF();
                 
-                PluginMessageUtil.get().removeFromQueue(uuid);
-                PluginMessageUtil.get().putInParsed(uuid, parsed);
+                PluginMessageUtil.get().queue(uuid, parsed, true);
             }
         }
     }

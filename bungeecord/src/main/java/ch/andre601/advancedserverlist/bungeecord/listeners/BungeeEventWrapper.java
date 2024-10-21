@@ -34,9 +34,9 @@ import ch.andre601.advancedserverlist.bungeecord.objects.impl.BungeeProxyImpl;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
-import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
+import ch.andre601.advancedserverlist.core.objects.ValueCache;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
 import com.google.common.io.ByteArrayDataOutput;
@@ -57,7 +57,7 @@ import java.util.UUID;
 
 public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePlayerImpl>{
     
-    private final CacheUtil<Integer> knownServerCache = new CacheUtil<>(Duration.ofMinutes(1));
+    private final ValueCache<Integer> knownServerCache = new ValueCache<>(Duration.ofMinutes(1));
     
     private final BungeeCordCore plugin;
     private final ProxyPingEvent event;
@@ -174,39 +174,25 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     
     @Override
     public String parsePAPIPlaceholders(String text, BungeePlayerImpl player){
-        knownServerCache.get(() -> {
-            plugin.getProxy().getServers().values().forEach(serverInfo -> {
-                ByteArrayDataOutput output = ByteStreams.newDataOutput();
-                output.writeUTF("findPlugins");
-                
-                serverInfo.sendData("advancedserverlist:action", output.toByteArray());
-            });
-            // We return some random dummy value here
-            return 1;
+        return PluginMessageUtil.get().getOrExecute(player.getUUID().toString(), text, (uuid, textValue) -> {
+            List<String> servers = PluginMessageUtil.get().getKnownServers();
+            if(servers.isEmpty())
+                return textValue;
+            
+            ServerInfo serverInfo = plugin.getProxy().getServerInfo(servers.get(0));
+            if(serverInfo == null)
+                return textValue;
+            
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("parse");
+            out.writeUTF(uuid);
+            out.writeUTF(textValue);
+            
+            serverInfo.sendData(BungeeCordCore.ASL_PLUGIN_CHANNEL, out.toByteArray());
+            PluginMessageUtil.get().queue(uuid, textValue, false);
+            
+            return PluginMessageUtil.get().getOrDefault(uuid, textValue);
         });
-        
-        List<String> knownServers = PluginMessageUtil.get().getKnownServers();
-        if(knownServers.isEmpty())
-            return text;
-        
-        String serverName = knownServers.get(0);
-        ServerInfo server = plugin.getProxy().getServerInfo(serverName);
-        if(server == null)
-            return text;
-        
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF("parse");
-        output.writeUTF(player.getUUID().toString());
-        output.writeUTF(text);
-        
-        server.sendData("advancedserverlist:action", output.toByteArray());
-        PluginMessageUtil.get().putInQueue(player.getUUID().toString(), text);
-        
-        if(PluginMessageUtil.get().hasParsed(player.getUUID().toString())){
-            return PluginMessageUtil.get().getAndRemoveParsed(player.getUUID().toString());
-        }else{
-            return PluginMessageUtil.get().getQueuedValue(player.getUUID().toString());
-        }
     }
     
     @Override

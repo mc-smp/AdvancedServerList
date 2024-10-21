@@ -16,7 +16,7 @@ public class PluginMessageListener implements Listener{
     
     @EventHandler
     public void onPluginMessage(PluginMessageEvent event){
-        if(!event.getTag().equals("advancedserverlist:action"))
+        if(!event.getTag().equals(BungeeCordCore.ASL_PLUGIN_CHANNEL))
             return;
         
         ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
@@ -30,8 +30,7 @@ public class PluginMessageListener implements Listener{
                 String uuid = input.readUTF();
                 String parsed = input.readUTF();
                 
-                PluginMessageUtil.get().removeFromQueue(uuid);
-                PluginMessageUtil.get().putInParsed(uuid, parsed);
+                PluginMessageUtil.get().queue(uuid, parsed, true);
             }
         }
     }

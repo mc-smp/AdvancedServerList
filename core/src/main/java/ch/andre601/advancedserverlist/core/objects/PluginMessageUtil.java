@@ -1,17 +1,17 @@
 package ch.andre601.advancedserverlist.core.objects;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiFunction;
 
 public class PluginMessageUtil{
     
     private static PluginMessageUtil instance;
     
-    private final List<String> knownServers = new ArrayList<>();
-    private final Map<String, String> queuedText = new HashMap<>();
-    private final Map<String, String> parsedText = new HashMap<>();
+    private final List<String> knownServers = new CopyOnWriteArrayList<>();
+    private final Map<String, ParsedText> text = new ConcurrentHashMap<>();
     
     private PluginMessageUtil(){}
     
@@ -30,27 +30,28 @@ public class PluginMessageUtil{
         return knownServers;
     }
     
-    public void putInQueue(String key, String value){
-        queuedText.put(key, value);
+    public void clear(){
+        knownServers.clear();
     }
     
-    public void removeFromQueue(String key){
-        queuedText.remove(key);
+    public String getOrExecute(String key, String value, BiFunction<String, String, String> function){
+        if(text.get(key) != null){
+            return getOrDefault(key, value);
+        }
+        
+        return function.apply(key, value);
     }
     
-    public String getQueuedValue(String key){
-        return queuedText.get(key);
+    public void queue(String key, String value, boolean parsed){
+        text.put(key, new ParsedText(value, parsed));
     }
     
-    public void putInParsed(String key, String value){
-        parsedText.put(key, value);
+    public String getOrDefault(String key, String def){
+        if(text.get(key) == null)
+            return def;
+        
+        return text.get(key).parsed() ? text.remove(key).text() : text.get(key).text();
     }
     
-    public boolean hasParsed(String key){
-        return parsedText.containsKey(key);
-    }
-    
-    public String getAndRemoveParsed(String key){
-        return parsedText.remove(key);
-    }
+    private record ParsedText(String text, boolean parsed){}
 }

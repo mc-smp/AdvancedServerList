@@ -39,6 +39,8 @@ import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityProx
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
 import com.alessiodp.libby.Library;
 import com.alessiodp.libby.VelocityLibraryManager;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
@@ -244,6 +246,11 @@ public class VelocityCore implements PluginCore<Favicon>{
                 return;
             
             fetchedServers.put(server.getServerInfo().getName(), ping);
+            
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("findPlugins");
+            
+            server.sendPluginMessage(ASL_IDENTIFIER, out.toByteArray());
         }));
     }
 }

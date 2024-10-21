@@ -36,9 +36,12 @@ import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeServ
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
+import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import com.alessiodp.libby.BungeeLibraryManager;
 import com.alessiodp.libby.Library;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.myzelyam.api.vanish.BungeeVanishAPI;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.Favicon;
@@ -58,6 +61,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
+    
+    public static final String ASL_PLUGIN_CHANNEL = "advancedserverlist:action";
     
     private final PluginLogger logger = new BungeeLogger(this);
     private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
@@ -235,11 +240,17 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     private void fetchServers(){
         fetchedServers.clear();
+        PluginMessageUtil.get().clear();
         getProxy().getServers().forEach((name, server) -> server.ping((ping, throwable) -> {
             if(throwable != null)
                 return;
             
             fetchedServers.put(name, ping);
+            
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("findPlugins");
+            
+            server.sendData(ASL_PLUGIN_CHANNEL, out.toByteArray());
         }));
     }
 }

@@ -31,7 +31,6 @@ import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenanceUtil;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
-import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
@@ -47,7 +46,6 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +53,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class VelocityEventWrapper implements GenericEventWrapper<Favicon, VelocityPlayerImpl>{
-    
-    private final CacheUtil<Integer> knownServerCache = new CacheUtil<>(Duration.ofMinutes(1));
     
     private final VelocityCore plugin;
     private final ProxyPingEvent event;
@@ -177,38 +173,25 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     
     @Override
     public String parsePAPIPlaceholders(String text, VelocityPlayerImpl player){
-        knownServerCache.get(() -> {
-            plugin.getProxy().getAllServers().forEach(registeredServer -> {
-                ByteArrayDataOutput output = ByteStreams.newDataOutput();
-                output.writeUTF("findPlugins");
-                
-                registeredServer.sendPluginMessage(VelocityCore.ASL_IDENTIFIER, output.toByteArray());
-            });
-            // Returning a dummy value here.
-            return 1;
+        return PluginMessageUtil.get().getOrExecute(player.getUUID().toString(), text, (uuid, textValue) -> {
+            List<String> servers = PluginMessageUtil.get().getKnownServers();
+            if(servers.isEmpty())
+                return textValue;
+            
+            RegisteredServer registeredServer = plugin.getProxy().getServer(servers.get(0)).orElse(null);
+            if(registeredServer == null)
+                return textValue;
+            
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("parse");
+            out.writeUTF(uuid);
+            out.writeUTF(textValue);
+            
+            registeredServer.sendPluginMessage(VelocityCore.ASL_IDENTIFIER, out.toByteArray());
+            PluginMessageUtil.get().queue(uuid, textValue, false);
+            
+            return PluginMessageUtil.get().getOrDefault(uuid, textValue);
         });
-        
-        List<String> knownServers = PluginMessageUtil.get().getKnownServers();
-        if(knownServers.isEmpty())
-            return text;
-        
-        String serverName = knownServers.get(0);
-        RegisteredServer server = plugin.getProxy().getServer(serverName).orElse(null);
-        if(server == null)
-            return text;
-        
-        ByteArrayDataOutput output = ByteStreams.newDataOutput();
-        output.writeUTF("parse");
-        output.writeUTF(player.getUUID().toString());
-        output.writeUTF(text);
-        
-        server.sendPluginMessage(VelocityCore.ASL_IDENTIFIER, output.toByteArray());
-        PluginMessageUtil.get().putInQueue(player.getUUID().toString(), text);
-        if(PluginMessageUtil.get().hasParsed(player.getUUID().toString())){
-            return PluginMessageUtil.get().getAndRemoveParsed(player.getUUID().toString());
-        }else{
-            return PluginMessageUtil.get().getQueuedValue(player.getUUID().toString());
-        }
     }
     
     @Override
