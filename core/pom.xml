@@ -137,7 +137,7 @@
         <dependency>
             <groupId>net.william278</groupId>
             <artifactId>papiproxybridge</artifactId>
-            <version>1.6.2</version>
+            <version>1.7.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -157,7 +157,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.2</version>
+            <version>5.11.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -356,7 +356,7 @@ You can use placeholders that resolve into numbers for this option.
 /// details | Example
     type: example
 
-```yaml title="YAML file
+```yaml title="YAML file"
 priority: 0
 
 # Hides the MOTD for demonstration purposes

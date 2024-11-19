@@ -35,26 +35,6 @@ import java.util.UUID;
 
 public class AdvancedBanProvider implements PunishmentProvider{
     
-    private static PunishmentManager getAPI(){
-        return PunishmentManager.get();
-    }
-    
-    private static String noDashesUUID(UUID uuid){
-        return hexString(uuid.getMostSignificantBits()) + hexString(uuid.getLeastSignificantBits());
-    }
-    
-    private static Punishment mute(GenericPlayer player){
-        return getAPI().getMute(noDashesUUID(player.getUUID()));
-    }
-    
-    private static Punishment ban(GenericPlayer player){
-        return getAPI().getBan(noDashesUUID(player.getUUID()));
-    }
-    
-    private static String hexString(long unsigned){
-        return Strings.padStart(UnsignedLongs.toString(unsigned, 16), 16, '0');
-    }
-    
     @Override
     public String muted(GenericPlayer player){
         return String.valueOf(getAPI().isMuted(noDashesUUID(player.getUUID())));
@@ -133,5 +113,25 @@ public class AdvancedBanProvider implements PunishmentProvider{
             return null;
         
         return ban.getDuration(fromStart);
+    }
+    
+    private PunishmentManager getAPI(){
+        return PunishmentManager.get();
+    }
+    
+    private String noDashesUUID(UUID uuid){
+        return hexString(uuid.getMostSignificantBits()) + hexString(uuid.getLeastSignificantBits());
+    }
+    
+    private Punishment mute(GenericPlayer player){
+        return getAPI().getMute(noDashesUUID(player.getUUID()));
+    }
+    
+    private Punishment ban(GenericPlayer player){
+        return getAPI().getBan(noDashesUUID(player.getUUID()));
+    }
+    
+    private String hexString(long unsigned){
+        return Strings.padStart(UnsignedLongs.toString(unsigned, 16), 16, '0');
     }
 }
