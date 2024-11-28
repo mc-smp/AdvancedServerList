@@ -15,6 +15,8 @@ on:
 jobs:
   buildWiki:
     runs-on: codeberg-tiny
+    container:
+      image: alpine:3.20
     steps:
       - name: "Checkout Source Repository"
         uses: https://code.forgejo.org/actions/checkout@v4
