@@ -16,7 +16,7 @@ jobs:
   buildWiki:
     runs-on: codeberg-tiny
     container:
-      image: ubuntu:20.04
+      image: node:23-alpine3.19
     steps:
       - name: "Checkout Source Repository"
         uses: https://code.forgejo.org/actions/checkout@v4
