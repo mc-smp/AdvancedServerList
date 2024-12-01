@@ -189,13 +189,12 @@ public class AdvancedServerList<F>{
     }
     
     private void printBanner(){
-        getPlugin().getPluginLogger().info("           _____ _");
-        getPlugin().getPluginLogger().info("    /\\    / ____| |");
-        getPlugin().getPluginLogger().info("   /  \\  | (___ | |");
-        getPlugin().getPluginLogger().info("  / /\\ \\  \\___ \\| |");
-        getPlugin().getPluginLogger().info(" / ____ \\ ____) | |____");
-        getPlugin().getPluginLogger().info("/_/    \\_\\_____/|______|");
-        getPlugin().getPluginLogger().info("");
+        getPlugin().getPluginLogger().info("     __        _______   ___");
+        getPlugin().getPluginLogger().info("    /\\ \\      / ____\\_\\ | | |");
+        getPlugin().getPluginLogger().info("   /  \\ \\    | (_(___   | | |");
+        getPlugin().getPluginLogger().info("  / /\\ \\ \\    \\___ \\ \\  | | |");
+        getPlugin().getPluginLogger().info(" / ____ \\ \\   ____) | | | |_|____");
+        getPlugin().getPluginLogger().info("/_/_/  \\_\\_\\ \\_____/_/  |______|_|");
     }
     
     private void resolveVersion(){

@@ -27,8 +27,7 @@ package ch.andre601.advancedserverlist.core.profiles.handlers;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import ch.andre601.advancedserverlist.core.objects.CacheUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -42,9 +41,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.Random;
 import java.util.stream.Stream;
 
 public class FaviconHandler<F>{
@@ -52,7 +57,7 @@ public class FaviconHandler<F>{
     private final AdvancedServerList<F> core;
     private final PluginLogger logger;
     private final ThreadPoolExecutor faviconThreadPool;
-    private final Cache<String, CompletableFuture<F>> faviconCache;
+    private final CacheUtil.IdentifiableCache<String, CompletableFuture<F>> faviconCache;
     
     private final Map<String, F> localFavicons = new HashMap<>();
     private final HttpClient client = HttpClient.newHttpClient();
@@ -62,24 +67,19 @@ public class FaviconHandler<F>{
         this.core = core;
         this.logger = core.getPlugin().getPluginLogger();
         this.faviconThreadPool = createFaviconThreadPool();
-        this.faviconCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(core.getFileHandler().getLong(1, 1, "faviconCacheTime"), TimeUnit.MINUTES)
-            .build();
+        this.faviconCache = new CacheUtil.IdentifiableCache<>(Duration.ofMinutes(
+            core.getFileHandler().getLong(1, 1, "faviconCacheTime")
+        ));
         
         loadLocalFavicons();
     }
     
     public F getFavicon(String input){
-        if(localFavicons.size() > 0){
+        if(!localFavicons.isEmpty()){
             logger.debug(FaviconHandler.class, "Current Local Favicons:");
             for(String key : localFavicons.keySet()){
                 logger.debug(FaviconHandler.class, "  - %s", key);
             }
-        }
-        
-        if(input.equalsIgnoreCase("random")){
-            logger.debug(FaviconHandler.class, "Input matches 'random'. Returning random Favicon...");
-            return getRandomized();
         }
         
         if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
@@ -87,17 +87,12 @@ public class FaviconHandler<F>{
             return localFavicons.get(input.toLowerCase(Locale.ROOT));
         }
         
-        try{
-            logger.debug(FaviconHandler.class, "Getting Favicon image from cache...");
-            return faviconCache.get(input, () -> getFuture(input)).getNow(null);
-        }catch(ExecutionException ex){
-            logger.warn("Received ExecutionException while retrieving Favicon for '%s'.", ex, input);
-            return null;
-        }
+        logger.debug(FaviconHandler.class, "Getting Favicon image from cache...");
+        return faviconCache.get(input, () -> getFuture(input)).getNow(null);
     }
     
     public void cleanCache(){
-        faviconCache.invalidateAll();
+        faviconCache.clear();
         loadLocalFavicons();
     }
     
@@ -113,7 +108,7 @@ public class FaviconHandler<F>{
             logger.debug(FaviconHandler.class, "Resolving image file '%s'...", input);
             return CompletableFuture.completedFuture(localFavicons.get(input.toLowerCase(Locale.ROOT)));
         }else{
-            logger.debug(FaviconHandler.class, "Resolving Name/UUID as https://mc-heads.net/avatar/%s/64...", input);
+            logger.debug(FaviconHandler.class, "Resolving '%s' as 'https://mc-heads.net/avatar/%s/64'...", input, input);
             return CompletableFuture.supplyAsync(() -> fromURL(core, "https://mc-heads.net/avatar/" + input + "/64"), this.faviconThreadPool);
         }
     }

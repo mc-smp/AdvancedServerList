@@ -227,20 +227,21 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     private void printNoPaperWarning(){
         getPluginLogger().warn("======================================================================================");
-        getPluginLogger().warn("THIS SERVER DOES NOT USE PAPER OR A COMPATIBLE FORK!");
+        getPluginLogger().warn("THIS SERVER IS NOT RUNNING PAPER OR A PAPER-COMPATIBLE FORK!");
         getPluginLogger().warn("");
-        getPluginLogger().warn("AdvancedServerList 3.6.0 has dropped support for Spigot-based servers.");
-        getPluginLogger().warn("This means that only servers using Paper or a Paper-compatible fork may work.");
+        getPluginLogger().warn("Support for Spigot-based Servers was dropped in v3.6.0 of AdvancedServerList.");
+        getPluginLogger().warn("This means that only Servers running Paper or a Fork supporting the Paper-Plugin");
+        getPluginLogger().warn("System may work.");
         getPluginLogger().warn("");
-        getPluginLogger().warn("Reasons for this removal:");
-        getPluginLogger().warn("  - Reliance on a different plugin for core functionalities.");
-        getPluginLogger().warn("  - Bad dependency loading limited to MavenCentral only.");
+        getPluginLogger().warn("Reasons for Removal of Spigot Support include:");
+        getPluginLogger().warn("  - The reliance on a 3rd-party Plugin (ProtocolLib) for core features of the Plugin.");
+        getPluginLogger().warn("  - Library/Dependency Loading being limited to MavenCentral only.");
         getPluginLogger().warn("");
-        getPluginLogger().warn("Please consider switching to Paper or one of the Paper-compatible forks to benefit");
-        getPluginLogger().warn("from overall performance improvements amongst other things.");
+        getPluginLogger().warn("Please consider switching to Paper or a Server supporting the Paper-Plugin System");
+        getPluginLogger().warn("for performance improvements and other Quality of Life features.");
         getPluginLogger().warn("");
-        getPluginLogger().warn("Disabling AdvancedServerList. If you believe this is an error, report it on");
-        getPluginLogger().warn("Codeberg: https://codeberg.org/Andre601/AdvancedServerList");
+        getPluginLogger().warn("If you believe this to be a mistake, file an issue on Codeberg:");
+        getPluginLogger().warn("https://codeberg.org/Andre601/AdvancedServerList/issues");
         getPluginLogger().warn("======================================================================================");
         
         Bukkit.getPluginManager().disablePlugin(this);

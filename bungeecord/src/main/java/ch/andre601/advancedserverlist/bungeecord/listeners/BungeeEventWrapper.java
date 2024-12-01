@@ -36,7 +36,6 @@ import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.interfaces.events.GenericEventWrapper;
 import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 import ch.andre601.advancedserverlist.core.objects.PluginMessageUtil;
-import ch.andre601.advancedserverlist.core.objects.ValueCache;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
 import com.google.common.io.ByteArrayDataOutput;
@@ -50,14 +49,11 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 
 import java.net.InetSocketAddress;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePlayerImpl>{
-    
-    private final ValueCache<Integer> knownServerCache = new ValueCache<>(Duration.ofMinutes(1));
     
     private final BungeeCordCore plugin;
     private final ProxyPingEvent event;
