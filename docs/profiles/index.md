@@ -122,7 +122,8 @@ The `favicon` option can be used to define an image to display in the server lis
 The Value can be one of three possible options, each being checked for in order:
 
 - A URL pointing to an image file. The URL needs to start with `https://` to work.
-- A PNG filename, including `.png` file extension, matching a PNG file in the `favicons` folder.
+- The keyword `random`. Setting this will have the plugin randomly select an existing PNG file from its `favicons` folder.
+- A filename matching an existing PNG file in the plugin's `favicons` folder. The `.png` extension needs to be included.
 - A player name or UUID, or a [placeholder](placeholders.md) that resolves into one.
 
 Note that for the name/UUID, the site https://mc-heads.net is being used.  

@@ -42,9 +42,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Stream;
 
@@ -57,6 +56,7 @@ public class FaviconHandler<F>{
     
     private final Map<String, F> localFavicons = new HashMap<>();
     private final HttpClient client = HttpClient.newHttpClient();
+    private final Random random = new Random();
     
     public FaviconHandler(AdvancedServerList<F> core){
         this.core = core;
@@ -75,6 +75,11 @@ public class FaviconHandler<F>{
             for(String key : localFavicons.keySet()){
                 logger.debug(FaviconHandler.class, "  - %s", key);
             }
+        }
+        
+        if(input.equalsIgnoreCase("random")){
+            logger.debug(FaviconHandler.class, "Input matches 'random'. Returning random Favicon...");
+            return getRandomized();
         }
         
         if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
@@ -101,12 +106,31 @@ public class FaviconHandler<F>{
             logger.debug(FaviconHandler.class, "Resolving URL '%s'...", input);
             return CompletableFuture.supplyAsync(() -> fromURL(core, input), this.faviconThreadPool);
         }else
+        if(input.equalsIgnoreCase("random")){
+            return CompletableFuture.completedFuture(getRandomized());
+        }else
         if(input.toLowerCase(Locale.ROOT).endsWith(".png")){
             logger.debug(FaviconHandler.class, "Resolving image file '%s'...", input);
             return CompletableFuture.completedFuture(localFavicons.get(input.toLowerCase(Locale.ROOT)));
         }else{
             logger.debug(FaviconHandler.class, "Resolving Name/UUID as https://mc-heads.net/avatar/%s/64...", input);
             return CompletableFuture.supplyAsync(() -> fromURL(core, "https://mc-heads.net/avatar/" + input + "/64"), this.faviconThreadPool);
+        }
+    }
+    
+    private F getRandomized(){
+        logger.debug(FaviconHandler.class, "Obtaining random Favicon...");
+        if(localFavicons.isEmpty())
+            return null;
+        
+        List<F> faviconList = List.copyOf(localFavicons.values());
+        
+        // Don't use Random for just one entry.
+        if(faviconList.size() == 1)
+            return faviconList.get(0);
+        
+        synchronized(random){
+            return faviconList.get(random.nextInt(faviconList.size()));
         }
     }
     
