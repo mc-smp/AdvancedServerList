@@ -214,12 +214,17 @@ motd:
 # This option supports three types of inputs:
 #
 #   1. Name, including .png extension, pointing to an image located in the plugin's favicons folder.
-#   2. URL pointing to an image.*
-#   3. Player name, UUID or placeholders returning one of these.*
+#   2. "random" to display a random PNG from the favicons folder.
+#   3. URL pointing to an image.
+#   4. Player name, UUID or placeholders returning one of these.
 #      https://mc-heads.net will be used to retrieve an image of the provided name/UUID.
 #
-# * These images are loaded asynchronously, meaning they may not yet be "ready" when AdvancedServerList is done with
-#   the event, requiring a refresh of the server list by the player to have it shown.
+# Note on favicons not showing:
+#   AdvancedServerList has to create a Favicon object for the Proxy/Server to use which takes time to do so.
+#   To not delay the Proxy/Server from being displayed (increase the loading time on the player end) is this creation
+#   done asynchronously for URL/Player name/UUID. This has the downside that the Proxy/Server may be done handling the
+#   ping before the Favicon is created, causing none to be displayed.
+#   Note that this won't happen with local favicons, as those are created during the plugin's startup.
 #
 # Any images above or below 64x64 pixels will be automatically resized to these dimensions.
 #
@@ -290,6 +295,7 @@ playerCount:
     enabled: false
     #
     # Set the number that should be added to the online player count to then use as the new max player count.
+    # Placeholders resolving to numbers can be used here.
     #
     # Example: Setting this to 1 will result in ${server playersMax} displaying 11 while 10 players are online,
     #          9 when 8 are online and so on.
@@ -318,10 +324,35 @@ playerCount:
     enabled: false
     #
     # Set the number that should be used as the new max players count.
+    # Placeholders resolving to numbers can be used here.
     #
     # If not present, defaults to 0.
     #
     # Read more: https://asl.andre601.ch/profiles/#maxplayers-amount
+    #
+    amount: 0
+  #
+  # The onlinePlayers feature allows to set a number to use as the online player count to display.
+  #
+  # Read more: https://asl.andre601.ch/profiles/#onlineplayers
+  #
+  onlinePlayers:
+    #
+    # Set whether the onlinePlayers feature should be enabled or not.
+    # When set to true, the max player count will be set to the 'amount' value.
+    #
+    # If not present, defaults to false.
+    #
+    # Read more: https://asl.andre601.ch/profiles/#onlineplayers-enabled
+    #
+    enabled: false
+    #
+    # Set the number that should be used as the new online players count.
+    # Placeholders resolving to numbers can be used here.
+    #
+    # If not present, defaults to current online player count.
+    #
+    # Read more: https://asl.andre601.ch/profiles/#onlineplayers-amount
     #
     amount: 0
 ```

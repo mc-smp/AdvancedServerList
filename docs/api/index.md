@@ -96,7 +96,7 @@ To add your own placeholders, follow these steps:
 
 You should first create a new class and make it extend the abstract [`PlaceholderProvider`][placeholderprovider]. This class includes a constructor and a method you need to add, so do that:
 
-```java
+```java title="Creating PlaceholderProvider class"
 public class MyPlaceholders extends PlaceholderProvider {
     
     public MyPlaceholders(String identifier) {
@@ -110,12 +110,12 @@ public class MyPlaceholders extends PlaceholderProvider {
 }
 ```
 
-/// tip
-You can replace the Constructor with a String argument with a no-args constructor and set the identifier directly in the `super`:
+/// tip | Recommendation
+It is recommended to use a No-Args Constructor and have the Placeholder name set directly in the `super` call:
 ```java
-public MyPlaceholders() {
-    super("myplaceholders");
-}
+    public MyPlaceholders() {
+        super("myplaceholders");
+    }
 ```
 ///
 
@@ -128,7 +128,7 @@ What you return is completely up to you. Just keep in mind that returning `null`
 /// details | Example of final class
     type: example
 
-```java
+```java title="MyPlaceholders.java"
 public class MyPlaceholders extends PlaceholderProvider {
     
     public MyPlaceholders() {

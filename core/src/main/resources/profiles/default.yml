@@ -59,14 +59,16 @@ motd:
 #
 #   1. Name, including .png extension, pointing to an image located in the plugin's favicons folder.
 #   2. "random" to display a random PNG from the favicons folder.
-#   3. URL pointing to an image.*
-#   4. Player name, UUID or placeholders returning one of these.*
+#   3. URL pointing to an image.
+#   4. Player name, UUID or placeholders returning one of these.
 #      https://mc-heads.net will be used to retrieve an image of the provided name/UUID.
 #
-# * The plugin needs to create instances of these images when used, which takes time.
-#   To not cause long delays does ASL do this async, meaning it may not be done creating these instances
-#   when the Server/Proxy is done with the server list stuff, so images may not appear on the first load
-#   but should usually appear after the second, if done so within the configured cache time.
+# Note on favicons not showing:
+#   AdvancedServerList has to create a Favicon object for the Proxy/Server to use which takes time to do so.
+#   To not delay the Proxy/Server from being displayed (increase the loading time on the player end) is this creation
+#   done asynchronously for URL/Player name/UUID. This has the downside that the Proxy/Server may be done handling the
+#   ping before the Favicon is created, causing none to be displayed.
+#   Note that this won't happen with local favicons, as those are created during the plugin's startup.
 #
 # Any images above or below 64x64 pixels will be automatically resized to these dimensions.
 #

@@ -132,13 +132,13 @@ The Value can be one of the following:
 /// details | Why is the favicon from URL/Placeholder not showing?
     type: question
 
-The Server/Proxy AdvancedServerList runs on does not use PNG images directly, but instead has its own kind of object used.  
-This means that in order for the plugin to display the Favicons, it has to first convert the PNG to the Object the Server/Proxy uses.
+AdvancedServerList has to create a Favicon instance to use, as the Proxy/Server doesn't directly use PNG images.  
+This action takes time, so to not unnecessarely delay the Pinged Proxy/Server from showing is this done asynchrnously.  
+This has the issue that the Proxy/Server may be done with handling the Ping before AdvancedServerList is done creating the Favicon, resulting in no favicon being displayed.
 
-For images in the `favicons` folder does this happen when the plugin starts, which is why they always appear on refreshing the list when set.  
-Images from URL or Placeholder however need to be converted first. This takes time and could result in large delays for the server list to refresh, which is why AdvancedServerList does this asynchronously, meaning the Server/Proxy doesn't wait for it to finish the conversion, which is why images may not show on first refresh.
+This issue is only present for when using either a URL or a Player name/uuid and not for local favicons, as those are created when the plugin loads.
 
-Images should however show on second refresh, if done so in the configured cache time of the plugin (By default 1 Minute).
+Favicons *should* display on the second ping, if pinged within the configured favicon cache time (Default: 1 minute).
 ///
 
 /// details | Example
