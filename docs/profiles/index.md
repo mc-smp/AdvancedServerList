@@ -119,15 +119,27 @@ motd:
 
 The `favicon` option can be used to define an image to display in the server list.
 
-The Value can be one of three possible options, each being checked for in order:
+The Value can be one of the following:
 
-- A URL pointing to an image file. The URL needs to start with `https://` to work.
-- The keyword `random`. Setting this will have the plugin randomly select an existing PNG file from its `favicons` folder.
-- A filename matching an existing PNG file in the plugin's `favicons` folder. The `.png` extension needs to be included.
-- A player name or UUID, or a [placeholder](placeholders.md) that resolves into one.
+- A URL pointing to a Image file. The URL needs to start with `https://` for it to work.
+- A filename matching a pre-existing file in the `favicons` folder of the Plugin.
+    - Only PNG files are supported for now and the provided filename needs to end with `.png`
+    - `random` can be used to have the plugin select a random image from the Favicons folder.
+- A player name or UUID.
+    - `${player name}`, `${player uuid}` or any [placeholder](placeholders.md) that resolves into a player name/UUID can be used.
+    - Uses [mc-heads.net](https://mc-heads.net) to resolve the Player Name/UUID.
 
-Note that for the name/UUID, the site https://mc-heads.net is being used.  
-Use the URL option with the `${player uuid}` placeholder if you want to use another service.
+/// details | Why is the favicon from URL/Placeholder not showing?
+    type: question
+
+The Server/Proxy AdvancedServerList runs on does not use PNG images directly, but instead has its own kind of object used.  
+This means that in order for the plugin to display the Favicons, it has to first convert the PNG to the Object the Server/Proxy uses.
+
+For images in the `favicons` folder does this happen when the plugin starts, which is why they always appear on refreshing the list when set.  
+Images from URL or Placeholder however need to be converted first. This takes time and could result in large delays for the server list to refresh, which is why AdvancedServerList does this asynchronously, meaning the Server/Proxy doesn't wait for it to finish the conversion, which is why images may not show on first refresh.
+
+Images should however show on second refresh, if done so in the configured cache time of the plugin (By default 1 Minute).
+///
 
 /// details | Example
     type: example
