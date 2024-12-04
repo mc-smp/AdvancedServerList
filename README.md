@@ -86,6 +86,9 @@ Below can you find a collection of videos made for my plugin. If you made a vide
 <details><summary>Click to show/hide Videos</summary>
 <p>
 
+English Video by KasaiSora  
+[![video thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg)](https://youtube.com/watch?v=9cU0uUWHOO0)
+
 Spanish Video by Ajneb97  
 [![video thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI)
 
