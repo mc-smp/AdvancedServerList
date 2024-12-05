@@ -16,8 +16,6 @@ on:
 jobs:
   deployWiki:
     runs-on: codeberg-tiny
-    container:
-      image: ghcr.io/catthehacker/ubuntu:act-latest
     steps:
       - name: "Checkout Source Repository"
         uses: https://code.forgejo.org/actions/checkout@v4
