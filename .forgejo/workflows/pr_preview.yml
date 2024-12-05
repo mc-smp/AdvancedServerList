@@ -20,8 +20,6 @@ env:
 jobs:
   createPreview:
     runs-on: codeberg-tiny
-    container:
-      image: ghcr.io/catthehacker/ubuntu:act-latest
     steps:
       #
       # Finding and updating comment in Pull request.
