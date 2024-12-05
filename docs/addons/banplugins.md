@@ -1,9 +1,12 @@
+---
+icon: octicons/stop-24
+---
 # BanPlugins Addon
 
 The BanPlugins Addon was made to provide placeholders for different punishment plugins to use in AdvancedServerList.
 
 /// info
-The BanPlugins Addon is available in downloads of AdvancedServerList on [:simple-modrinth: Modrinth](https://modrinth.com/plugin/advancedserverlist) and on [Releases on :simple-codeberg: Codeberg](https://codeberg.org/Andre601/AdvancedServerList/releases).
+The BanPlugins Addon is available in downloads of AdvancedServerList on [:simple-modrinth: Modrinth](https://modrinth.com/plugin/advancedserverlist) and in [Releases on :simple-codeberg: Codeberg](https://codeberg.org/Andre601/AdvancedServerList/releases).
 ///
 
 ## Placeholders

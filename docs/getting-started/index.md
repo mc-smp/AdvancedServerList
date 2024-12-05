@@ -5,7 +5,7 @@ icon: octicons/milestone-24
 # Getting Started
 
 This page will explain how to set up AdvancedServerList and make it work for your server.  
-The guide is designed to be as easy to understand as possible. If you still have problems or questions, join the [M.O.S.S Discord Server](https://discord.gg/MyPTjpsgGH){ target="_blank" rel="nofollow" } for more help.
+The guide is designed to be as easy to understand as possible. If you still have problems or questions, join the [M.O.S.S Discord Server][discord]{ target="_blank" rel="nofollow" } for more help.
 
 ## 1. Download the plugin { #download-the-plugin }
 
@@ -109,10 +109,6 @@ The plugin also supports these additional plugins. They are all optional.
 
 </div>
 
-[placeholderapi]: https://hangar.papermc.io/HelpChat/PlaceholderAPI
-[viaversion]: https://hangar.papermc.io/ViaVersion/ViaVersion
-[papiproxybridge]: https://hangar.papermc.io/William278/PAPIProxyBridge
-[maintenance]: https://hangar.papermc.io/kennytv/Maintenance
 [addon]: ../addons/banplugins.md
 
 ## 2. Installation { #installation }

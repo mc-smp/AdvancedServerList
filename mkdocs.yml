@@ -84,6 +84,8 @@ markdown_extensions:
   - pymdownx.superfences:
   - pymdownx.snippets:
       base_path: docs/.snippets
+      auto_append:
+        - links.md
   - pymdownx.blocks.admonition:
       types:
         - note
@@ -108,7 +110,9 @@ hooks:
 
 nav:
   - Home: index.md
-  - Getting Started: getting-started/index.md
+  - Getting Started:
+    - getting-started/index.md
+    - Tutorials: getting-started/tutorials.md
   - Commands: commands/index.md
   - Profiles:
     - profiles/index.md

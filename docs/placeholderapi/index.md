@@ -6,8 +6,6 @@ icon: material/percent
 
 AdvancedServerList provides support for [PlaceholderAPI] placeholders to be used, while also providing its own set of placeholders.
 
-[placeholderapi]: https://hangar.papermc.io/HelpChat/PlaceholderAPI
-
 ## Own placeholders
 
 The below listed placeholders can be used through PlaceholderAPI in other plugins.  

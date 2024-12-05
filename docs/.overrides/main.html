@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block announce %}
+  <span class="twemoji">{% include ".icons/octicons/info-24.svg" %}</span>
+  <b>NEW:</b> Added a <a href="{{ base_url | url }}/getting-started/tutorials">Tutorial Section</a> to the Wiki!
+{% endblock %}
