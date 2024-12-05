@@ -119,14 +119,27 @@ motd:
 
 The `favicon` option can be used to define an image to display in the server list.
 
-The Value can be one of three possible options, each being checked for in order:
+The Value can be one of the following:
 
-- A URL pointing to an image file. The URL needs to start with `https://` to work.
-- A PNG filename, including `.png` file extension, matching a PNG file in the `favicons` folder.
-- A player name or UUID, or a [placeholder](placeholders.md) that resolves into one.
+- A URL pointing to a Image file. The URL needs to start with `https://` for it to work.
+- A filename matching a pre-existing file in the `favicons` folder of the Plugin.
+    - Only PNG files are supported for now and the provided filename needs to end with `.png`
+    - `random` can be used to have the plugin select a random image from the Favicons folder.
+- A player name or UUID.
+    - `${player name}`, `${player uuid}` or any [placeholder](placeholders.md) that resolves into a player name/UUID can be used.
+    - Uses [mc-heads.net](https://mc-heads.net) to resolve the Player Name/UUID.
 
-Note that for the name/UUID, the site https://mc-heads.net is being used.  
-Use the URL option with the `${player uuid}` placeholder if you want to use another service.
+/// details | Why is the favicon from URL/Placeholder not showing?
+    type: question
+
+AdvancedServerList has to create a Favicon instance to use, as the Proxy/Server doesn't directly use PNG images.  
+This action takes time, so to not unnecessarely delay the Pinged Proxy/Server from showing is this done asynchrnously.  
+This has the issue that the Proxy/Server may be done with handling the Ping before AdvancedServerList is done creating the Favicon, resulting in no favicon being displayed.
+
+This issue is only present for when using either a URL or a Player name/uuid and not for local favicons, as those are created when the plugin loads.
+
+Favicons *should* display on the second ping, if pinged within the configured favicon cache time (Default: 1 minute).
+///
 
 /// details | Example
     type: example

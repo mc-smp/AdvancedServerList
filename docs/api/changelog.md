@@ -17,7 +17,7 @@ They are ordered newest to oldest.
 
 ### :octicons-plus-circle-24:{ .changelog-added title="Added" } Added { #v4.0.0-added }
 
-- New setter methods added to [`ProfileEntry.Builder`][profilentry.builder] class:
+- New setter methods added to [`ProfileEntry.Builder`][profileentry.builder] class:
     - [`onlinePlayersCount(String)`][onlinePlayersCount]
     - [`onlinePlayersEnabled(NullBool)`][onlinePlayersEnabled]
 

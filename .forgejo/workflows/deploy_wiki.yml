@@ -1,0 +1,43 @@
+name: "Deploy Wiki"
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - "**"
+    paths:
+      - ".forgejo/workflows/deploy_wiki.yml"
+      - "docs/**"
+      - "domains"
+      - "mkdocs.yml"
+      - "requirements.txt"
+
+jobs:
+  deployWiki:
+    runs-on: codeberg-tiny
+    steps:
+      - name: "Checkout Source Repository"
+        uses: https://code.forgejo.org/actions/checkout@v4
+        with:
+          token: "${{ secrets.BOT_TOKEN }}"
+      - name: "Checkout Target Repository"
+        run: "git clone -b pages https://codeberg.org/Andre601/asl-docs site"
+      - name: "Setup Python 3.x"
+        uses: https://code.forgejo.org/actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: "Install Dependencies"
+        run: "pip install -r requirements.txt"
+      - name: "Build Website"
+        run: "mkdocs build"
+      - name: "Commit and Push"
+        run: |
+          git config --global user.email "andre_601-bot@noreply.codeberg.org"
+          git config --global user.name "ASL Wiki Builder"
+          mv domains site/.domains
+          cd site
+          git remote set-url origin https://${{ secrets.BOT_TOKEN }}@codeberg.org/Andre601/asl-docs
+          git add --all
+          git commit -m "Update Wiki ($( env TZ=Europe/Zurich date +"%d.%m.%Y %Z" ))"
+          git push
