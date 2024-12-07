@@ -11,7 +11,7 @@ AdvancedServerList offers an API that other plugins can use to add their own pla
 Add the following to your `pom.xml`, `build.gradle` or `build.gradle.kts` depending on what you use:
 
 /// tab | :simple-apachemaven: Maven 
-```xml title="pom.xml"
+```xml { data-md-component="api-version" title="pom.xml" }
 <repositories>
   <repository>
     <id>codeberg</id>
@@ -51,7 +51,7 @@ Add the following to your `pom.xml`, `build.gradle` or `build.gradle.kts` depend
 ///
 
 /// tab | :simple-gradle: Gradle
-```groovy title="build.gradle"
+```groovy { data-md-component="api-version" title="build.gradle" }
 repositorories {
     maven { url = 'https://codeberg.org/api/packages/Andre601/maven/' }
 }
@@ -68,7 +68,7 @@ dependencies {
 ///
 
 /// tab | :simple-gradle: Gradle (KTS)
-```kotlin title="build.gradle.kts"
+```kotlin { data-md-component="api-version" title="build.gradle.kts" }
 repositories {
     maven("https://codeberg.org/api/packages/Andre601/maven/")
 }
@@ -96,11 +96,11 @@ To add your own placeholders, follow these steps:
 
 You should first create a new class and make it extend the abstract [`PlaceholderProvider`][placeholderprovider]. This class includes a constructor and a method you need to add, so do that:
 
-```java title="Creating PlaceholderProvider class"
+```java { .annotate title="Creating PlaceholderProvider class" }
 public class MyPlaceholders extends PlaceholderProvider {
     
     public MyPlaceholders(String identifier) {
-        super(identifier);
+        super(identifier); // (1)
     }
     
     @Override
@@ -110,14 +110,12 @@ public class MyPlaceholders extends PlaceholderProvider {
 }
 ```
 
-/// tip | Recommendation
-It is recommended to use a No-Args Constructor and have the Placeholder name set directly in the `super` call:
-```java
-    public MyPlaceholders() {
-        super("myplaceholders");
-    }
-```
-///
+1.  It is recommended to replace this constructor with a no-args Constructor and have the placeholder name set in the `super` directly:  
+    ```java
+        public MyPlaceholders() {
+            super("myplaceholders");
+        }
+    ```
 
 The [`parsePlaceholder(String, GenericPlayer, GenericServer)`][parseplaceholder] method is used by AdvancedServerList to replace a matching placeholder with a value.  
 What you return is completely up to you. Just keep in mind that returning `null` will be treated as an invalid placeholder by AdvancedServerList, resulting in the placeholder being returned as-is without any changes.

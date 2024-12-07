@@ -116,11 +116,11 @@ The plugin also supports these additional plugins. They are all optional.
 Installing the plugin is as simple as moving the jar file into the `plugins` folder. Just make sure to download the right version of AdvancedServerList for the right platform.  
 Here is a quick table showing the jar file name with the platforms it is made for:
 
-| Jar file name                                 | Platforms             |
-|-----------------------------------------------|-----------------------|
-| `AdvancedServerList-Paper-{version}.jar`      | Paper                 |
-| `AdvancedServerList-BungeeCord-{version}.jar` | BungeeCord, Waterfall |
-| `AdvancedServerList-Velocity-{version}.jar`   | Velocity              |
+| Jar file name                                                                       | Platforms             |
+|-------------------------------------------------------------------------------------|-----------------------|
+| `AdvancedServerList-Paper-{version}.jar`{ data-md-component="plugin-version" }      | Paper                 |
+| `AdvancedServerList-BungeeCord-{version}.jar`{ data-md-component="plugin-version" } | BungeeCord, Waterfall |
+| `AdvancedServerList-Velocity-{version}.jar`{ data-md-component="plugin-version" }   | Velocity              |
 
 After you added it to your plugins folder - alongside any other dependency you may want - (re)start your server or proxy to enable the plugin.  
 If everything goes well should AdvancedServerList create a folder named `AdvancedServerList` (`advancedserverlist` on Velocity) with additional files and folders inside of it.

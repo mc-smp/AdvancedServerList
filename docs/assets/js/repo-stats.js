@@ -4,7 +4,7 @@ document$.subscribe(async () => {
 
     const repo_stats = document.querySelector('[data-md-component="source"] .md-source__repository');
     
-    function loadCodebergInfo(data) {
+    async function loadCodebergInfo(data) {
         const facts = document.createElement("ul");
         facts.className = "md-source__facts";
         
@@ -28,22 +28,36 @@ document$.subscribe(async () => {
         repo_stats.appendChild(facts);
     }
     
-    function loadApiInfo(data) {
+    async function loadApiInfo(data) {
+        const codeBlocks = document.querySelectorAll('[data-md-component="api-version"] pre code')
+        if (codeBlocks === null)
+            return;
+        
         const version = data["version"];
-        const versionToken = '{apiVersion}';
-        const codeBlocks = document.querySelectorAll('.md-content pre code');
-        for(const codeBlock of codeBlocks) {
-            codeBlock.innerHTML = codeBlock.innerHTML.replace(new RegExp(versionToken, 'g'), version.substring(1));
-        }
+        const regex = new RegExp('{apiVersion}', 'g');
+        codeBlocks.forEach((codeBlock) => {
+            var walker = document.createTreeWalker(codeBlock, NodeFilter.SHOW_TEXT);
+            var node;
+            while (node = walker.nextNode()) {
+                node.nodeValue = node.nodeValue.replace(regex, version.substring(1));
+            }
+        });
     }
     
-    function loadPluginVersion(data) {
+    async function loadPluginVersion(data) {
+        const entries = document.querySelectorAll('code[data-md-component="plugin-version"]');
+        if(entries === null)
+            return;
+        
         const version = data["version"];
-        const versionToken = '{version}'
-        const entries = document.querySelectorAll('.md-content code');
-        for(const entry of entries) {
-            entry.innerHTML = entry.innerHTML.replace(new RegExp(versionToken, 'g'), version.substring(1));
-        }
+        const regex = new RegExp('{version}', 'g');
+        entries.forEach((entry) => {
+            var walker = document.createTreeWalker(entry, NodeFilter.SHOW_TEXT);
+            var node;
+            while (node = walker.nextNode()) {
+                node.nodeValue = node.nodeValue.replace(regex, version.substring(1));
+            }
+        })
     }
     
     async function fetchApiInfo() {
