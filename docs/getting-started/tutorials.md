@@ -14,7 +14,9 @@ Can't find a tutorial that exists? Join the [M.O.S.S. Discord][discord]{ target=
 Below is a collection of video tutorials made.
 
 /// note
-No videos were embedded due to privacy concerns. The below displayed thumbnails will direct you to the video in question.
+For privacy reasons are only thumbnails of the videos displayed, as otherwise sensitive data would be sent via embedding the videos themself.  
+you can click the image to be sent to the actual video.
+///
 
 ### KasaiSora
 
