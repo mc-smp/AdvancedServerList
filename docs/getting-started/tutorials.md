@@ -20,13 +20,13 @@ No videos were embedded due to privacy concerns. The below displayed thumbnails 
 
 **Video Language:** :flag_gb: English
 
-[[thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg)](https://youtube.com/watch?v=9cU0uUWHOO0){ target="_blank" rel="nofollow" }
+[![thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg)](https://youtube.com/watch?v=9cU0uUWHOO0){ target="_blank" rel="nofollow" }
 
 ### Ajneb97
 
 **Video Language:** :flag_es: Spanish
 
-[[thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
+[![thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
 
 ## Text Tutorials
 
