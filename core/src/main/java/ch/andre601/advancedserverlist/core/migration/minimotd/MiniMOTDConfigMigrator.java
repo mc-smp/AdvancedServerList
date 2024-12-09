@@ -110,14 +110,14 @@ public class MiniMOTDConfigMigrator{
         if(config.iconEnabled()){
             if(config.motds().size() == 1){
                 MiniMOTDConfig.Motd motd = config.motds().get(0);
-                if(!motd.icon().isEmpty() && !motd.icon().equalsIgnoreCase("random")){
+                if(!motd.icon().isEmpty()){
                     profileBuilder.favicon(motd.icon());
                 }
             }else
             if(config.motds().size() > 1){
                 for(int i = 0; i < config.motds().size(); i++){
                     MiniMOTDConfig.Motd motd = config.motds().get(i);
-                    if(!motd.icon().isEmpty() && !motd.icon().equalsIgnoreCase("random")){
+                    if(!motd.icon().isEmpty()){
                         profilesBuilders.get(i).favicon(motd.icon());
                     }
                 }
