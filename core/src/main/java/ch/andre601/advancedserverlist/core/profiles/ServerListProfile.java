@@ -56,7 +56,7 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             for(ParseWarnCollector.Context context : collector.getWarnings()){
                 logger.warn("  - At position %s:", context.position() == -1 ? "Unknown" : context.position());
                 logger.warn("    %s", condition);
-                logger.warn(" ".repeat(context.position() + 4) + "^");
+                logger.warn(" ".repeat(context.position() + 3) + "^");
                 logger.warn("    -> %s", context.message());
             }
         }

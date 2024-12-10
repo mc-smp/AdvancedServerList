@@ -72,6 +72,9 @@ public class StringReplacer{
         boolean identified = false;
         boolean invalid = true;
         
+        int placeholderStart = position.getIndex() - 1;
+        int valueStart = position.getIndex() - 1;
+        
         char[] chars = input.substring(index).toCharArray();
         for(final char c : chars){
             index++;
@@ -83,6 +86,7 @@ public class StringReplacer{
             
             if(c == ' ' && !identified){
                 identified = true;
+                valueStart = index + 1;
                 continue;
             }
             
@@ -97,10 +101,6 @@ public class StringReplacer{
         String valuesStr = values.toString();
         
         StringBuilder raw = new StringBuilder();
-        
-        // Condition parsing needs one extra increase of index... for some reason
-        if(collector != null)
-            index++;
         
         position.setIndex(index);
         
@@ -126,7 +126,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(index, "Placeholder '%s' does not have any available PlaceholderProvider", raw.toString());
+                collector.appendWarningFormatted(placeholderStart, "Placeholder '%s' does not have any available PlaceholderProvider", raw.toString());
             
             return raw.toString();
         }
@@ -141,7 +141,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(index, "Placeholder '%s' has an invalid value String '%s'", raw.toString(), valuesStr);
+                collector.appendWarningFormatted(valueStart, "Placeholder '%s' has an invalid value String '%s'", raw.toString(), valuesStr);
             
             return raw.toString();
         }
