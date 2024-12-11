@@ -18,7 +18,7 @@ Execute the command [`/asl migrate minimotd`](../commands/index.md#migrate) to s
 Below can you find a full example of a `main.conf` file and the corresponding migrated files from AdvancedServerList:
 
 /// tab | :octicons-file-code-24: main.conf
-```lighty
+```ruby
 icon-enabled=true
 motd-enabled=true
 motds=[
