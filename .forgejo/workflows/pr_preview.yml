@@ -16,7 +16,7 @@ on:
 
 env:
   BRANCH_NAME: "${{ github.event.repository.name }}/${{ github.event.pull_request.number }}"
-  RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/run/${{ github.run_number }}"
+  RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}"
 
 jobs:
   createPreview:
