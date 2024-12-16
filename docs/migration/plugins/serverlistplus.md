@@ -48,7 +48,7 @@ The following Favicon options get converted into an equivalent one:
 
 ## How to Migrate
 
-Execute the command [`/asl migrate serverlistplus`](../commands/index.md#migrate) to start the migration process. Make sure that ServerListPlus is present and enabled.
+Execute the command [`/asl migrate serverlistplus`](../../commands/index.md#migrate) to start the migration process. Make sure that ServerListPlus is present and enabled.
 
 ## Example
 
