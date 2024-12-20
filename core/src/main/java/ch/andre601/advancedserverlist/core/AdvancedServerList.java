@@ -32,6 +32,7 @@ import ch.andre601.advancedserverlist.core.commands.CommandHandler;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
+import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.advancedserverlist.core.profiles.handlers.PlayerHandler;
 
@@ -47,6 +48,8 @@ public class AdvancedServerList<F>{
     private final FileHandler fileHandler;
     private final CommandHandler commandHandler;
     private final PlayerHandler playerHandler;
+    private final TextCenterUtil textCenterUtil;
+    
     private static final AdvancedServerListAPI api = AdvancedServerListAPI.get();
     private final ProfileConditionParser parser = ProfileConditionParser.create();
     
@@ -59,6 +62,7 @@ public class AdvancedServerList<F>{
         this.fileHandler = new FileHandler(this);
         this.commandHandler = new CommandHandler(this);
         this.playerHandler = new PlayerHandler(this);
+        this.textCenterUtil = new TextCenterUtil(this);
         
         plugin.getPluginLogger().info("Registering internal Placeholders...");
         
@@ -108,6 +112,10 @@ public class AdvancedServerList<F>{
     
     public UpdateChecker getUpdateChecker(){
         return updateChecker;
+    }
+    
+    public TextCenterUtil getTextCenterUtil(){
+        return textCenterUtil;
     }
     
     public void disable(){

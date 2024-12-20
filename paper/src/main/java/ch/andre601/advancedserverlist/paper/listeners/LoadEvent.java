@@ -56,14 +56,12 @@ public class LoadEvent implements Listener{
         plugin.getPluginLogger().warn("======================================================================================");
         plugin.getPluginLogger().warn("SERVER RELOAD DETECTED!");
         plugin.getPluginLogger().warn("");
-        plugin.getPluginLogger().warn("AdvancedServerList has detected your server has been reloaded using the /reload");
-        plugin.getPluginLogger().warn("command or the Bukkit.reload() method call.");
+        plugin.getPluginLogger().warn("A server reload has been detected by AdvancedServerList, meaning either the /reload");
+        plugin.getPluginLogger().warn("command or Bukkit.reload() was executed.");
         plugin.getPluginLogger().warn("");
-        plugin.getPluginLogger().warn("DO NOT RELOAD THE SERVER. ALWAYS RESTART IT!");
-        plugin.getPluginLogger().warn("");
-        plugin.getPluginLogger().warn("Plugins may not work as expected when reloading a server, causing breaking issues.");
-        plugin.getPluginLogger().warn("AdvancedServerList *should* work, but any support for issues with it will be denied if");
-        plugin.getPluginLogger().warn("a server reload was detected!");
+        plugin.getPluginLogger().warn("YOU WILL GET NO SUPPORT FOR THE PLUGIN FOR ANY ISSUES YOU ENCOUNTER AFTER A SERVER");
+        plugin.getPluginLogger().warn("RELOAD!");
+        plugin.getPluginLogger().warn("ALWAYS RESTART YOUR SERVER. NEVER RELOAD IT!");
         plugin.getPluginLogger().warn("======================================================================================");
     }
 }

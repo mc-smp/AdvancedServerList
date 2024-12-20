@@ -46,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class PAPIPlaceholders extends PlaceholderExpansion{
     
@@ -114,9 +115,9 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
         
         BukkitServer finalServer = new PaperServerImpl(plugin.getWorldCache().worlds(), online, max, host);
         return switch(identifier.toLowerCase(Locale.ROOT)){
-            case "motd" -> getOption(entry.motd(), pl, player, finalServer);
+            case "motd" -> getOption(entry.motd(), pl, player, finalServer, true);
             case "favicon" -> getOption(entry.favicon(), pl, player, finalServer);
-            case "playercount_hover" -> getOption(entry.players(), pl, player, finalServer);
+            case "playercount_hover" -> getOption(entry.players(), pl, player, finalServer, false);
             case "playercount_text" -> getOption(entry.playerCountText(), pl, player, finalServer);
             case "playercount_extraplayers" -> extraPlayers == null ? "null" : String.valueOf(extraPlayers);
             case "playercount_maxplayers" -> maxPlayers == null ? "null" : String.valueOf(maxPlayers);
@@ -136,14 +137,23 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
     }
     
     private String getOption(String str, Player pl, BukkitPlayer player, BukkitServer server){
-        return getOption(Collections.singletonList(str), pl, player, server);
+        return getOption(Collections.singletonList(str), pl, player, server, false);
     }
     
-    private String getOption(List<String> list, Player pl, BukkitPlayer player, BukkitServer server){
-        return ComponentParser.list(list)
-            .modifyText(text -> StringReplacer.replace(text, player, server))
-            .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
-            .toString();
+    private String getOption(List<String> list, Player pl, BukkitPlayer player, BukkitServer server, boolean isMotd){
+        return list.stream()
+            .map(line -> ComponentParser.text(line)
+                .modifyText(text -> StringReplacer.replace(text, player, server))
+                .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
+                .modifyText(text -> {
+                    if(isMotd)
+                        return plugin.getCore().getTextCenterUtil().getCenteredText(text);
+                    
+                    return text;
+                })
+                .toString()
+            )
+            .collect(Collectors.joining("\n"));
     }
     
     private Integer parseNumberOption(String option, Player pl, BukkitPlayer player, BukkitServer server){
