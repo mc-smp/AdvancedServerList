@@ -80,6 +80,8 @@
             <version>1.5.0</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- Configuration -->
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>configurate-yaml</artifactId>
@@ -168,6 +170,16 @@
             <resource>
                 <filtering>true</filtering>
                 <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>char-widths.json.gz</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>char-widths.json.gz</include>
+                </includes>
             </resource>
         </resources>
         <plugins>

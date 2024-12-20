@@ -59,14 +59,43 @@ public class SLPConfigMigrator{
         "(?<end>#[a-fA-F0-9]{6})" +   // Ending color
         "%" +
         "(?<text>.+?)" +              // Text
-        "%gradient%");
+        "%gradient%"
+    );
     
     private static final Map<String, String> STATIC_REPLACEMENTS = Map.of(
         "%player%", "${player name}",
         "%uuid%", "${player uuid}",
         "%_uuid_%", "${player uuid}",
         "%online%", "${server playersOnline}",
-        "%max%", "${server playersMax}");
+        "%max%", "${server playersMax}"
+    );
+    private static final Map<String, String> COLOR_TO_MINIMESSAGE_TAG = new HashMap<>(){{
+        // Color Codes.
+        put("a", "<green>");
+        put("b", "<aqua>");
+        put("c", "<red>");
+        put("d", "<light_purple>");
+        put("e", "<yellow>");
+        put("f", "<white>");
+        put("0", "<black>");
+        put("1", "<dark_blue>");
+        put("2", "<dark_green>");
+        put("3", "<dark_aqua>");
+        put("4", "<dark_red>");
+        put("5", "<dark_purple>");
+        put("6", "<gold>");
+        put("7", "<grey>");
+        put("8", "<dark_grey>");
+        put("9", "<blue>");
+        
+        // Formatting Codes
+        put("k", "<obfuscated>");
+        put("l", "<bold>");
+        put("m", "<strikethrough>");
+        put("n", "<underlined>");
+        put("o", "<italic>");
+        put("r", "<reset>");
+    }};
     
     public static int migrate(AdvancedServerList<?> core, CmdSender sender){
         ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
@@ -194,9 +223,7 @@ public class SLPConfigMigrator{
             
             if(type == Type.PERSONALIZED){
                 node.node("condition")
-                    .set("${player name} != \"" +
-                        core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") +
-                        "\"");
+                    .set("${player name} != \"" + core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
             }else
             if(type == Type.BANNED){
                 node.node("condition")
@@ -372,32 +399,11 @@ public class SLPConfigMigrator{
         if(colorCodeMatcher.find()){
             builder.setLength(0);
             do{
-                String color = colorCodeMatcher.group("color").toLowerCase(Locale.ROOT); 
-                switch(color){
-                    case "a" -> colorCodeMatcher.appendReplacement(builder, "<green>");
-                    case "b" -> colorCodeMatcher.appendReplacement(builder, "<aqua>");
-                    case "c" -> colorCodeMatcher.appendReplacement(builder, "<red>");
-                    case "d" -> colorCodeMatcher.appendReplacement(builder, "<light_purple>");
-                    case "e" -> colorCodeMatcher.appendReplacement(builder, "<yellow>");
-                    case "f" -> colorCodeMatcher.appendReplacement(builder, "<white>");
-                    case "k" -> colorCodeMatcher.appendReplacement(builder, "<obfuscated>");
-                    case "l" -> colorCodeMatcher.appendReplacement(builder, "<bold>");
-                    case "m" -> colorCodeMatcher.appendReplacement(builder, "<strikethrough>");
-                    case "n" -> colorCodeMatcher.appendReplacement(builder, "<underlined>");
-                    case "o" -> colorCodeMatcher.appendReplacement(builder, "<italic>");
-                    case "r" -> colorCodeMatcher.appendReplacement(builder, "<reset>");
-                    case "0" -> colorCodeMatcher.appendReplacement(builder, "<black>");
-                    case "1" -> colorCodeMatcher.appendReplacement(builder, "<dark_blue>");
-                    case "2" -> colorCodeMatcher.appendReplacement(builder, "<dark_green>");
-                    case "3" -> colorCodeMatcher.appendReplacement(builder, "<dark_aqua>");
-                    case "4" -> colorCodeMatcher.appendReplacement(builder, "<dark_red>");
-                    case "5" -> colorCodeMatcher.appendReplacement(builder, "<dark_purple>");
-                    case "6" -> colorCodeMatcher.appendReplacement(builder, "<gold>");
-                    case "7" -> colorCodeMatcher.appendReplacement(builder, "<grey>");
-                    case "8" -> colorCodeMatcher.appendReplacement(builder, "<dark_grey>");
-                    case "9" -> colorCodeMatcher.appendReplacement(builder, "<blue>");
-                    // This one shouldn't be reachable given the pattern, but you never know...
-                    default -> colorCodeMatcher.appendReplacement(builder, "&" + color);
+                for(Map.Entry<String, String> colorCodes : COLOR_TO_MINIMESSAGE_TAG.entrySet()){
+                    if(!colorCodeMatcher.group("color").equalsIgnoreCase(colorCodes.getKey()))
+                        continue;
+                    
+                    colorCodeMatcher.appendReplacement(builder, colorCodes.getValue());
                 }
             }while(colorCodeMatcher.find());
             

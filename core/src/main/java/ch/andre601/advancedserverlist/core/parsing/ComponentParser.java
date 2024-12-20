@@ -29,7 +29,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class ComponentParser{
@@ -50,10 +49,6 @@ public class ComponentParser{
     
     public static ComponentParser text(String text){
         return new ComponentParser(text);
-    }
-    
-    public static ComponentParser list(List<String> lines){
-        return new ComponentParser(String.join("\n", lines));
     }
     
     public ComponentParser modifyText(Function<String, String> function){
