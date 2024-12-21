@@ -50,6 +50,12 @@ AdvancedServerList supports the following platforms:
     ----
     
     A simple guide on how to get started with AdvancedServerList.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - [:octicons-project-roadmap-24: Tutorials](getting-started/tutorials.md)
 
 -   [:octicons-rel-file-path-24: **Commands**](commands/index.md)
     
@@ -62,6 +68,14 @@ AdvancedServerList supports the following platforms:
     ----
     
     Pages containing information about the Server List Profile System and all its available options.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - [:octicons-file-code-24: Expressions](profiles/expressions.md)
+    - [:octicons-pencil-24: Formatting](profiles/formatting.md)
+    - [:material-percent: Placeholders](profiles/placeholders.md)
 
 -   [:octicons-list-unordered-24: **Examples**](examples/index.md)
     
@@ -74,18 +88,47 @@ AdvancedServerList supports the following platforms:
     ----
     
     Pages explaining how to migrate from one version of the plugin to another.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - Plugins
+        - [:octicons-arrow-right-24: MiniMOTD](migration/plugins/minimotd.md)
+        - [:octicons-arrow-right-24: ServerListPlus](migration/plugins/serverlistplus.md)
+    - Versions
+        - [:octicons-arrow-right-24: v3.8.0 to v3.9.0](migration/versions/v3.8.0-to-v3.9.0.md)
+        - [:octicons-arrow-right-24: v3.7.0 to v3.8.0](migration/versions/v3.7.0-to-v3.8.0.md)
+        - [:octicons-arrow-right-24: < v3.7.0 to v3.7.0](migration/versions/pre-v3.7.0-to-v3.7.0.md)
+        - [:octicons-arrow-right-24: v1.9.0 to v1.10.0](migration/versions/v1.9.0-to-v1.10.0.md)
+        - [:octicons-arrow-right-24: v1.5.3 to v1.6.0](migration/versions/v1.5.3-to-v1.6.0.md)
 
 -   [:octicons-command-palette-24: **API**](api/index.md)
     
     ----
     
     Pages all about the API of AdvancedServerList.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - [:octicons-log-24: Changelog](api/changelog.md)
+    - [:octicons-link-external-24: Javadocs](api/javadocs.md)
+    - [:simple-codeberg: Source Code](api/source.md)
+    - [:octicons-file-code-24: Reference](api/reference/index.md)
 
 -   [:octicons-plus-circle-24: **Addons**](addons/index.md)
     
     ----
     
     Pages listing 1st-party and 3rd-party add-ons for AdvancedServerList.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - [:octicons-stop-24: BanPlugins Addon](addons/banplugins.md)
     
 -   [:material-percent: **PlaceholderAPI**](placeholderapi/index.md)
     

@@ -52,3 +52,7 @@
     white-space: nowrap;
     display: block;
 }
+
+.md-banner__inner.md-grid.md-typeset {
+    text-align: center;
+}

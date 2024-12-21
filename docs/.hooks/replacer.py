@@ -17,7 +17,7 @@
 import re
 
 from mkdocs.config.defaults import MkDocsConfig
-from mkdocs.structure.files import File, Files
+from mkdocs.structure.files import Files
 from mkdocs.structure.pages import Page
 
 def on_page_markdown(
