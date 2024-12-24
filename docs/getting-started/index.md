@@ -41,10 +41,7 @@ AdvancedServerList is available on the following places (Please note the current
 
 </div>
 
-[modrinth]: https://modrinth.com/plugin/advancedserverlist
-[codeberg]: https://codeberg.org/Andre601/AdvancedServerList
 [spigot]: https://www.spigotmc.org/resources/102910/
-[hangar]: https://hangar.papermc.io/Andre_601/AdvancedServerList
 
 The plugin is available for Paper, BungeeCord, Waterfall and Velocity, and has been tested on these platforms. It may support additional forks, but this is not guaranteed.
 
