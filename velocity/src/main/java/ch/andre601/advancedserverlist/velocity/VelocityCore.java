@@ -32,7 +32,8 @@ import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
-import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
+import ch.andre601.advancedserverlist.velocity.logging.VelocityComponentLogger;
+import ch.andre601.advancedserverlist.velocity.logging.VelocityFallbackLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityProxyPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServerPlaceholders;
@@ -51,9 +52,9 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
-import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -69,7 +70,6 @@ public class VelocityCore implements PluginCore<Favicon>{
     private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private final PluginLogger pluginLogger;
-    private final ComponentLogger logger;
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
@@ -82,9 +82,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     private ScheduledTask scheduledTask = null;
     
     @Inject
-    public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics, ComponentLogger logger){
-        this.pluginLogger = new VelocityLogger(this, logger);
-        this.logger = logger;
+    public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
+        this.pluginLogger = getLogger();
         
         this.proxy = proxy;
         this.path = path;
@@ -144,7 +143,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public void downloadLibrary(String groupId, String artifactId, String version){
         if(libraryManager == null){
-            libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
+            libraryManager = new VelocityLibraryManager<>(this, LoggerFactory.getLogger("AdvancedServerList"), getFolderPath(), getProxy().getPluginManager());
             libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
         }
         
@@ -231,6 +230,15 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     public Map<String, ServerPing> getFetchedServers(){
         return fetchedServers;
+    }
+    
+    private PluginLogger getLogger(){
+        try{
+            Class.forName("net.kyori.adventure.text.logger.slf4j.ComponentLogger");
+            return new VelocityComponentLogger(this);
+        }catch(ClassNotFoundException ignored){
+            return new VelocityFallbackLogger(this);
+        }
     }
     
     private void fetchServers(){
