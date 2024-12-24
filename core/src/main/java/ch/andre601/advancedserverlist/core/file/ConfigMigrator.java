@@ -46,11 +46,22 @@ public class ConfigMigrator{
     public static ConfigurationTransformation.Versioned create(){
         return ConfigurationTransformation.versionedBuilder()
             .versionKey("configVersion")
-            .addVersion(LATEST, fiveToSix())
+            .addVersion(LATEST, sixToSeven())
+            .addVersion(6, fiveToSix())
             .addVersion(5, fourToFive())
             .addVersion(4, threeToFour())
             .addVersion(3, twoToThree())
             .addVersion(2, oneToTwo())
+            .build();
+    }
+    
+    public static ConfigurationTransformation sixToSeven(){
+        return ConfigurationTransformation.builder()
+            .addAction(NodePath.path(), (path, value) -> {
+                value.node("printBanner").set(true);
+                
+                return null;
+            })
             .build();
     }
     
@@ -122,7 +133,7 @@ public class ConfigMigrator{
             versioned.apply(node);
             final int endVersion = versioned.version(node);
             if(startVersion < endVersion)
-                logger.info("Migrated config.yml from v" + startVersion + " to v" + endVersion);
+                logger.success("Successfully migrated config from <white>v%d</white> to <white>v%d</white>", startVersion, endVersion);
         }
         
         return node;

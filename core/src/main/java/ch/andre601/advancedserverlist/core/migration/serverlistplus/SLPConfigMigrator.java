@@ -101,13 +101,13 @@ public class SLPConfigMigrator{
         ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(slpCore == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
             return 0;
         }
         
         ServerStatusConf conf = slpCore.getConf(ServerStatusConf.class);
         if(conf == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus configuration. Received configuration was null.");
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate ServerListPlus configuration. Received configuration was null.");
             return 0;
         }
         
@@ -130,7 +130,7 @@ public class SLPConfigMigrator{
     private static int parseConf(AdvancedServerList<?> core, CmdSender sender, PersonalizedStatusConf.StatusConf conf, Type type){
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(conf == null){
-            logger.info("[Migrator - ServerListPlus] No StatusConf found for type %s. Skipping...", type.getName());
+            logger.info("[<white>Migrator - ServerListPlus</white>] No StatusConf found for type <white>%s</white>. Skipping...", type.getName());
             sender.sendPrefixedMsg(" -> Not found! Skipping...");
             
             return 0;
@@ -170,7 +170,7 @@ public class SLPConfigMigrator{
         
         boolean profilesInvalid = profileEntries.isEmpty() || profileEntries.stream().anyMatch(ProfileEntry::isInvalid);
         if(entry.isInvalid() && profilesInvalid){
-            logger.warn("[Migrator - ServerListPlus] Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.getName());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Unable to parse ServerListPlus configuration of type <white>%s</white>. Generated ProfileEntry was invalid.", type.getName());
             sender.sendErrorMsg(" -> <red>Received invalid Configuration.");
             
             return 0;
@@ -178,7 +178,7 @@ public class SLPConfigMigrator{
         
         Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(type.getFile());
         if(Files.exists(profile)){
-            logger.warn("[Migrator - ServerListPlus] Cannot create new file %s. One with the same name is already present", type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot create new file <white>%s</white>. One with the same name is already present", type.getFile());
             sender.sendErrorMsg(" -> <red>File</red> %s <red>already present.", type.getFile());
             
             return 0;
@@ -187,7 +187,7 @@ public class SLPConfigMigrator{
         try{
             Files.createFile(profile);
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to create file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to create file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File creation error.");
             
             return 0;
@@ -204,14 +204,14 @@ public class SLPConfigMigrator{
         try{
             node = loader.load();
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to load file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to load file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return 0;
         }
         
         if(node == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate Configuration of type %s. ConfigurationNode was null.", type.getName());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate Configuration of type <white>%s</white>. ConfigurationNode was null.", type.getName());
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return 0;
@@ -236,7 +236,7 @@ public class SLPConfigMigrator{
             
             node.set(entry);
         }catch(SerializationException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered a SerializationException while setting values.", ex);
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered a SerializationException while setting values.", ex);
             sender.sendErrorMsg(" -> <red>Error while updating file</red> %s<red>.", type.getFile());
             
             return 0;
@@ -248,7 +248,7 @@ public class SLPConfigMigrator{
             
             return 1;
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to save new file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to save new file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File saving error.");
             
             return 0;

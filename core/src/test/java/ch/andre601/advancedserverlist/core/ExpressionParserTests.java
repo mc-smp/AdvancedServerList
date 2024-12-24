@@ -23,7 +23,7 @@
  *
  */
 
-package ch.andre601.advancedserverlist.test;
+package ch.andre601.advancedserverlist.core;
 
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.expressionparser.ParseWarnCollector;

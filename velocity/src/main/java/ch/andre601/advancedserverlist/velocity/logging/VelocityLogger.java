@@ -26,15 +26,16 @@
 package ch.andre601.advancedserverlist.velocity.logging;
 
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import org.slf4j.Logger;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 public class VelocityLogger implements PluginLogger{
     
     private final VelocityCore plugin;
-    private final Logger logger;
+    private final ComponentLogger logger;
     
-    public VelocityLogger(VelocityCore plugin, Logger logger){
+    public VelocityLogger(VelocityCore plugin, ComponentLogger logger){
         this.plugin = plugin;
         this.logger = logger;
     }
@@ -53,21 +54,21 @@ public class VelocityLogger implements PluginLogger{
     
     @Override
     public void info(String msg, Object... args){
-        logger.info(String.format(msg, args));
+        logger.info(ComponentParser.textFormatted("<grey>" + msg, args).toComponent());
     }
     
     @Override
     public void warn(String msg, Object... args){
-        logger.warn(String.format(msg, args));
+        logger.warn(ComponentParser.textFormatted(msg, args).toComponent());
     }
     
     @Override
     public void warn(String msg, Throwable throwable){
-        logger.warn(msg, throwable);
+        logger.warn(ComponentParser.text(msg).toComponent(), throwable);
     }
     
     @Override
     public void warn(String msg, Throwable throwable, Object... args){
-        logger.warn(String.format(msg, args), throwable);
+        logger.warn(ComponentParser.textFormatted(msg, args).toComponent(), throwable);
     }
 }

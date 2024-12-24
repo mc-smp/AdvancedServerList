@@ -79,40 +79,40 @@ public class PlayerHandler{
         try(BufferedReader reader = Files.newBufferedReader(cache)){
             cachedPlayers = gson.fromJson(reader, listType);
         }catch(IOException ex){
-            logger.warn("Encountered IOException while reading the playercache.json file!", ex);
+            logger.warn("Encountered IOException while reading the <white>playercache.json</white> file!", ex);
             return;
         }catch(JsonIOException | JsonSyntaxException ex){
-            logger.warn("Encountered JsonSyntaxException while parsing playercache.json file!", ex);
+            logger.warn("Encountered JsonSyntaxException while parsing <white>playercache.json</white> file!", ex);
             return;
         }
         
         // In case Gson messes up... I guess.
         if(cachedPlayers == null){
-            logger.warn("Couldn't load players from playercache.json file. Is the JSON valid?");
+            logger.warn("Couldn't load players from <white>playercache.json</white> file. Is the JSON valid?");
             // Create new ArrayList instance to avoid further issues.
             cachedPlayers = new ArrayList<>();
             return;
         }
         
-        logger.info("Loaded %d players into cache!", cachedPlayers.size());
+        logger.success("Loaded <white>%d</white> players into cache!", cachedPlayers.size());
     }
     
     public void save(){
         if(cachedPlayers.isEmpty()){
-            logger.info("No players in cache to save. Skipping...");
+            logger.debug(PlayerHandler.class, "No players in cache to save. Skipping...");
             return;
         }
         
         if(core.getFileHandler().getBoolean("disableCache")){
-            logger.info("'disable_cache' is set to true. Skipping saving of cached players...");
+            logger.debug(PlayerHandler.class, "[-] 'disable_cache' is set to true. Not saving cached players.");
             return;
         }
         
         try(BufferedWriter writer = Files.newBufferedWriter(cache, StandardCharsets.UTF_8)){
             gson.toJson(cachedPlayers, listType, writer);
-            logger.info("Successfully saved playercache.json file.");
+            logger.success("Successfully saved <white>playercache.json</white> file.");
         }catch(IOException ex){
-            logger.warn("Encountered IOException while saving cached players to playercache.json!", ex);
+            logger.failure("Encountered IOException while saving cached players to <white>playercache.json</white>!", ex);
         }
     }
     

@@ -360,7 +360,7 @@ public class CommandHandler{
                         sender.sendErrorMsg("<red>There was an error while creating the file</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for further details.");
                         
-                        core.getPlugin().getPluginLogger().warn("Encountered IOException while creating file %s", ex, copy);
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while creating file <white>%s</white>", ex, copy);
                         return;
                     }
                     
@@ -378,7 +378,7 @@ public class CommandHandler{
                         sender.sendErrorMsg("<red>There was an error while loading the file</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for further details.");
                         
-                        core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file %s", ex, copy);
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s</white>", ex, copy);
                         return;
                     }
                     
@@ -398,7 +398,7 @@ public class CommandHandler{
                         sender.sendErrorMsg("<red>There was an Error while copying values from</red> %s <red>to</red> %s<red>.", name, copy);
                         sender.sendErrorMsg("<red>Check console for details.");
                         
-                        core.getPlugin().getPluginLogger().warn("Encountered SerializationException while set values for %s!", ex, copy);
+                        core.getPlugin().getPluginLogger().warn("Encountered SerializationException while set values for <white>%s</white>!", ex, copy);
                         return;
                     }
                     
@@ -410,7 +410,7 @@ public class CommandHandler{
                         sender.sendErrorMsg("<red>There was an Error while trying to save</red> %s<red>!", copy);
                         sender.sendErrorMsg("<red>Check console for details.");
                         
-                        core.getPlugin().getPluginLogger().warn("Encountered IOException while saving ConfigurationNode for %s!", ex, copy);
+                        core.getPlugin().getPluginLogger().warn("Encountered IOException while saving ConfigurationNode for <white>%s</white>!", ex, copy);
                     }
                 }
                 default -> {

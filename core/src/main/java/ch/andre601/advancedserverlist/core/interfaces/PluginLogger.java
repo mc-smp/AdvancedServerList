@@ -27,9 +27,17 @@ package ch.andre601.advancedserverlist.core.interfaces;
 
 public interface PluginLogger{
     
+    default void debugSuccess(Class<?> clazz, String msg, Object... args){
+        debug(clazz, "[<green>✓</green>] " + msg, args);
+    }
+    
     void debug(Class<?> clazz, String msg, Object... args);
     
     void debugWarn(Class<?> clazz, String msg, Object... args);
+    
+    default void success(String msg, Object... args){
+        info("[<green>✓</green>] " + msg, args);
+    }
     
     void info(String msg, Object... args);
     
@@ -38,4 +46,8 @@ public interface PluginLogger{
     void warn(String msg, Throwable throwable);
     
     void warn(String msg, Throwable throwable, Object... args);
+    
+    default void failure(String msg, Object... args){
+        warn("[<red>x</red>] " + msg, args);
+    }
 }

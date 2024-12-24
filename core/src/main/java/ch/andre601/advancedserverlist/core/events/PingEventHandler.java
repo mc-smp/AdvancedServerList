@@ -176,7 +176,7 @@ public class PingEventHandler{
         }
         
         if(ProfileManager.checkOption(entry.players()) && !hidePlayers && ignoreMaintenance(event, "playerCountHover")){
-            logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying '%s'...", String.join("\\n", entry.players()));
+            logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying ['%s']...", String.join("', '", entry.players()));
             
             event.setPlayers(entry.players(), player, server);
         }

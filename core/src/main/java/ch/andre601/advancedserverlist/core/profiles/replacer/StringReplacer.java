@@ -111,7 +111,7 @@ public class StringReplacer{
                 raw.append(' ').append(valuesStr);
             
             if(collector != null)
-                collector.appendWarningFormatted(index, "Placeholder '%s' does not have a closing bracket (})", raw.toString());
+                collector.appendWarningFormatted(index, "Placeholder '<white>%s</white>' does not have a closing bracket (})", raw.toString());
             
             return raw.toString();
         }
@@ -126,7 +126,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(placeholderStart, "Placeholder '%s' does not have any available PlaceholderProvider", raw.toString());
+                collector.appendWarningFormatted(placeholderStart, "Placeholder '<white>%s</white>' does not have any available PlaceholderProvider", raw.toString());
             
             return raw.toString();
         }
@@ -141,7 +141,7 @@ public class StringReplacer{
             raw.append('}');
             
             if(collector != null)
-                collector.appendWarningFormatted(valueStart, "Placeholder '%s' has an invalid value String '%s'", raw.toString(), valuesStr);
+                collector.appendWarningFormatted(valueStart, "Placeholder '<white>%s</white>' has an invalid value String '<white>%s</white>'", raw.toString(), valuesStr);
             
             return raw.toString();
         }

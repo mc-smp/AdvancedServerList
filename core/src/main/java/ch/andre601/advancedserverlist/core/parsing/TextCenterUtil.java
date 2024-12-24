@@ -89,7 +89,7 @@ public class TextCenterUtil{
         }catch(IOException ex){
             plugin.getPlugin().getPluginLogger().warn("Encountered IOException while loading font widths.");
             plugin.getPlugin().getPluginLogger().warn("The <center> Placeholder won't work.");
-            plugin.getPlugin().getPluginLogger().warn("Cause: %s", ex.getMessage());
+            plugin.getPlugin().getPluginLogger().warn("Cause: <white>%s</white>", ex.getMessage());
             return new HashMap<>();
         }
     }

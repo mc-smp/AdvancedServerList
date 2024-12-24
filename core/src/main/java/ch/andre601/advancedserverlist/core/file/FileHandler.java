@@ -72,7 +72,6 @@ public class FileHandler{
     }
     
     public boolean loadConfig(){
-        logger.info("Loading config.yml...");
         File folder = plugin.getPlugin().getFolderPath().toFile();
         if(!folder.exists() && !folder.mkdirs()){
             logger.warn("Couldn't create folder for plugin. Is it missing Write permissions?");
@@ -87,7 +86,7 @@ public class FileHandler{
                 }
                 
                 Files.copy(stream, config);
-                logger.info("Created new config.yml!");
+                logger.success("Created new config.yml!");
             }catch(IOException ex){
                 logger.warn("Cannot create config.yml for plugin.", ex);
                 return false;
@@ -98,7 +97,7 @@ public class FileHandler{
     }
     
     public boolean loadProfiles(){
-        logger.info("Loading profiles...");
+        logger.info("[-] Loading profiles...");
         
         if(createFile("default.yml")){
             return reloadProfiles();
@@ -109,7 +108,7 @@ public class FileHandler{
     
     public boolean createFile(String name){
         if(Files.notExists(profilesFolder) && profilesFolder.toFile().mkdirs()){
-            logger.info("Successfully created profiles folder.");
+            logger.debugSuccess(FileHandler.class, "Successfully created profiles folder.");
         }
         
         File file = new File(profilesFolder.toFile(), name);
@@ -126,7 +125,7 @@ public class FileHandler{
             Files.copy(stream, profilesFolder.resolve(name));
             return true;
         }catch(IOException ex){
-            logger.warn("Encountered IOException while trying to create file %s", ex, name);
+            logger.warn("Encountered IOException while trying to create file <white>%s</white>", ex, name);
             return false;
         }
     }
@@ -160,7 +159,7 @@ public class FileHandler{
         
         File[] files = profilesFolder.toFile().listFiles(((dir, name) -> name.endsWith(".yml")));
         if(files == null || files.length == 0){
-            logger.warn("Cannot load files from profiles folder! No valid YAML files present.");
+            logger.failure("Cannot load files from profiles folder! No valid YAML files present.");
             return false;
         }
         
@@ -170,11 +169,11 @@ public class FileHandler{
                 continue;
             
             profiles.add(ServerListProfile.Builder.resolve(file.getName(), tmp, logger).build());
-            logger.info("Loaded '%s'!", file.getName());
+            logger.debugSuccess(FileHandler.class, "Loaded '<white>%s</white>'!", file.getName());
         }
         
         if(profiles.isEmpty()){
-            logger.warn("Couldn't load any profile from profiles folder!");
+            logger.failure("Couldn't load any profile from profiles folder!");
             return false;
         }
         
@@ -191,7 +190,7 @@ public class FileHandler{
         try{
             return loader.load();
         }catch(IOException ex){
-            logger.warn("Cannot load '%s' due to an IOException!", ex, path.toFile().getName());
+            logger.warn("Cannot load '<white>%s</white>' due to an IOException!", ex, path.toFile().getName());
             return null;
         }
     }
@@ -218,11 +217,11 @@ public class FileHandler{
     }
     
     private boolean makeBackup(){
-        logger.info("Making backup of old config.yml...");
+        logger.info("[-] Making backup of old config.yml...");
         
         File backups = plugin.getPlugin().getFolderPath().resolve("backups").toFile();
         if(!backups.exists() && !backups.mkdirs()){
-            logger.warn("Cannot create backups folder for migration!");
+            logger.failure("Cannot create backups folder for migration!");
             return false;
         }
         
@@ -231,16 +230,16 @@ public class FileHandler{
         File configBackup = new File(backups, "config_" + date.replace(":", "_") + ".yml");
         try{
             if(!configBackup.exists() && !configBackup.createNewFile()){
-                logger.warn("Cannot create backup file for config.yml!");
+                logger.failure("Cannot create backup file for config.yml!");
                 return false;
             }
             
             Files.copy(config, configBackup.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            logger.info("Saved backup as '%s'!", configBackup.getName());
+            logger.success("Saved backup as '<white>%s</white>'!", configBackup.getName());
             
             return true;
         }catch(IOException ex){
-            logger.warn("Encountered IOException while trying to create a backup.", ex);
+            logger.failure("Encountered IOException while trying to create a backup.", ex);
             return false;
         }
     }

@@ -27,6 +27,7 @@ package ch.andre601.advancedserverlist.bungeecord.logging;
 
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,21 +56,21 @@ public class BungeeLogger implements PluginLogger{
     
     @Override
     public void info(String msg, Object... args){
-        logger.info(String.format(msg, args));
+        logger.info(ComponentParser.textFormatted(msg, args).toStringStriped());
     }
     
     @Override
     public void warn(String msg, Object... args){
-        logger.warning(String.format(msg, args));
+        logger.warning(ComponentParser.textFormatted(msg, args).toStringStriped());
     }
     
     @Override
     public void warn(String msg, Throwable throwable){
-        logger.log(Level.WARNING, msg, throwable);
+        logger.log(Level.WARNING, ComponentParser.text(msg).toStringStriped(), throwable);
     }
     
     @Override
     public void warn(String msg, Throwable throwable, Object... args){
-        logger.log(Level.WARNING, String.format(msg, args), throwable);
+        logger.log(Level.WARNING, ComponentParser.textFormatted(msg, args).toStringStriped(), throwable);
     }
 }

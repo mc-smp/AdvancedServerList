@@ -89,9 +89,9 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     @Override
     public void loadCommands(){
         if(getServer().getCommandMap().register("asl", new CmdAdvancedServerList(this))){
-            getPluginLogger().info("Registered /advancedserverlist:advancedserverlist");
+            getPluginLogger().success("Registered <white>/advancedserverlist:advancedserverlist</white>!");
         }else{
-            getPluginLogger().info("Registered /asl:advancedserverlist");
+            getPluginLogger().success("Registered <white>/asl:advancedserverlist</white>!");
         }
     }
     
@@ -222,7 +222,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         
         OptionalInt build = info.buildNumber();
         if(build.isEmpty())
-            return String.format("%s (%s, Version: %s)", name, id, version);
+            return String.format("%s (ID: %s, Version: %s)", name, id, version);
         
         return String.format("%s (ID: %s, Version: %s, Build: %d)", name, id, version, build.getAsInt());
     }

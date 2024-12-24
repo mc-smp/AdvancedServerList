@@ -26,19 +26,18 @@
 package ch.andre601.advancedserverlist.paper.logging;
 
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.paper.PaperCore;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 public class PaperLogger implements PluginLogger{
     
     private final PaperCore plugin;
-    private final Logger logger;
+    private final ComponentLogger logger;
     
     public PaperLogger(PaperCore plugin){
         this.plugin = plugin;
-        this.logger = plugin.getLogger();
+        this.logger = plugin.getComponentLogger();
     }
     
     @Override
@@ -55,21 +54,21 @@ public class PaperLogger implements PluginLogger{
     
     @Override
     public void info(String msg, Object... args){
-        logger.info(String.format(msg, args));
+        logger.info(ComponentParser.textFormatted("<grey>" + msg, args).toComponent());
     }
     
     @Override
     public void warn(String msg, Object... args){
-        logger.warning(String.format(msg, args));
+        logger.warn(ComponentParser.textFormatted("<yellow>" + msg, args).toComponent());
     }
     
     @Override
     public void warn(String msg, Throwable throwable){
-        logger.log(Level.WARNING, msg, throwable);
+        logger.warn(ComponentParser.text("<yellow>" + msg).toComponent(), throwable);
     }
     
     @Override
     public void warn(String msg, Throwable throwable, Object... args){
-        logger.log(Level.WARNING, String.format(msg, args), throwable);
+        logger.warn(ComponentParser.textFormatted("<yellow>" + msg, args).toComponent(), throwable);
     }
 }

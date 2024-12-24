@@ -69,12 +69,11 @@ public class AdvancedServerList<F>{
         placeholders.forEach(this::addPlaceholder);
         
         if(plugin.isPluginEnabled("Maintenance")){
-            plugin.getPluginLogger().info("Found Maintenance Plugin. Registering extra Placeholder...");
             addPlaceholder(new MaintenancePlaceholder(this));
         }
         
-        plugin.getPluginLogger().info("Completed internal Placeholder registration!");
-        
+        resolveVersion();
+        getPlugin().getPluginLogger().info("Starting <white>AdvancedServerList v%s</white>...", version);
         load();
     }
     
@@ -119,15 +118,15 @@ public class AdvancedServerList<F>{
     }
     
     public void disable(){
-        getPlugin().getPluginLogger().info("Saving playercache.json file...");
+        getPlugin().getPluginLogger().info("[-] Saving <white>playercache.json</white> file...");
         getPlayerHandler().save();
         
         if(updateChecker != null){
-            getPlugin().getPluginLogger().info("Disabling Update Checker...");
+            getPlugin().getPluginLogger().info("[-] Disabling Update Checker...");
             updateChecker.disable();
         }
         
-        getPlugin().getPluginLogger().info("AdvancedServerList disabled!");
+        getPlugin().getPluginLogger().success("AdvancedServerList disabled!");
     }
     
     public void clearFaviconCache(){
@@ -139,70 +138,56 @@ public class AdvancedServerList<F>{
     }
     
     private void load(){
-        printBanner();
-        resolveVersion();
-    
-        getPlugin().getPluginLogger().info("Starting AdvancedServerList v%s...", version);
-        getPlugin().getPluginLogger().info("Platform: %s", plugin.getPlatformInfo());
-        
-        if(getFileHandler().loadConfig()){
-            getPlugin().getPluginLogger().info("Successfully loaded config.yml!");
-        }else{
-            getPlugin().getPluginLogger().warn("Unable to load config.yml! Check previous lines for errors.");
+        if(!getFileHandler().loadConfig()){
+            getPlugin().getPluginLogger().failure("Unable to load <white>config.yml</white>! Check previous lines for errors.");
             return;
         }
         
         if(getFileHandler().isOldConfig()){
-            getPlugin().getPluginLogger().info("Detected old config.yml. Attempting to migrate...");
+            getPlugin().getPluginLogger().info("[-] Detected old <white>config.yml</white>. Attempting to migrate...");
             if(getFileHandler().migrateConfig()){
-                getPlugin().getPluginLogger().info("Migration completed successfully!");
+                getPlugin().getPluginLogger().success("Migration completed successfully!");
             }else{
-                getPlugin().getPluginLogger().warn("Couldn't migrate config.yml! Check previous lines for errors.");
+                getPlugin().getPluginLogger().failure("Couldn't migrate <white>config.yml</white>! Check previous lines for errors.");
                 return;
             }
         }
         
+        if(getFileHandler().getBool(true, "printBanner")){
+            printBanner();
+        }
+        
+        getPlugin().getPluginLogger().info("Platform: <white>%s</white>", plugin.getPlatformInfo());
+        getPlugin().getPluginLogger().info("");
+        
         if(getFileHandler().loadProfiles()){
-            getPlugin().getPluginLogger().info("Successfully loaded %d profile(s)!", getFileHandler().getProfiles().size());
+            getPlugin().getPluginLogger().success("Successfully loaded <white>%d</white> profile(s)!", getFileHandler().getProfiles().size());
         }else{
-            getPlugin().getPluginLogger().warn("Unable to load profiles! Check previous lines for errors.");
+            getPlugin().getPluginLogger().failure("Unable to load profiles! Check previous lines for errors.");
             return;
         }
         
         getPlugin().loadFaviconHandler(this);
     
-        getPlugin().getPluginLogger().info("Loading Commands...");
         plugin.loadCommands();
-        getPlugin().getPluginLogger().info("Commands loaded!");
-    
-        getPlugin().getPluginLogger().info("Loading events...");
         plugin.loadEvents();
-        getPlugin().getPluginLogger().info("Events loaded!");
-    
-        getPlugin().getPluginLogger().info("Loading playercache.json...");
         getPlayerHandler().load();
-    
-        getPlugin().getPluginLogger().info("Loading bStats metrics. Disable it in the global config under /plugins/bstats/");
         plugin.loadMetrics();
-        getPlugin().getPluginLogger().info("Metrics loaded!");
-        
-        getPlugin().getPluginLogger().info("Enabling Schedulers...");
         plugin.startScheduler();
-        getPlugin().getPluginLogger().info("Schedulers enabled.");
     
-        getPlugin().getPluginLogger().info("AdvancedServerList is ready!");
+        getPlugin().getPluginLogger().success("<green>AdvancedServerList is ready!");
         
         if(getFileHandler().getBoolean("checkUpdates"))
             this.updateChecker = new UpdateChecker(this);
     }
     
     private void printBanner(){
-        getPlugin().getPluginLogger().info("           _____ _");
-        getPlugin().getPluginLogger().info("    /\\    / ____| |");
-        getPlugin().getPluginLogger().info("   /  \\  | (___ | |");
-        getPlugin().getPluginLogger().info("  / /\\ \\  \\___ \\| |");
-        getPlugin().getPluginLogger().info(" / ____ \\ ____) | |____");
-        getPlugin().getPluginLogger().info("/_/    \\_\\_____/|______|");
+        getPlugin().getPluginLogger().info("<#3b90ff>     __      _______ ___");
+        getPlugin().getPluginLogger().info("<#3b90ff>    /\\ \\    / ____|_| | |");
+        getPlugin().getPluginLogger().info("<#3b90ff>   /  \\ \\  | (_(___ | | |");
+        getPlugin().getPluginLogger().info("<#3b90ff>  / /\\ \\ \\  \\___ \\ \\| | |");
+        getPlugin().getPluginLogger().info("<#3b90ff> / ____ \\ \\ ____) | | |_|____");
+        getPlugin().getPluginLogger().info("<#3b90ff>/_/_/  \\_\\_\\_____/_/|______|_|");
         getPlugin().getPluginLogger().info("");
     }
     
@@ -219,7 +204,6 @@ public class AdvancedServerList<F>{
     }
     
     private void addPlaceholder(PlaceholderProvider placeholderProvider){
-        getPlugin().getPluginLogger().info("Registering %s Placeholders...", placeholderProvider.getIdentifier());
         AdvancedServerList.getApi().addPlaceholderProvider(placeholderProvider);
     }
 }
