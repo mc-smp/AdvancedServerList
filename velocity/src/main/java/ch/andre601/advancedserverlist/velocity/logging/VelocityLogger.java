@@ -30,14 +30,14 @@ import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.velocity.VelocityCore;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
-public class VelocityComponentLogger implements PluginLogger{
+public class VelocityLogger implements PluginLogger{
     
     private final VelocityCore plugin;
     private final ComponentLogger logger;
     
-    public VelocityComponentLogger(VelocityCore plugin){
+    public VelocityLogger(VelocityCore plugin, ComponentLogger logger){
         this.plugin = plugin;
-        this.logger = ComponentLogger.logger("AdvancedServerList");
+        this.logger = logger;
     }
     
     @Override
