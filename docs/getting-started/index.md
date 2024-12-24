@@ -425,6 +425,14 @@ checkUpdates: true
 debug: false
 
 #
+# Should the "ASL" ASCI art be displayed on plugin startup?
+# Setting this to false will hide the banner.
+#
+# Default: true
+#
+printBanner: true
+
+#
 # Sets how long Favicons should be cached. Value is in minutes with the lowest possible value being 1.
 #
 # This option only affects dynamic favicons created from a placeholder or URL. Local favicons will
@@ -483,6 +491,12 @@ disableDuringMaintenance:
   # Default: true
   #
   maxPlayers: true
+  #
+  # Whether the online players feature should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  onlinePlayers: true
 
 #
 # DO NOT EDIT!
@@ -490,7 +504,7 @@ disableDuringMaintenance:
 # This is used internally to determine if the config needs to be migrated.
 # Changing or even removing this option could result in your config being broken.
 #
-config-version: 5
+configVersion: 7
 ```
 ///
 
