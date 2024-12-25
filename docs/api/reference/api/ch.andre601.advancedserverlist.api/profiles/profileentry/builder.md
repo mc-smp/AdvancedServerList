@@ -13,14 +13,16 @@ constructors:
 methods:
   - name: 'extraPlayersCount'
     description: |
-      Sets the number of players to add to the online players to use as the new max players value.<br>
+      Sets the value to resolve into a number by AdvancedServerList.<br>
+      Strings not resolving into valid numbers will be treated as this option not being set.<br>
+      <br>
       This option has no effect when <a href="../#extraplayersenabled()"><code>extraPlayersEnabled</code></a> is set to <a href="../../../objects/nullbool/#false"><code>NullBool.FALSE</code></a> or <a href="../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a>.<br>
       <br>
-      Set this to <code>null</code> to not alter the max player count. Alternatively, set <a href="#setextraplayersenabled(nullbool)"><code>setExtraPlayersEnabled(NullBool)</code></a> to <a href="../../../objects/nullbool/#false"><code>NullBool.FALSE</code></a>.
+      Set this to <code>null</code> to not alter the max player count. Alternatively <a href="#setextraplayersenabled(nullbool)"><code>disable extra Players</code></a>.
     parameters:
       - name: 'extraPlayersCount'
         description: 'The number of extra players to add.'
-        type: 'Integer'
+        type: 'String'
         attribute:
           - 'nullable'
     returns: 'This Builder after the extra player count has been set. Useful for chaining.'
@@ -73,7 +75,9 @@ methods:
         description: 'Thrown by the <code>CheckUtil</code> in case <code>null</code> has been provided as parameter.'
   - name: 'maxPlayersCount'
     description: |
-      Sets the number of max players allowed to join this server.<br>
+      Sets the value to resolve into a number by AdvancedServerList.<br>
+      Strings not resolving into valid numbers will be treated as this option not being set.<br>
+      <br>
       This option has no effect when <a href="#maxplayersenabled(nullbool)">maxPlayersEnabled</a> is set to <a href="../../../objects/nullbool/#false"><code>NullBool.FALSE</code></a> or <a href="../../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a>.<br>
       <br>
       Set this to <code>null</code> to not alter the max player count. Alternatively <a href="#maxplayersenabled(nullbool)">disable max Players</a>.
@@ -122,7 +126,11 @@ methods:
   - name: 'onlinePlayersCount'
     description: |
       Sets the value to resolve into a number by AdvancedServerList.<br>
-      Strings not resolving into valid numbers will be treated as this option not being set.
+      Strings not resolving into valid numbers will be treated as this option not being set.<br>
+      <br>
+      This option has no effect when <a href="#onlineplayersenabled(nullbool)">maxPlayersEnabled</a> is set to <a href="../../../objects/nullbool/#false"><code>NullBool.FALSE</code></a> or <a href="../../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a>.<br>
+      <br>
+      Set this to <code>null</code> to not alter the online player count. Alternatively <a href="#onlineplayersenabled(nullbool)">disable online Players</a>.
     parameters:
       - name: 'onlinePlayersCount'
         description: 'The number of online players to set.'
