@@ -43,13 +43,18 @@ constructors:
         attributes:
           - notnull
       - name: 'extraPlayersCount'
-        description: 'The number to add to the online players for the max players number.'
-        type: Integer
+        description: 'The number to add to the online Players for the extra Players.'
+        type: String
         attributes:
           - nullable
       - name: 'maxPlayersCount'
-        description: 'The number to use for the max players count.'
-        type: Integer
+        description: 'The number to set for the max Players count.'
+        type: String
+        attributes:
+          - nullable
+      - name: 'onlinePlayersCount'
+        description: 'The number to set for the Online Players count.'
+        type: String
         attributes:
           - nullable
     seealso:
@@ -76,6 +81,7 @@ methods:
         <li><a href="#maxplayersenabled()"><code>maxPlayersEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBoo.NOT_SET</code></a></li>
         <li><a href="#extraplayerscount()"><code>extraPlayersCount</code></a>: <code>null</code></li>
         <li><a href="#maxplayerscount()"><code>maxPlayersCount</code></a>: <code>null</code></li>
+        <li><a href="#onlineplayerscount()"><code>onlinePlayersCount</code></a>: <code>null</code></li>
       </ul>
     returns: 'New ProfileEntry instance with empty/null values defined'
     attributes:
@@ -164,12 +170,12 @@ methods:
       type: 'object'
       link: '../../objects/nullbool/'
   - name: 'extraPlayersCount'
-    description: 'Gets the currently set number of extra players to use by this ProfileEntry. May be <code>null</code>.'
-    returns: 'Possibly-null integer number of extra players used by this ProfileEntry.'
+    description: 'Gets the currently set number of extra players of this ProfileEntry.'
+    returns: 'The current number of extra players used by this ProfileEntry.'
     attributes:
       - nullable
     type:
-      name: 'Integer'
+      name: 'String'
       type: 'object'
   - name: 'maxPlayersCount'
     description: 'Gets the currently set number of max players of this ProfileEntry.'
@@ -177,7 +183,15 @@ methods:
     attributes:
       - nullable
     type:
-      name: 'Integer'
+      name: 'String'
+      type: 'object'
+  - name: 'onlinePlayersCount'
+    description: 'Gets the currently set number of online players of this ProfileEntry.'
+    returns: 'The current number of online players used by this ProfileEntry.'
+    attributes:
+      - nullable
+    type:
+      name: 'String'
       type: 'object'
   - name: 'isInvalid'
     description: |
