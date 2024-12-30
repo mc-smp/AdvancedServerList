@@ -4,57 +4,69 @@ icon: octicons/pencil-24
 
 # Formatting
 
-All text options, with exception of [`Conditions`](index.md#condition), allow the usage of formatting options using [MiniMessage].
+AdvancedServerList utilizes the [MiniMessage] text formatting to allow colors, formatting codes, gradients, etc. for the text options `motd`, `playerCount -> hover` and `playerCount -> text`.  
+You can find a collection of available tags on the library's [Format] page. Please make sure to see the [Unsupported Formatting](#unsupported-formatting) section below for tags with no support.
 
-/// info | Online Tool
-The devs of the Adventure library provide a handy online tool to create the right formatting codes to display the text properly.  
-You can find the tool at https://webui.advntr.dev/
+## Why no legacy colors (`&`/`§` codes) support?
+
+### The tl;dr
+
+MiniMessage tags are overall more readable while also allowing a lot more ways of formatting, with Legacy colors becoming an unreadable mess the more complex your formatting is.
+
+### The long explanation
+
+Legacy colors are a mess to read. This becomes especially evident with gradients using RGB color support.  
+As an example is here the text `Hello World` made into a Gradient with starting color `#084CFB` and end color `#ADF3FD` both in Legacy Color (Using `&` character) and MiniMessage format:
+
+/// tab | Legacy Color Codes
+```
+&#084CFBH&#195DFBe&#296DFBl&#3A7EFCl&#4A8FFCo &#6BB0FCW&#7CC1FCo&#8CD2FDr&#9DE2FDl&#ADF3FDd
+```
 ///
 
-## Before starting
-
-Please make sure to surround your text with either single quotes (`'`) or double quotes (`"`).  
-This avoids possible issues where the YAML parser would treat lines starting with specific characters as special options (i.e. `<` would be treated as a scolar value).
-
-Also, should your text contain single quotes (for example when using `you're`), either surround the text with double quotes, or change the single quote in your text into two single quotes (`you're -> you''re`).
-
-```yaml title="Wrong formatting"
-motd:
-  - <red>This will cause
-  - <red>Errors
+/// tab | MiniMessage
 ```
-
-```yaml title="Right formatting"
-motd:
-  - "<green>This will be formatted"
-  - "<green>properly."
+<gradient:#084CFB:#ADF3FD>Hello World</gradient>
 ```
+///
 
-## Unsupported options
+This becomes even more difficult to work with if you want to add text formatting to only parts of the text.  
+Assuming you want to make `World` be bold, with legacy colors, you would need to add `&l` before every character of the word, as colors reset any formatting applied. In MiniMessage all you need to do is put `<bold>` before the word and `</bold>` after it.
 
-The following options are **not** supported, no matter what option they are used in:
+Another benefit for gradients in particular is, that MiniMessage allows more than one color to be set for the gradient, i.e. you can set three colors for a start, middle and end color.
 
-- Hover Actions (Show text, Show Advancement, etc)
-- Click Actions (Run command, Suggest command, etc.)
-- Custom Fonts (May work if player already has the resource pack loaded)
+## Web Editor
 
-## Colors
+The Adventure team offers an [Online Web tool][webviewer]{ target="_blank" rel="nofollow" } that allows you to create the right MiniMessage tags while also having a preview.  
+Just visit the page and make sure to select `Server List` at the top to have a preview in a server list.
 
-### Default colors
+## YAML Formatting
 
-Default colors such as `<red>`, `<green>`, `<aqua>`, etc. may be used in all text options.
+It is recommended to always surround your text with single or double quotes. This avoids situations where the YAML parses sees a specific character and treats it as a special YAML feature.  
+This is especially the case with MiniMessage tags, where `<` can be seen as the start of a so-called scolar value.
 
-### Hex Colors
+Should you be using single quotes inside the text itself - i.e. for words such as `you're` - will you either need to surround the text with double quotes, or change the single quote in the word to two single quotes (`you're` becomes `you''re`).
 
-Hexadecimal colors may be used in the [`motd`](index.md#motd) option using the `<#RRGGBB>` format.
+## Unsupported Formatting
 
-### Gradients
+### Non-functional Tags
 
-Gradients can be created by using `<gradient:<color1>:<color2>>`, replacing `<color1>` with a starting color name or hex color value and `<color2>` with an ending color name or hex color value.  
-Only the [`motd`](index.md#motd) option may support hex color gradients and in all other options will it be downsampled.
+While MiniMessage will parse most, if not all tags, will not all work.  
+The following list of tags will do nothing, or only work under specific circumstances:
 
-## Formatting
+| Tag           | Note                                                                                                 |
+|---------------|------------------------------------------------------------------------------------------------------|
+| `<click>`     |                                                                                                      |
+| `<hover>`     |                                                                                                      |
+| `<insertion>` |                                                                                                      |
+| `<font>`      | May work if either a default MC font is used, or the player has a resourcepack with the font loaded. |
+| `<selector>`  |                                                                                                      |
+| `<score>`     |                                                                                                      |
 
-Formatting options (`<bold>`, `<italic>`, etc.) are available for all text options.
+### Non-supported RGB
 
-[MiniMessage]: https://docs.adventure.kyori.net/minimessage/index.html
+Only the `motd` option supports RGB colors. Every other option allowing MiniMessage format may only support the default colors provided by Minecraft (`<aqua>`, `<yellow>`, etc) with RGB colors being downsampled to their next supported option.
+
+[MiniMessage]: https://docs.advntr.dev/minimessage/index.html
+[Format]: https://docs.advntr.dev/minimessage/format.html
+[webviewer]: https://webui.advntr.dev/
