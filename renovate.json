@@ -1,11 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", "group:allNonMajor"],
   "labels": ["PR Type/Dependency Update"],
   "ignoreDeps": [
     "ch.andre601.advancedserverlist:parent",
     "ch.andre601.advancedserverlist:core"
   ],
   "packageRules": [
+    {
+      "description": "Automerge non-major updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    },
     {
       "description": "Use Jitpack registry for various Libs",
       "matchPackageNames": [
