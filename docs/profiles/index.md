@@ -198,6 +198,13 @@ playerCount:
 </div>
 ///
 
+### HidePlayersHover
+
+The `playerCount -> hidePlayersHover` option takes a boolean (`true` or `false`) to set whether the hover displayed on the player count should be hidden or not.
+
+When set to true will hovering over the player count show nothing.  
+In addition will [`playerCount -> hover`](#hover) not be used.
+
 ### Hover
 
 The `playerCount -> hover` option allows you to define lines of text to show when a player hovers over the player count with their cursor.
