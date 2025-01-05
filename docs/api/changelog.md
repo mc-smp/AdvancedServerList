@@ -7,6 +7,15 @@ icon: octicons/log-24
 This page lists the recent changes made towards the AdvancedServerListAPI.  
 They are ordered newest to oldest.
 
+## v4.1.0 { #v4.1.0 }
+
+### :octicons-plus-circle-24:{ .changelog-added title="Added" } Added { #v-added }
+
+- New setter method added to [`ProfileEntry.Builder`][profileentry.builder] class:
+    - [`hidePlayersHoverEnabled(NullBool)`][hidePlayersHoverEnabled]
+
+[hidePlayersHoverEnabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#hideplayershoverenabled(nullbool)
+
 ## v4.0.0 { #v4.0.0 }
 
 ### :octicons-alert-24:{ .changelog-breaking title="Breaking Changes" } Breaking Changes { #v4.0.0-breaking }
@@ -21,7 +30,7 @@ They are ordered newest to oldest.
     - [`onlinePlayersCount(String)`][onlinePlayersCount]
     - [`onlinePlayersEnabled(NullBool)`][onlinePlayersEnabled]
 
-[onlinePlayersCount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#onlineplayerscount(integer)
+[onlinePlayersCount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#onlineplayerscount(string)
 [onlinePlayersEnabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#onlineplayersenabled(nullbool)
 
 ## v3.3.0 { #v3.3.0 }
@@ -53,11 +62,11 @@ They are ordered newest to oldest.
     - [`playerCountText(String)`][playercounttext]
     - [`players(List<String>)`][players]
 
-[extraplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#extraplayerscount(integer)
+[extraplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#extraplayerscount(string)
 [extraplayersenabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#extraplayersenabled(nullbool)
 [favicon]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#favicon(string)
 [hideplayersenabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#hideplayersenabled(nullbool)
-[maxplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#maxplayerscount(integer)
+[maxplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#maxplayerscount(string)
 [maxplayersenabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#maxplayersenabled(nullbool)
 [motd]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#motd(list<string>)
 [playercounttext]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#playercounttext(string)
@@ -119,9 +128,9 @@ They are ordered newest to oldest.
     - [`maxPlayersEnabled()`][maxplayersenabled] - Returns the value for `playerCount -> maxPlayers -> enabled` as `NullBool`
     - [`maxPlayersCount()`][maxplayerscount] - Returns the value of `playerCount -> maxPlayers -> amount` as nullable `Integer`
 - New setters in [`ProfileEntry.Builder`][profileentry.builder]:
-    - [`setMaxPlayersEnabled(NullBool)`][setmaxplayersenabled] - Sets whether the max players feature is enabled or not.
-    - [`setMaxPlayersCount(Integer)`][setmaxplayerscount] - Sets the number to use for the max players count.
-    - [`setExtraPlayersCount(Integer)`][setextraplayersecount] - Replacement for [deprecated `setExtraPlayerCount(Integer)` method](#v3.1.0-deprecated).
+    - `setMaxPlayersEnabled(NullBool)`- Sets whether the max players feature is enabled or not.
+    - `setMaxPlayersCount(Integer)` - Sets the number to use for the max players count.
+    - `setExtraPlayersCount(Integer)` - Replacement for [deprecated `setExtraPlayerCount(Integer)` method](#v3.1.0-deprecated).
 
 ### :octicons-zap-24:{ .changelog-breaking title="Deprecated" } Deprecated { #v3.1.0-deprecated }
 
@@ -132,9 +141,6 @@ They are ordered newest to oldest.
 [maxplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/index.md#maxplayerscount()
 
 [profileentry.builder]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md
-[setmaxplayersenabled]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#setmaxplayersenabled(nullbool)
-[setmaxplayerscount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#setmaxplayerscount(integer)
-[setextraplayersecount]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md#setextraplayerscount(integer)
 
 ----
 

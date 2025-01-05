@@ -56,6 +56,7 @@ public class ProfileManager{
         NullBool extraPlayersEnabled = resolve(defEntry, entry, ProfileEntry::extraPlayersEnabled);
         NullBool maxPlayersEnabled = resolve(defEntry, entry, ProfileEntry::maxPlayersEnabled);
         NullBool onlinePlayersEnabled = resolve(defEntry, entry, ProfileEntry::onlinePlayersEnabled);
+        NullBool hidePlayersHoverEnabled = resolve(defEntry, entry, ProfileEntry::hidePlayersHoverEnabled);
         String extraPlayersCount = resolve(defEntry, entry, ProfileEntry::extraPlayersCount);
         String maxPlayersCount = resolve(defEntry, entry, ProfileEntry::maxPlayersCount);
         String onlinePlayersCount = resolve(defEntry, entry, ProfileEntry::onlinePlayersCount);
@@ -69,6 +70,7 @@ public class ProfileManager{
             .extraPlayersEnabled(extraPlayersEnabled)
             .maxPlayersEnabled(maxPlayersEnabled)
             .onlinePlayersEnabled(onlinePlayersEnabled)
+            .hidePlayersHoverEnabled(hidePlayersHoverEnabled)
             .extraPlayersCount(extraPlayersCount)
             .maxPlayersCount(maxPlayersCount)
             .onlinePlayersCount(onlinePlayersCount)
@@ -96,6 +98,7 @@ public class ProfileManager{
         NullBool extraPlayersEnabled = resolveNullBool(node, "playerCount", "extraPlayers", "enabled");
         NullBool maxPlayersEnabled = resolveNullBool(node, "playerCount", "maxPlayers", "enabled");
         NullBool onlinePlayersEnabled = resolveNullBool(node, "playerCount", "onlinePlayers", "enabled");
+        NullBool hidePlayersHoverEnabled = resolveNullBool(node, "playerCount", "hidePlayersHover");
         String extraPlayers = resolveNullableString(node, "playerCount", "extraPlayers", "amount");
         String maxPlayers = resolveNullableString(node, "playerCount", "maxPlayers", "amount");
         String onlinePlayers = resolveNullableString(node, "playerCount", "onlinePlayers", "amount");
@@ -109,6 +112,7 @@ public class ProfileManager{
             .extraPlayersEnabled(extraPlayersEnabled)
             .maxPlayersEnabled(maxPlayersEnabled)
             .onlinePlayersEnabled(onlinePlayersEnabled)
+            .hidePlayersHoverEnabled(hidePlayersHoverEnabled)
             .extraPlayersCount(extraPlayers)
             .maxPlayersCount(maxPlayers)
             .onlinePlayersCount(onlinePlayers)

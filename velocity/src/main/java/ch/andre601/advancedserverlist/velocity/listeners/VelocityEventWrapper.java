@@ -120,6 +120,11 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
+    public void setPlayersHidden(){
+        builder.clearSamplePlayers();
+    }
+    
+    @Override
     public void setFavicon(Favicon favicon){
         builder.favicon(favicon);
     }

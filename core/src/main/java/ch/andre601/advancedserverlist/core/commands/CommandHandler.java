@@ -102,42 +102,26 @@ public class CommandHandler{
         public void handle(CmdSender sender, String[] args){
             sender.sendPrefixedMsg("- Commands. Hover for details.");
             for(PluginCommand command : core.getCommandHandler().getSubCommands()){
-                sender.sendPrefixedMsg("");
-                sender.sendPrefixedMsg(
-                    "<aqua><hover:show_text:\"%s\">" +
+                sender.sendMsg();
+                sender.sendMsg(
                     "<click:suggest_command:/asl %s>" +
-                    "/asl <white>%s</white>" +
-                    "</click>" +
-                    "</hover></aqua>",
-                    getCommandHover(command),
-                    command.name(),
+                    command.usage() +
+                    "</click>",
                     command.name()
                 );
+                sender.sendMsg("<grey>[<hover:show_text:\"%s\"><white>Permission</white></hover>]</grey>", command.permission());
             }
         }
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>help</white></aqua>";
+            return new CommandStringBuilder("help", description())
+                .build();
         }
         
         @Override
         public String description(){
             return "Shows all available commands.";
-        }
-        
-        private String getCommandHover(PluginCommand command){
-            return String.format(
-                """
-                <grey>Usage: %s
-                Permission: <white>%s</white>
-                
-                <white>%s</white>
-                """,
-                command.usage(),
-                command.permission(),
-                command.description()
-            );
         }
     }
     
@@ -172,7 +156,8 @@ public class CommandHandler{
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>reload</white></aqua>";
+            return new CommandStringBuilder("reload", description())
+                .build();
         }
         
         @Override
@@ -206,7 +191,8 @@ public class CommandHandler{
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>clearcache</white></aqua>";
+            return new CommandStringBuilder("clearcache", description())
+                .build();
         }
         
         @Override
@@ -268,7 +254,18 @@ public class CommandHandler{
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>migrate <grey>\\<</grey>Plugin<grey>></grey></white></aqua>";
+            return new CommandStringBuilder("migrate", description())
+                .appendSpace()
+                .appendArgument(new CommandStringBuilder.ArgumentBuilder("Plugin").description(
+                    """
+                    The Plugin to migrate from.
+                    Supported options:
+                    
+                    - <white>ServerListPlus</white>
+                    - <white>MiniMOTD</white>
+                    """
+                ).build())
+                .build();
         }
         
         @Override
@@ -422,11 +419,32 @@ public class CommandHandler{
         
         @Override
         public String usage(){
-            return "<aqua>/asl <white>profiles</white> <grey>\\<" +
-                "<white>add</white> \\<<white>name</white>> | " +
-                "<white>copy</white> \\<<white>profile</white>> \\<<white>name</white>> | " +
-                "<white>list</white>" +
-                "></grey></aqua>";
+            return new CommandStringBuilder("profiles", "Creates a new profile, copies one from an existing file, or lists all available profiles.")
+                .appendSpace()
+                .appendText("<grey>\\<")
+                // add <name>
+                .appendLiteralArgument("add", "Adds a new profile using the default values.")
+                .appendSpace()
+                .appendArgument(new CommandStringBuilder.ArgumentBuilder("name").description("Name of the new profile").required().build())
+                // Divider
+                .appendSpace()
+                .appendText("|")
+                .appendSpace()
+                // copy <profile> <name>
+                .appendLiteralArgument("copy", "Creates a copy of the provided profile.")
+                .appendSpace()
+                .appendArgument(new CommandStringBuilder.ArgumentBuilder("profile").description("The profile to copy.").required().build())
+                .appendSpace()
+                .appendArgument(new CommandStringBuilder.ArgumentBuilder("name").description("Name of the copy.").required().build())
+                // Divider
+                .appendSpace()
+                .appendText("|")
+                .appendSpace()
+                // list
+                .appendLiteralArgument("list", "Lists all currently know profiles and wether they are valid or not.")
+                // Closing bracket
+                .appendText("></grey>")
+                .build();
         }
         
         @Override

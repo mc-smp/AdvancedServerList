@@ -73,6 +73,21 @@ methods:
     throws:
       - name: 'IllegalArgumentException'
         description: 'Thrown by the <code>CheckUtil</code> in case <code>null</code> has been provided as parameter.'
+  - name: 'hidePlayersHoverEnabled'
+    description: |
+      Sets ehther the Hover List of online Players should be hidden or not.<br>
+      <br>
+      Set to <a href="../../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a> to not set this.
+    parameters:
+      - name: 'hidePlayersHoverEnabled'
+        description: 'Whether the online players feature should be enabled or not.'
+        type: 'NullBool'
+        attribute:
+          - 'notnull'
+    returns: 'This Builder after the NullBool has been set. Useful for chaining.'
+    throws:
+      - name: 'IllegalArgumentException'
+        description: 'Thrown by the <code>CheckUtil</code> in case <code>null</code> has been provided as parameter.'
   - name: 'maxPlayersCount'
     description: |
       Sets the value to resolve into a number by AdvancedServerList.<br>
