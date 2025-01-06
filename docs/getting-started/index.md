@@ -474,6 +474,12 @@ disableDuringMaintenance:
   #
   hidePlayers: true
   #
+  # Whether hiding player list on hover should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  hidePlayersHover: true
+  #
   # Whether player count text changing should be disabled while Maintenance mode is active.
   #
   # Default: true

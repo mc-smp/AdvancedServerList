@@ -158,7 +158,7 @@ public class PingEventHandler{
         
         boolean hidePlayers = ProfileManager.checkOption(entry.hidePlayersEnabled());
         
-        if(hidePlayers && ignoreMaintenance(event, "hidePlayers")){
+        if(hidePlayers && ignoreMaintenance(event, "hidePlayers") && ignoreMaintenance(event, "hidePlayersHover")){
             logger.debug(PingEventHandler.class, "'playerCount -> hidePlayers' enabled. Hiding player count...");
             
             event.hidePlayers();

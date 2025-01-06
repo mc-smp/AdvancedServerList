@@ -46,12 +46,23 @@ public class ConfigMigrator{
     public static ConfigurationTransformation.Versioned create(){
         return ConfigurationTransformation.versionedBuilder()
             .versionKey("configVersion")
-            .addVersion(LATEST, sixToSeven())
+            .addVersion(LATEST, sevenToEight())
+            .addVersion(7, sixToSeven())
             .addVersion(6, fiveToSix())
             .addVersion(5, fourToFive())
             .addVersion(4, threeToFour())
             .addVersion(3, twoToThree())
             .addVersion(2, oneToTwo())
+            .build();
+    }
+    
+    public static ConfigurationTransformation sevenToEight(){
+        return ConfigurationTransformation.builder()
+            .addAction(NodePath.path("disableDuringMaintenance"), (path, value) -> {
+                value.node("hidePlayersHover").set(true);
+                
+                return null;
+            })
             .build();
     }
     
