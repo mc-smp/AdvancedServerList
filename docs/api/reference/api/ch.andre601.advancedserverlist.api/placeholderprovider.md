@@ -8,7 +8,7 @@ constructors:
       - name: 'identifier'
         description: 'The identifier to use for the placeholder. Cannot be empty.'
         type: String
-        attribute:
+        attributes:
           - notnull
 
 methods:
@@ -28,7 +28,7 @@ methods:
         type: GenericServer
         description: 'The <a href="./../objects/genericserver/"><code>GenericServer</code> instance</a> used.'
     returns: 'Possibly-parsed or possibly-null String to replace the placeholder with.'
-    attribute:
+    attributes:
       - nullable
       - abstract
     type:
@@ -48,3 +48,5 @@ Abstract class that is used to provide your own Placeholder patterns for Advance
 
 In order for your class to be considered a valid PlaceholderProvider will you need to set the `identifier` to a non-null, non-empty value without having any spaces in it.  
 Once set, use [`AdvancedServerListAPI#addPlaceholderProvider(PlaceholderProvider)`](advancedserverlistapi.md#addplaceholderprovider(placeholderprovider)) to register your class for AdvancedServerList to use.
+
+{{ context() | pretty }}

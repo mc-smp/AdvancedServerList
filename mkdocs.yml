@@ -88,6 +88,7 @@ plugins:
 markdown_extensions:
   - markdown.extensions.toc:
       permalink: true
+      toc_depth: 3
   - markdown.extensions.attr_list:
   - markdown.extensions.footnotes:
   - markdown.extensions.md_in_html:
