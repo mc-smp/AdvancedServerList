@@ -113,6 +113,8 @@ AdvancedServerList supports the following platforms:
     
     **Other Pages:**
     
+    - [:octicons-plus-circle-24: Adding Placeholders](api/adding-placeholders.md)
+    - [:octicons-broadcast-24: Listening for Events](api/listening-for-events.md)
     - [:octicons-log-24: Changelog](api/changelog.md)
     - [:octicons-link-external-24: Javadocs](api/javadocs.md)
     - [:simple-codeberg: Source Code](api/source.md)
