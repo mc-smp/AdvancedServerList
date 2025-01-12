@@ -131,11 +131,5 @@ AdvancedServerList supports the following platforms:
     **Other Pages:**
     
     - [:octicons-stop-24: BanPlugins Addon](addons/banplugins.md)
-    
--   [:material-percent: **PlaceholderAPI**](placeholderapi/index.md)
-    
-    ----
-    
-    Information about available placeholders to use in PlaceholderAPI and how to use placeholders from other plugins in AdvancedServerList using PlaceholderAPI.
 
 </div>
