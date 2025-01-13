@@ -47,6 +47,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
+import org.sayandev.sayanvanish.bungeecord.api.SayanVanishBungeeAPI;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -210,6 +211,9 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         // Exclude players when PremiumVanish is enabled and player is hidden.
         if(getProxy().getPluginManager().getPlugin("PremiumVanish") != null){
             players.removeIf(BungeeVanishAPI::isInvisible);
+        }else // Do the same if SayanVanish is enabled.
+        if(getProxy().getPluginManager().getPlugin("SayanVanish") != null){
+            players.removeIf(player -> SayanVanishBungeeAPI.getInstance().isVanished(player.getUniqueId()));
         }
         
         return players.size();

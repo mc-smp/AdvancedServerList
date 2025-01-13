@@ -53,6 +53,7 @@ public class ProfileSerializer implements TypeSerializer<ProfileEntry>{
         node.node("playerCount", "text").set(profile.playerCountText());
         node.node("favicon").set(profile.favicon());
         node.node("playerCount", "hidePlayers").set(profile.hidePlayersEnabled().getOrDefault(false));
+        node.node("playerCount", "hidePlayersHover").set(profile.hidePlayersHoverEnabled().getOrDefault(false));
         node.node("playerCount", "extraPlayers", "enabled").set(profile.extraPlayersEnabled().getOrDefault(false));
         node.node("playerCount", "extraPlayers", "amount").set((profile.extraPlayersCount() == null) ? "0" : profile.extraPlayersCount());
         node.node("playerCount", "maxPlayers", "enabled").set(profile.maxPlayersEnabled().getOrDefault(false));

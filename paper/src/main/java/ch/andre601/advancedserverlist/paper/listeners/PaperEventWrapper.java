@@ -98,11 +98,21 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     @Override
     public void setPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
         try{
-            event.getListedPlayers();
+            Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent$ListedPlayerInfo");
             setListedPlayers(lines, player, server);
-        }catch(NoSuchMethodError ex){
+        }catch(ClassNotFoundException ex){
             // Version before latest 1.20.6 builds(?)
             setPlayerSample(lines, player, server);
+        }
+    }
+    
+    @Override
+    public void setPlayersHidden(){
+        try{
+            Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent$ListedPlayerInfo");
+            clearListedPlayers();
+        }catch(ClassNotFoundException ex){
+            clearPlayerSample();
         }
     }
     
@@ -184,8 +194,12 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
         return new PaperServerImpl(plugin.getWorldCache().worlds(), playersOnline, playersMax, host);
     }
     
-    private void setListedPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
+    private void clearListedPlayers(){
         event.getListedPlayers().clear();
+    }
+    
+    private void setListedPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
+        clearListedPlayers();
         List<PaperServerListPingEvent.ListedPlayerInfo> playerList = getPlayerList(lines, player, server,
             text -> new PaperServerListPingEvent.ListedPlayerInfo(text, UUID.randomUUID()));
         
@@ -193,8 +207,13 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @SuppressWarnings({"Deprecation", "removal"})
-    private void setPlayerSample(List<String> lines, PaperPlayerImpl player, GenericServer server){
+    private void clearPlayerSample(){
         event.getPlayerSample().clear();
+    }
+    
+    @SuppressWarnings({"Deprecation", "removal"})
+    private void setPlayerSample(List<String> lines, PaperPlayerImpl player, GenericServer server){
+        clearPlayerSample();
         List<PlayerProfile> playerProfiles = getPlayerList(lines, player, server, FakePlayerProfile::create);
         
         event.getPlayerSample().addAll(playerProfiles);

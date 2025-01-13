@@ -54,6 +54,7 @@ import de.myzelyam.api.vanish.VelocityVanishAPI;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.sayandev.sayanvanish.velocity.api.SayanVanishVelocityAPI;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -226,6 +227,9 @@ public class VelocityCore implements PluginCore<Favicon>{
         // Exclude players when PremiumVanish is enabled and player is hidden.
         if(getProxy().getPluginManager().isLoaded("premiumvanish")){
             players.removeIf(VelocityVanishAPI::isInvisible);
+        }else // Do the same if SayanVanish is enabled.
+        if(getProxy().getPluginManager().isLoaded("sayanvanish")){
+            players.removeIf(player -> SayanVanishVelocityAPI.getInstance().isVanished(player.getUniqueId()));
         }
         
         return players.size();

@@ -42,6 +42,16 @@ constructors:
         type: NullBool
         attributes:
           - notnull
+      - name: 'onlinePlayersCount'
+        description: 'The number to set for the Online Players count.'
+        type: String
+        attributes:
+          - nullable
+      - name: 'hidePlayersHoverEnabled'
+        description: 'Whether the online Players Hover should beenabled.'
+        type: NullBool
+        attributes:
+          - notnull
       - name: 'extraPlayersCount'
         description: 'The number to add to the online Players for the extra Players.'
         type: String
@@ -49,11 +59,6 @@ constructors:
           - nullable
       - name: 'maxPlayersCount'
         description: 'The number to set for the max Players count.'
-        type: String
-        attributes:
-          - nullable
-      - name: 'onlinePlayersCount'
-        description: 'The number to set for the Online Players count.'
         type: String
         attributes:
           - nullable
@@ -79,6 +84,8 @@ methods:
         <li><a href="#hideplayersenabled()"><code>hidePlayersEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a></li>
         <li><a href="#extraplayersenabled()"><code>extraPlayersEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBool.NOT_SET</code></a></li>
         <li><a href="#maxplayersenabled()"><code>maxPlayersEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBoo.NOT_SET</code></a></li>
+        <li><a href="#onlineplayersenabled()"><code>onlinePlayersEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBoo.NOT_SET</code></a></li>
+        <li><a href="#hideplayershoverenabled()"><code>hidePlayersHoverEnabled</code></a>: <a href="../../objects/nullbool/#not_set"><code>NullBoo.NOT_SET</code></a></li>
         <li><a href="#extraplayerscount()"><code>extraPlayersCount</code></a>: <code>null</code></li>
         <li><a href="#maxplayerscount()"><code>maxPlayersCount</code></a>: <code>null</code></li>
         <li><a href="#onlineplayerscount()"><code>onlinePlayersCount</code></a>: <code>null</code></li>
@@ -145,7 +152,7 @@ methods:
   - name: 'hidePlayersEnabled'
     description: |
       Whether the player count should be hidden or not in this ProfileEntry.<br>
-      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault()"><code>getOrDefault(boolean)</code></a>.
+      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault(boolean)"><code>getOrDefault(boolean)</code></a>.
     returns: 'Whether the player count should be hidden or not in this ProfileEntry.'
     type:
       name: 'NullBool'
@@ -154,7 +161,7 @@ methods:
   - name: 'extraPlayersEnabled'
     description: |
       Whether the extra players feature should be used or not in this ProfileEntry.<br>
-      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault()"><code>getOrDefault(boolean)</code></a>.
+      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault(boolean)"><code>getOrDefault(boolean)</code></a>.
     returns: 'Whether the extra players feature should be used or not in this ProfileEntry.'
     type:
       name: 'NullBool'
@@ -163,8 +170,28 @@ methods:
   - name: 'maxPlayersEnabled'
     description: |
       Whether the max players feature should be used or not.<br>
-      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault()"><code>getOrDefault(boolean)</code></a>.
+      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault(boolean)"><code>getOrDefault(boolean)</code></a>.
     returns: 'Whether the max players feature should be used or not.'
+    type:
+      name: 'NullBool'
+      type: 'object'
+      link: '../../objects/nullbool/'
+  - name: 'onlinePlayersEnabled'
+    description: |
+      Whether the online players feature should be used or not.<br>
+      To get the actual boolean value, append <a href="../../objects/nullbool/#getordefault(boolean)"><code>getOrDefault(boolean)</code></a>.
+    returns: 'Whether the online players feature should be used or not.'
+    type:
+      name: 'NullBool'
+      type: 'object'
+      link: '../../objects/nullbool/'
+  - name: 'hidePlayersHoverEnabled'
+    description: |
+      Whether the Hover List of online players should be hidden or not.<br>
+      To get the actual boolean value, use <a href="../../objects/nullbool/#getordefault()"><code>getOrDefault(boolean)</code></a> of the returned <a href="../../objects/nullbool"><code>NullBool</code></a>.<br>
+      <br>
+      When true, this option will force the <a href="#players()"><code>players()</code></a> list to be ignored.
+    returns: 'Whether the Hover List of online players should be hidden or not.'
     type:
       name: 'NullBool'
       type: 'object'

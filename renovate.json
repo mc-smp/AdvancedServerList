@@ -1,5 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base", "group:allNonMajor"],
+  "dependencyDashboard": false,
   "labels": ["PR Type/Dependency Update"],
   "ignoreDeps": [
     "ch.andre601.advancedserverlist:parent",
@@ -37,7 +39,7 @@
         "io.papermc.paper:paper-api"
       ],
       "registryUrls": [
-        "https://papermc.io/repo/repository/maven-public"
+        "https://repo.papermc.io/repository/maven-public"
       ]
     },
     {

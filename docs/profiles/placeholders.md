@@ -15,43 +15,39 @@ The following placeholders are available in AdvancedServerList itself. Please no
 
 These placeholders use the player who pinged the server, to return values. They may require the player to be cached in order to work.
 
-| Placeholder                 | Description                                                     | Platforms    | Cached Player required?[^1] |
-|-----------------------------|-----------------------------------------------------------------|--------------|-----------------------------|
-| `${player name}`            | The name of the player.                                         | All          | Yes[^2]                     |
-| `${player protocol}`        | The protocol version of the player.                             | All          | No                          |
-| `${player uuid}`            | The UUID of the player.                                         | All          | Yes[^3]                     |
-| `${player version}`         | The protocol version of the player as readable MC version.      | Velocity     | No                          |
-| `${player hasPlayedBefore}` | Boolean for whether the player has played on the server before. | Paper        | Yes                         |
-| `${player isBanned}`        | Boolean for whether the player has been banned from the server. | Paper        | Yes                         |
-| `${player isWhitelisted}`   | Boolean for whether the player is whitelisted on the server.    | Paper        | Yes                         |
+| Placeholder                 | Description                                                     | Platforms    | Cached Player required?^[1](#player-n1)^ |
+|-----------------------------|-----------------------------------------------------------------|--------------|------------------------------------------|
+| `${player name}`            | The name of the player.                                         | All          | Yes^[2](#player-n2)^                     |
+| `${player protocol}`        | The protocol version of the player.                             | All          | No                                       |
+| `${player uuid}`            | The UUID of the player.                                         | All          | Yes^[3](#player-n3)^                     |
+| `${player version}`         | The protocol version of the player as readable MC version.      | Velocity     | No                                       |
+| `${player hasPlayedBefore}` | Boolean for whether the player has played on the server before. | Paper        | Yes                                      |
+| `${player isBanned}`        | Boolean for whether the player has been banned from the server. | Paper        | Yes                                      |
+| `${player isWhitelisted}`   | Boolean for whether the player is whitelisted on the server.    | Paper        | Yes                                      |
 
-[^1]:
-    Whether this placeholder requires the player to have joined before while AdvancedServerList was running.  
-    When `disableCache` is enabled will these placeholders not work.
-[^2]: Will default to whatever name has been provided in the `unknownPlayer -> name` option of the config.yml, when the player isn't cached yet.
-[^3]: Will default to whatever name has been provided in the `unknownPlayer -> uuid` option of the config.yml, when the player isn't cached yet.
+<small>^1^{ #player-n1 } When `Yes` is set, requires the player to have joined before while AdvancedServerList was running. Placeholder will not work when `disableCache` is true.</small>
+
+<small>^2^{ #player-n2 } Will default to the value provided in `unknownPlayer -> name` of the config.yml, should the player not be cached yet.</small>
+
+<small>^3^{ #player-n3 } Will default to the value provided in `unknownPlayer -> uuid` of the config.yml, should the player not be cached yet.</small>
 
 ### Server
 
 These placeholders use values given by the server/proxy AdvancedServerList runs on.
 
-| Placeholder                  | Description                                                | Platforms |
-|------------------------------|------------------------------------------------------------|-----------|
-| `${server playersOnline}`    | The number of players online on this proxy/server.[^4]     | All       |
-| `${server playersMax}`       | The total number of players that can join this server.[^5] | All       |
-| `${server host}`             | The domain/IP the player pinged.[^6]                       | All       |
-| `${server whitelistEnabled}` | Whether the whitelist is enabled or not.                   | Paper     |
+| Placeholder                  | Description                                                             | Platforms |
+|------------------------------|-------------------------------------------------------------------------|-----------|
+| `${server playersOnline}`    | The number of players online on this proxy/server.^[1](#server-n1)^     | All       |
+| `${server playersMax}`       | The total number of players that can join this server.^[2](#server-n2)^ | All       |
+| `${server host}`             | The domain/IP the player pinged.^[3](#server-n3)^                       | All       |
+| `${server whitelistEnabled}` | Whether the whitelist is enabled or not.                                | Paper     |
 
-[^4]:
-    A comma-separated list of world (On Paper) or Server (On BungeeCord/Velocity) names can be provided to display the added numbers of players in these worlds/servers.  
-    **Example:** `${server playersOnline lobby1,lobby2}` will display the collective numbers of players in the servers `lobby1` and `lobby2`.  
-    Using the [onlinePlayers' `amount`](index.md#onlineplayers-amount) option will modify the output of this placeholder, except when used in [`condition`](index.md#condition).
-[^5]:
-    Using either the [extraPlayers' `amount`](index.md#extraplayers-amount) or [maxPlayers' `amount`](index.md#maxplayers-amount) option will make this placeholder return the modified max players count.  
-    Only exception to this rule is when the placeholder is used in the [`condition`](index.md#condition) option in which case it returns the actual max player count of the proxy/server.
-[^6]:
-    An optional server name can be provided to display the IP/Domain associated with that server. This only works on BungeeCord or Velocity.  
-    **Example:** `${server host survival}` would display the IP/Domain associated with the `survival` server.
+<small>^1^{ #server-n1 } You can provide a comma-separated list of world or server names (based on platform) to return the collective count of players on these worlds/servers.  
+Additionally, when using [`playerCount -> onlinePlayers`](index.md#onlineplayers) will this placeholder return the modified online players count, except when used within the [`condition`](index.md#condition) option.</small>
+
+<small>^2^{ #server-n2 } When using either [`playerCount -> extraPlayers`](index.md#extraplayers) or [`playerCount -> maxPlayers`](index.md#maxplayers) will this placeholder return the modified max players count, except when used within the [`condition`](index.md#condition) option.</small>
+
+<small>^3^{ #server-n3 } An optional server name may be provided to display the IP/Domain associated with said server. This only works for the BungeeCord and Velocity version of the plugin.</small>
 
 ### Proxy
 
@@ -61,14 +57,14 @@ These placeholders are only available on the BungeeCord and Velocity versions of
 Servers are pinged every 10 seconds by the plugin and cached for that time period.
 ///
 
-| Placeholders                 | Description                                                       | Default[^7] |
-|------------------------------|-------------------------------------------------------------------|-------------|
-| `${proxy status <name>}`     | Returns `online` or `offline` based on the Server's availability. | `offline`   |
-| `${proxy motd <name>}`       | Returns the Server's MOTD as MiniMessage String.                  | `none`      |
-| `${proxy players <name>}`    | Returns the number of online Players on the Server.               | `0`         |
-| `${proxy maxPlayers <name>}` | Returns the max number of Players allowed to join the Server.     | `0`         |
+| Placeholders                 | Description                                                       | Default^[1](#proxy-n1)^ |
+|------------------------------|-------------------------------------------------------------------|-------------------------|
+| `${proxy status <name>}`     | Returns `online` or `offline` based on the Server's availability. | `offline`               |
+| `${proxy motd <name>}`       | Returns the Server's MOTD as MiniMessage String.                  | `none`                  |
+| `${proxy players <name>}`    | Returns the number of online Players on the Server.               | `0`                     |
+| `${proxy maxPlayers <name>}` | Returns the max number of Players allowed to join the Server.     | `0`                     |
 
-[^7]: The default value returned, should the Server or parts of it not be available.
+<small>^1^{ #proxy-n1 } The default value returned, should the Server or parts of it not be available.</small>
 
 ### Maintenance
 
@@ -78,13 +74,42 @@ These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/M
 |-------------------------------------|----------------------------------------------------------------|
 | `${maintenance maintenanceEnabled}` | Returns whether the Global maintenance mode is enabled or not. |
 
+## Adding your own Placeholders
+
+Thanks to the API of AdvancedServerList are you able to add your own Placeholders that can be used using the `${identifier value}` pattern.  
+To learn how to do this, head over to the [API page](../api/index.md) to learn more.
+
+
 ## PlaceholderAPI
 
-Please visit the [PlaceholderAPI page](../placeholderapi/index.md) for how AdvancedServerList works with PlaceholderAPI.
+### Own Placeholders
 
-## Custom Placeholders
+The Paper version of AdvancedServerList provides the following placeholders to use through PlaceholderAPI.
 
-Since version 2 of AdvancedServerList are developers able to provide their own placeholders to be used in a server list profile.  
-The format follows the same one as the [built-in placeholders](#built-in-placeholders), meaning it is `${<identifier> <placeholder>}`.
+/// info
+AdvancedServerList uses the same logic to determine the value to return for a player as it does when selecting a Server List Profile.
+///
 
-If you're a developer and want to integrate your own placeholders into AdvancedServerList, read about it [here](../api/index.md).
+| Placeholder                          | Description                                                                       | Default^[1](#papi-n1)^ |
+|--------------------------------------|-----------------------------------------------------------------------------------|------------------------|
+| `%asl_favicon%`                      | Value of `favicon` when present.                                                  | `(empty string)`       |
+| `%asl_motd%`                         | Value of `motd` when present.                                                     | `(empty string)`       |
+| `%asl_playercount_extraplayers%`     | Value of `playerCount -> extraPlayers -> amount`.                                 | `(empty string)`       |
+| `%asl_playercount_hideplayers%`      | Returns wether `playerCount -> hidePlayers` is enabled or not.                    | `false`                |
+| `%asl_playercount_hideplayershover%` | Returns wether `playerCount -> hidePlayersHover` is enabled or not.               | `false`                |
+| `%asl_playercount_hover%`            | Value of `playerCount -> hover`.                                                  | `(empty string)`       |
+| `%asl_playercount_maxplayers%`       | Value of `playerCount -> maxPlayers -> amount`                                    | `(empty string)`       |
+| `%asl_playercount_onlineplayers%`    | Value of `playerCount -> onlinePlayers -> amount`                                 | `(empty string)`       |
+| `%asl_playercount_text%`             | Value of `playerCount -> text`                                                    | `(empty string)`       |
+| `%asl_playersmax%`                   | Returns the max players based on currently set maxPlayers or extraPlayers values. | `(empty string)`       |
+
+<small>^1^{ #papi-n1 } The default value is returned when the option in the chosen profile is either not set, or `null`.</small>
+
+### Other Placeholders
+
+Placeholders from PlaceholderAPI Expansions can be used in AdvancedServerList using the default `%identifier_value%` format.
+
+PlaceholderAPI placeholders can be used both on the Server (Paper) and on the proxy (BungeeCord, Velocity) version of AdvancedServerList.  
+However, the Proxy version requires the usage of [PAPIProxyBridge] to function properly.
+
+Placeholders can also not be used within the [`condition`](index.md#condition) option of a Server List Profile.

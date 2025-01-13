@@ -158,7 +158,7 @@ public class PingEventHandler{
         
         boolean hidePlayers = ProfileManager.checkOption(entry.hidePlayersEnabled());
         
-        if(hidePlayers && ignoreMaintenance(event, "hidePlayers")){
+        if(hidePlayers && ignoreMaintenance(event, "hidePlayers") && ignoreMaintenance(event, "hidePlayersHover")){
             logger.debug(PingEventHandler.class, "'playerCount -> hidePlayers' enabled. Hiding player count...");
             
             event.hidePlayers();
@@ -175,7 +175,13 @@ public class PingEventHandler{
             );
         }
         
-        if(ProfileManager.checkOption(entry.players()) && !hidePlayers && ignoreMaintenance(event, "playerCountHover")){
+        boolean hidePlayersHover = ProfileManager.checkOption(entry.hidePlayersHoverEnabled());
+        if(hidePlayersHover){
+            logger.debug(PingEventHandler.class, "'playerCount -> hidePlayersHover' option set. Hiding Player Hover...");
+            event.setPlayersHidden();
+        }
+        
+        if(ProfileManager.checkOption(entry.players()) && !hidePlayers && !hidePlayersHover && ignoreMaintenance(event, "playerCountHover")){
             logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying ['%s']...", String.join("', '", entry.players()));
             
             event.setPlayers(entry.players(), player, server);

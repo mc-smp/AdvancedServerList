@@ -52,6 +52,8 @@ public interface GenericEventWrapper<F, P extends GenericPlayer>{
     
     void setPlayers(List<String> players, P player, GenericServer server);
     
+    void setPlayersHidden();
+    
     void setFavicon(F favicon);
     
     void setDefaultFavicon();

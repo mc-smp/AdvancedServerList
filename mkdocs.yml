@@ -80,6 +80,9 @@ plugins:
         'migration/pre-v3_7_0-to-v3_7_0.md': 'migration/versions/pre-v3.7.0-to-v3.7.0.md'
         'migration/v1_9_0-to-v1_10_0.md': 'migration/versions/v1.9.0-to-v1.10.0.md'
         'migration/v1_5_3-to-v1_6_0.md': 'migration/versions/v1.5.3-to-v1.6.0.md'
+        #
+        # PlaceholderAPI page
+        'placeholderapi/index.md': 'profiles/placeholders.md#own-placeholders'
   - pagenav-generator
   - macros:
       include_dir: docs/.overrides
@@ -119,6 +122,7 @@ markdown_extensions:
   - pymdownx.blocks.tab:
       alternate_style: true
   - pymdownx.blocks.details:
+  - pymdownx.caret:
 
 hooks:
   - docs/.hooks/badges.py
@@ -149,6 +153,8 @@ nav:
       - v1.5.3 to v1.6.0: migration/versions/v1.5.3-to-v1.6.0.md
   - API:
     - api/index.md
+    - Adding Placeholders: api/adding-placeholders.md
+    - Listening for Events: api/listening-for-events.md
     - Changelog: api/changelog.md
     - Javadocs: api/javadocs.md
     - Source Code: api/source.md
@@ -201,4 +207,3 @@ nav:
   - Addons:
     - addons/index.md
     - BanPlugins: addons/banplugins.md
-  - PlaceholderAPI: placeholderapi/index.md

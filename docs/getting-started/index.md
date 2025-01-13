@@ -244,6 +244,15 @@ playerCount:
   #
   hidePlayers: false
   #
+  # Set whether the List of players is shown when hovering over the player count.
+  # Setting this to true will also make the plugin ignore the hover option below.
+  #
+  # If not present, defaults to false.
+  #
+  # Read more: https://asl.andre601.ch/profiles/#hideplayershover
+  #
+  hidePlayersHover: false
+  #
   # Set the lines shown when the player hovers over the player count.
   # Unlike the MOTD option does this one only support basic color and formatting codes. Any RGB colors will be
   # downsampled to the nearest matching color.
@@ -464,6 +473,12 @@ disableDuringMaintenance:
   # Default: true
   #
   hidePlayers: true
+  #
+  # Whether hiding player list on hover should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  hidePlayersHover: true
   #
   # Whether player count text changing should be disabled while Maintenance mode is active.
   #
