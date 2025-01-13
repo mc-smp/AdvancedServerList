@@ -54,7 +54,7 @@ There are 5 frontmatter options, each following a specific structure:
 
 - [`Constructors`](#constructors)
 - [`Nested Classes`](#nested-classes)
-- [`Enum Constants`](#enum constants)
+- [`Enum Constants`](#enum-constants)
 - [`Methods`](#methods)
 - [`Inherits`](#inherits)
 

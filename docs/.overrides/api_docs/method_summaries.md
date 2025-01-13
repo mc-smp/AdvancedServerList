@@ -1,6 +1,7 @@
-{% if page.meta.methods %}
+{% if page.meta.methods or page.meta.inherits %}
 ## Method Summary
 
+{% if page.meta.methods %}
 <table>
   <thead>
     <tr>
@@ -52,4 +53,26 @@
     {% endfor %}
   </tbody>
 </table>
+{% endif %}
+{% if page.meta.inherits %}
+{% for classpath, inherit in page.meta.inherits.items() %}
+<table>
+  <thead>
+    <tr>
+      <th>Methods inherited from <a href="{{ inherit.link }}"><code>{{ classpath }}</code></a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {% for entry in inherit.list %}
+          <a href="{{ inherit.link }}#{{ entry | lower() | replace(' ', '-') | e }}"><code>{{- entry | e -}}</code></a>
+          {%- if loop.revindex > 1 %}, {% endif -%}
+        {% endfor %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% endfor %}
+{% endif %}
 {% endif %}

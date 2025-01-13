@@ -1,5 +1,5 @@
 ---
-template: api-doc.html
+api: true
 
 methods:
   - name: 'get'
@@ -51,4 +51,4 @@ methods:
 # <api__class></api__class> AdvancedServerListAPI
 
 Core class of the API for AdvancedServerList.  
-Use [`get()`](#get) to retrieve the instance currently used.
+Use [`get()`](#get()) to retrieve the instance currently used.

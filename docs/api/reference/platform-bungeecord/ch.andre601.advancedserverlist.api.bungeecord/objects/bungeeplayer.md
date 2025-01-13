@@ -1,5 +1,5 @@
 ---
-template: api-doc.html
+api: true
 
 inherits:
   'ch.andre601.advancedserverlist.api.objects.GenericPlayer':

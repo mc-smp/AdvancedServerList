@@ -1,5 +1,5 @@
 ---
-template: api-doc.html
+api: true
 
 defaults:
   type:
