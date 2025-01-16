@@ -11,13 +11,13 @@ These pages may include important information about the migration process and wh
 
 <div class="grid cards" markdown>
 
--   [**MiniMOTD**](minimotd.md)
+-   [**MiniMOTD**](plugins/minimotd.md)
     
     ----
     
     Migrate from the Plugin [MiniMOTD](https://github.com/jpenilla/MiniMOTD){ target="_blank" rel="nofollow" }
 
--   [**ServerListPlus**](serverlistplus.md)
+-   [**ServerListPlus**](plugins/serverlistplus.md)
     
     ----
     
@@ -32,31 +32,31 @@ These guides are only for the Server List Profile files, as the config.yml gets 
 
 <div class="grid cards" markdown>
 
--   [**v3.8.0 to v3.9.0**](v3_8_0-to-v3_9_0.md)
+-   [**v3.8.0 to v3.9.0**](versions/v3.8.0-to-v3.9.0.md)
     
     ----
     
     Migrate from version 3.8.0 to 3.9.0.
 
--   [**v3.7.0 to v3.8.0**](v3_7_0-to-v3_8_0.md)
+-   [**v3.7.0 to v3.8.0**](versions/v3.7.0-to-v3.8.0.md)
 
     ----
     
     Migrating from version 3.7.0 to 3.8.0.
 
--   [**< v3.7.0 to v3.7.0**](pre-v3_7_0-to-v3_7_0.md)
+-   [**< v3.7.0 to v3.7.0**](versions/pre-v3.7.0-to-v3.7.0.md)
     
     ----
     
     Migrate from any version prior to 3.7.0 to 3.7.0 or newer.
 
--   [**v1.9.0 to v1.10.0**](v1_9_0-to-v1_10_0.md)
+-   [**v1.9.0 to v1.10.0**](versions/v1.9.0-to-v1.10.0.md)
     
     ----
     
     Migrate from version 1.9.0 to 1.10.0.
 
--   [**v1.5.3 to v1.6.0**](v1_5_3-to-v1_6_0.md)
+-   [**v1.5.3 to v1.6.0**](versions/v1.5.3-to-v1.6.0.md)
     
     ----
     

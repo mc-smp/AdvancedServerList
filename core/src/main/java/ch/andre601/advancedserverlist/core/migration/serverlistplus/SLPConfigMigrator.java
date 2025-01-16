@@ -59,26 +59,55 @@ public class SLPConfigMigrator{
         "(?<end>#[a-fA-F0-9]{6})" +   // Ending color
         "%" +
         "(?<text>.+?)" +              // Text
-        "%gradient%");
+        "%gradient%"
+    );
     
     private static final Map<String, String> STATIC_REPLACEMENTS = Map.of(
         "%player%", "${player name}",
         "%uuid%", "${player uuid}",
         "%_uuid_%", "${player uuid}",
         "%online%", "${server playersOnline}",
-        "%max%", "${server playersMax}");
+        "%max%", "${server playersMax}"
+    );
+    private static final Map<String, String> COLOR_TO_MINIMESSAGE_TAG = new HashMap<>(){{
+        // Color Codes.
+        put("a", "<green>");
+        put("b", "<aqua>");
+        put("c", "<red>");
+        put("d", "<light_purple>");
+        put("e", "<yellow>");
+        put("f", "<white>");
+        put("0", "<black>");
+        put("1", "<dark_blue>");
+        put("2", "<dark_green>");
+        put("3", "<dark_aqua>");
+        put("4", "<dark_red>");
+        put("5", "<dark_purple>");
+        put("6", "<gold>");
+        put("7", "<grey>");
+        put("8", "<dark_grey>");
+        put("9", "<blue>");
+        
+        // Formatting Codes
+        put("k", "<obfuscated>");
+        put("l", "<bold>");
+        put("m", "<strikethrough>");
+        put("n", "<underlined>");
+        put("o", "<italic>");
+        put("r", "<reset>");
+    }};
     
     public static int migrate(AdvancedServerList<?> core, CmdSender sender){
         ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(slpCore == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
             return 0;
         }
         
         ServerStatusConf conf = slpCore.getConf(ServerStatusConf.class);
         if(conf == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate ServerListPlus configuration. Received configuration was null.");
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate ServerListPlus configuration. Received configuration was null.");
             return 0;
         }
         
@@ -101,7 +130,7 @@ public class SLPConfigMigrator{
     private static int parseConf(AdvancedServerList<?> core, CmdSender sender, PersonalizedStatusConf.StatusConf conf, Type type){
         PluginLogger logger = core.getPlugin().getPluginLogger();
         if(conf == null){
-            logger.info("[Migrator - ServerListPlus] No StatusConf found for type %s. Skipping...", type.getName());
+            logger.info("[<white>Migrator - ServerListPlus</white>] No StatusConf found for type <white>%s</white>. Skipping...", type.getName());
             sender.sendPrefixedMsg(" -> Not found! Skipping...");
             
             return 0;
@@ -141,7 +170,7 @@ public class SLPConfigMigrator{
         
         boolean profilesInvalid = profileEntries.isEmpty() || profileEntries.stream().anyMatch(ProfileEntry::isInvalid);
         if(entry.isInvalid() && profilesInvalid){
-            logger.warn("[Migrator - ServerListPlus] Unable to parse ServerListPlus configuration of type %s. Generated ProfileEntry was invalid.", type.getName());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Unable to parse ServerListPlus configuration of type <white>%s</white>. Generated ProfileEntry was invalid.", type.getName());
             sender.sendErrorMsg(" -> <red>Received invalid Configuration.");
             
             return 0;
@@ -149,7 +178,7 @@ public class SLPConfigMigrator{
         
         Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(type.getFile());
         if(Files.exists(profile)){
-            logger.warn("[Migrator - ServerListPlus] Cannot create new file %s. One with the same name is already present", type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot create new file <white>%s</white>. One with the same name is already present", type.getFile());
             sender.sendErrorMsg(" -> <red>File</red> %s <red>already present.", type.getFile());
             
             return 0;
@@ -158,7 +187,7 @@ public class SLPConfigMigrator{
         try{
             Files.createFile(profile);
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to create file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to create file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File creation error.");
             
             return 0;
@@ -175,14 +204,14 @@ public class SLPConfigMigrator{
         try{
             node = loader.load();
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to load file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to load file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return 0;
         }
         
         if(node == null){
-            logger.warn("[Migrator - ServerListPlus] Cannot migrate Configuration of type %s. ConfigurationNode was null.", type.getName());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate Configuration of type <white>%s</white>. ConfigurationNode was null.", type.getName());
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return 0;
@@ -194,9 +223,7 @@ public class SLPConfigMigrator{
             
             if(type == Type.PERSONALIZED){
                 node.node("condition")
-                    .set("${player name} != \"" +
-                        core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") +
-                        "\"");
+                    .set("${player name} != \"" + core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
             }else
             if(type == Type.BANNED){
                 node.node("condition")
@@ -209,7 +236,7 @@ public class SLPConfigMigrator{
             
             node.set(entry);
         }catch(SerializationException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered a SerializationException while setting values.", ex);
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered a SerializationException while setting values.", ex);
             sender.sendErrorMsg(" -> <red>Error while updating file</red> %s<red>.", type.getFile());
             
             return 0;
@@ -221,7 +248,7 @@ public class SLPConfigMigrator{
             
             return 1;
         }catch(IOException ex){
-            logger.warn("[Migrator - ServerListPlus] Encountered an IOException while trying to save new file %s.", ex, type.getFile());
+            logger.warn("[<white>Migrator - ServerListPlus</white>] Encountered an IOException while trying to save new file <white>%s</white>.", ex, type.getFile());
             sender.sendErrorMsg(" -> <red>File saving error.");
             
             return 0;
@@ -372,32 +399,11 @@ public class SLPConfigMigrator{
         if(colorCodeMatcher.find()){
             builder.setLength(0);
             do{
-                String color = colorCodeMatcher.group("color").toLowerCase(Locale.ROOT); 
-                switch(color){
-                    case "a" -> colorCodeMatcher.appendReplacement(builder, "<green>");
-                    case "b" -> colorCodeMatcher.appendReplacement(builder, "<aqua>");
-                    case "c" -> colorCodeMatcher.appendReplacement(builder, "<red>");
-                    case "d" -> colorCodeMatcher.appendReplacement(builder, "<light_purple>");
-                    case "e" -> colorCodeMatcher.appendReplacement(builder, "<yellow>");
-                    case "f" -> colorCodeMatcher.appendReplacement(builder, "<white>");
-                    case "k" -> colorCodeMatcher.appendReplacement(builder, "<obfuscated>");
-                    case "l" -> colorCodeMatcher.appendReplacement(builder, "<bold>");
-                    case "m" -> colorCodeMatcher.appendReplacement(builder, "<strikethrough>");
-                    case "n" -> colorCodeMatcher.appendReplacement(builder, "<underlined>");
-                    case "o" -> colorCodeMatcher.appendReplacement(builder, "<italic>");
-                    case "r" -> colorCodeMatcher.appendReplacement(builder, "<reset>");
-                    case "0" -> colorCodeMatcher.appendReplacement(builder, "<black>");
-                    case "1" -> colorCodeMatcher.appendReplacement(builder, "<dark_blue>");
-                    case "2" -> colorCodeMatcher.appendReplacement(builder, "<dark_green>");
-                    case "3" -> colorCodeMatcher.appendReplacement(builder, "<dark_aqua>");
-                    case "4" -> colorCodeMatcher.appendReplacement(builder, "<dark_red>");
-                    case "5" -> colorCodeMatcher.appendReplacement(builder, "<dark_purple>");
-                    case "6" -> colorCodeMatcher.appendReplacement(builder, "<gold>");
-                    case "7" -> colorCodeMatcher.appendReplacement(builder, "<grey>");
-                    case "8" -> colorCodeMatcher.appendReplacement(builder, "<dark_grey>");
-                    case "9" -> colorCodeMatcher.appendReplacement(builder, "<blue>");
-                    // This one shouldn't be reachable given the pattern, but you never know...
-                    default -> colorCodeMatcher.appendReplacement(builder, "&" + color);
+                for(Map.Entry<String, String> colorCodes : COLOR_TO_MINIMESSAGE_TAG.entrySet()){
+                    if(!colorCodeMatcher.group("color").equalsIgnoreCase(colorCodes.getKey()))
+                        continue;
+                    
+                    colorCodeMatcher.appendReplacement(builder, colorCodes.getValue());
                 }
             }while(colorCodeMatcher.find());
             

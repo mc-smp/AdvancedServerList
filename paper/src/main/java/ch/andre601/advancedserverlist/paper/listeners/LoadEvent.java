@@ -48,5 +48,20 @@ public class LoadEvent implements Listener{
         
         // Load currently loaded worlds into the WorldCache
         Bukkit.getWorlds().forEach(world -> plugin.getWorldCache().addWorld(world));
+        
+        // Print a warning if server load was after a reload.
+        if(event.getType() != ServerLoadEvent.LoadType.RELOAD)
+            return;
+        
+        plugin.getPluginLogger().warn("======================================================================================");
+        plugin.getPluginLogger().warn("SERVER RELOAD DETECTED!");
+        plugin.getPluginLogger().warn("");
+        plugin.getPluginLogger().warn("A server reload has been detected by AdvancedServerList, meaning either the /reload");
+        plugin.getPluginLogger().warn("command or Bukkit.reload() was executed.");
+        plugin.getPluginLogger().warn("");
+        plugin.getPluginLogger().warn("YOU WILL GET NO SUPPORT FOR THE PLUGIN FOR ANY ISSUES YOU ENCOUNTER AFTER A SERVER");
+        plugin.getPluginLogger().warn("RELOAD!");
+        plugin.getPluginLogger().warn("ALWAYS RESTART YOUR SERVER. NEVER RELOAD IT!");
+        plugin.getPluginLogger().warn("======================================================================================");
     }
 }

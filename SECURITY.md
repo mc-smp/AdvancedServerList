@@ -8,12 +8,12 @@ To ensure proper safety and support are only certain versions and Platforms of A
 |---------------|-----------|
 | v5            | Yes       |
 | v4            | Yes*      |
-| v3            | Yes**     |
+| v3            | No**      |
 | v2            | No        |
 | v1            | No        |
 
 \*Only receives support but no updates or bug fixes.  
-\*\*Support ends at the end of 2024.
+\*\*Support ended on December 31st, 2024.
 
 ## Supported Server/Proxy Versions
 

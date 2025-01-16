@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.viaversion</groupId>
             <artifactId>viaversion-api</artifactId>
-            <version>5.1.1</version>
+            <version>5.2.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -118,6 +118,16 @@
             <resource>
                 <filtering>true</filtering>
                 <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>char-widths.json.gz</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>char-widths.json.gz</include>
+                </includes>
             </resource>
         </resources>
         <plugins>

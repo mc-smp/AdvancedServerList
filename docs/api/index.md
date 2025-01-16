@@ -11,7 +11,7 @@ AdvancedServerList offers an API that other plugins can use to add their own pla
 Add the following to your `pom.xml`, `build.gradle` or `build.gradle.kts` depending on what you use:
 
 /// tab | :simple-apachemaven: Maven 
-```xml title="pom.xml"
+```xml { data-md-component="api-version" title="pom.xml" }
 <repositories>
   <repository>
     <id>codeberg</id>
@@ -51,7 +51,7 @@ Add the following to your `pom.xml`, `build.gradle` or `build.gradle.kts` depend
 ///
 
 /// tab | :simple-gradle: Gradle
-```groovy title="build.gradle"
+```groovy { data-md-component="api-version" title="build.gradle" }
 repositorories {
     maven { url = 'https://codeberg.org/api/packages/Andre601/maven/' }
 }
@@ -68,7 +68,7 @@ dependencies {
 ///
 
 /// tab | :simple-gradle: Gradle (KTS)
-```kotlin title="build.gradle.kts"
+```kotlin { data-md-component="api-version" title="build.gradle.kts" }
 repositories {
     maven("https://codeberg.org/api/packages/Andre601/maven/")
 }
@@ -84,128 +84,22 @@ dependencies {
 ```
 ///
 
-## Adding your own Placeholders
+## Tutorials
 
-<!-- admo:info This requires the main api module -->
+Dedicated pages to explain aspects of the API are available:
 
-The API allows you to add your own placeholders which would be available through the `${<identifier> <values>}` placeholder Pattern in a Server List profile.
+<div class="grid cards" markdown>
 
-To add your own placeholders, follow these steps:
+- [:octicons-plus-circle-24: Adding Placeholders](adding-placeholders.md)
+- [:octicons-broadcast-24: Listening for Events](listening-for-events.md)
 
-### 1. Create a Placeholder class
+</div>
 
-You should first create a new class and make it extend the abstract [`PlaceholderProvider`][placeholderprovider]. This class includes a constructor and a method you need to add, so do that:
-
-```java title="Creating PlaceholderProvider class"
-public class MyPlaceholders extends PlaceholderProvider {
-    
-    public MyPlaceholders(String identifier) {
-        super(identifier);
-    }
-    
-    @Override
-    public String parsePlaceholder(String placeholder, GenericPlayer player, GenericServer server) {
-        return null;
-    }
-}
-```
-
-/// tip | Recommendation
-It is recommended to use a No-Args Constructor and have the Placeholder name set directly in the `super` call:
-```java
-    public MyPlaceholders() {
-        super("myplaceholders");
-    }
-```
-///
-
-The [`parsePlaceholder(String, GenericPlayer, GenericServer)`][parseplaceholder] method is used by AdvancedServerList to replace a matching placeholder with a value.  
-What you return is completely up to you. Just keep in mind that returning `null` will be treated as an invalid placeholder by AdvancedServerList, resulting in the placeholder being returned as-is without any changes.
-
-[placeholderprovider]: reference/api/ch.andre601.advancedserverlist.api/placeholderprovider.md
-[parseplaceholder]: reference/api/ch.andre601.advancedserverlist.api/placeholderprovider.md#parseplaceholder(string,-genericplayer,-genericserver)
-
-/// details | Example of final class
-    type: example
-
-```java title="MyPlaceholders.java"
-public class MyPlaceholders extends PlaceholderProvider {
-    
-    public MyPlaceholders() {
-        super("myplaceholders");
-    }
-    
-    @Override
-    public String parsePlaceholder(String placeholder, GenericPlayer player, GenericServer server) {
-        if(placeholder.equalsIgnoreCase("hello"))
-            return "Hello " + player.getName();
-        
-        return null;
-    }
-}
-```
-///
-
-### 2. Register the Placeholders
-
-Next step should be to register the placeholder. To achieve this, first obtain an instance of the [`AdvancedServerListAPI`][advancedserverlistapi] by using the static [`get()`][get] method. After that call [`addPlaceholderProvider(PlaceholderProvider placeholderProvider)`][addplaceholderprovider].  
-Your code may look similar to this:
-
-```java title="Registering PlaceholderProvider class"
-public class MyPlugin extends JavaPlugin {
-    
-    @Override
-    public void onEnable() {
-        AdvancedServerListAPI api = AdvancedServerListAPI.get();
-        
-        api.addPlaceholderProvider(new MyPlaceholders());
-    }
-}
-```
-
-[advancedserverlistapi]: reference/api/ch.andre601.advancedserverlist.api/advancedserverlistapi.md
-[get]: reference/api/ch.andre601.advancedserverlist.api/advancedserverlistapi.md#get()
-[addplaceholderprovider]: reference/api/ch.andre601.advancedserverlist.api/advancedserverlistapi.md#addplaceholderprovider(placeholderprovider)
-
-This should register your PlaceholderExpansion as long as it is valid, meaning that the identifier...
-
-- ...is not `null`
-- ...is not containing spaces
-- ...is not using a name already registered in the API
-
-### 3. Declare AdvancedServerList as (soft)depend
+## Declare AdvancedServerList as (soft)depend
 
 The final thing you should make sure is to define AdvancedServerList as a depend or soft-depend for your plugin, to make sure it loads after AdvancedServerList.
 
 Below are example setups for Spigot, Paper, BungeeCord and Velocity:
-
-/// tab | :simple-spigotmc: Spigot
-//// tab | Softdepend
-```yaml title="plugin.yml"
-name: "MyPlugin"
-author: "author"
-version: "1.0.0"
-
-main: "com.example.plugin.ExamplePlugin"
-
-softdepend:
-  - AdvancedServerList
-```
-////
-
-//// tab | Depend
-```yaml title="plugin.yml"
-name: "MyPlugin"
-author: "author"
-version: "1.0.0"
-
-main: "com.example.plugin.ExamplePlugin"
-
-depend:
-  - AdvancedServerList
-```
-////
-///
 
 /// tab | :fontawesome-solid-paper-plane: Paper
 //// tab | Softdepend

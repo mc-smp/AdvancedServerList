@@ -13,17 +13,22 @@ Can't find a tutorial that exists? Join the [M.O.S.S. Discord][discord]{ target=
 
 Below is a collection of video tutorials made.
 
+/// note
+For privacy reasons are only thumbnails of the videos displayed, as otherwise sensitive data would be sent via embedding the videos themself.  
+you can click the image to be sent to the actual video.
+///
+
 ### KasaiSora
 
 **Video Language:** :flag_gb: English
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9cU0uUWHOO0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg)](https://youtube.com/watch?v=9cU0uUWHOO0){ target="_blank" rel="nofollow" }
 
 ### Ajneb97
 
 **Video Language:** :flag_es: Spanish
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/rIbljm_4HVI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
 
 ## Text Tutorials
 

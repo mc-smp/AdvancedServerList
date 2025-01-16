@@ -23,7 +23,7 @@
  *
  */
 
-package ch.andre601.advancedserverlist.test;
+package ch.andre601.advancedserverlist.core;
 
 import com.unascribed.flexver.FlexVerComparator;
 import org.junit.jupiter.api.Test;

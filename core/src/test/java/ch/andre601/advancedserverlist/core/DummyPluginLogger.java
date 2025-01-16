@@ -23,7 +23,7 @@
  *
  */
 
-package ch.andre601.advancedserverlist.test;
+package ch.andre601.advancedserverlist.core;
 
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 

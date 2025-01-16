@@ -45,3 +45,14 @@
 .md-source__repository .md-source__facts {
     animation: facts .25s ease-in;
 }
+
+.md-nav--secondary li.md-nav__item > .md-nav__link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+.md-banner__inner.md-grid.md-typeset {
+    text-align: center;
+}

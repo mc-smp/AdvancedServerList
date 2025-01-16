@@ -55,10 +55,10 @@ import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.util.Favicon;
 import de.myzelyam.api.vanish.VelocityVanishAPI;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sayandev.sayanvanish.velocity.api.SayanVanishVelocityAPI;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -72,10 +72,11 @@ import java.util.concurrent.TimeUnit;
 public class VelocityCore implements PluginCore<Favicon>{
     
     public static final MinecraftChannelIdentifier ASL_IDENTIFIER = MinecraftChannelIdentifier.from("advancedserverlist:action");
-    private final Logger logger = LoggerFactory.getLogger("AdvancedServerList");
     private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private final PluginLogger pluginLogger;
+    private final ComponentLogger logger;
+    
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
@@ -90,7 +91,9 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Inject
     public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
         proxy.getChannelRegistrar().register(ASL_IDENTIFIER);
-        this.pluginLogger = new VelocityLogger(this, this.logger);
+        ComponentLogger logger = ComponentLogger.logger("AdvancedServerList");
+        this.pluginLogger = new VelocityLogger(this, logger);
+        this.logger = logger;
         
         this.proxy = proxy;
         this.path = path;
@@ -118,6 +121,7 @@ public class VelocityCore implements PluginCore<Favicon>{
             .build();
         
         getProxy().getCommandManager().register(command, new CmdAdvancedServerList(this));
+        getPluginLogger().success("Registered <white>/advancedserverlist</white>!");
     }
     
     @Override
@@ -230,6 +234,9 @@ public class VelocityCore implements PluginCore<Favicon>{
         // Exclude players when PremiumVanish is enabled and player is hidden.
         if(getProxy().getPluginManager().isLoaded("premiumvanish")){
             players.removeIf(VelocityVanishAPI::isInvisible);
+        }else // Do the same if SayanVanish is enabled.
+        if(getProxy().getPluginManager().isLoaded("sayanvanish")){
+            players.removeIf(player -> SayanVanishVelocityAPI.getInstance().isVanished(player.getUniqueId()));
         }
         
         return players.size();

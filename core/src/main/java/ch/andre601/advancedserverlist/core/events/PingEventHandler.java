@@ -36,6 +36,10 @@ import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import ch.andre601.advancedserverlist.core.profiles.ServerListProfile;
 import ch.andre601.advancedserverlist.core.profiles.profile.ProfileManager;
 import ch.andre601.advancedserverlist.core.profiles.replacer.StringReplacer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+
+import java.util.List;
 
 public class PingEventHandler{
     
@@ -138,19 +142,23 @@ public class PingEventHandler{
         GenericServer finalServer = event.createGenericServer(online, max, host);
         
         if(ProfileManager.checkOption(entry.motd()) && ignoreMaintenance(event, "motd")){
-            logger.debug(PingEventHandler.class, "'motd' option present. Applying '%s'...", String.join("\\n", entry.motd()));
+            logger.debug(PingEventHandler.class, "'motd' option present. Applying ['%s']...", String.join("', '", entry.motd()));
             
-            event.setMotd(
-                ComponentParser.list(entry.motd())
+            List<Component> motd = entry.motd().stream()
+                .map(line -> ComponentParser.text(line)
                     .modifyText(text -> StringReplacer.replace(text, player, finalServer))
                     .modifyText(text -> event.parsePAPIPlaceholders(text, player))
+                    .modifyText(text -> plugin.getCore().getTextCenterUtil().getCenteredText(text))
                     .toComponent()
-            );
+                )
+                .toList();
+            
+            event.setMotd(Component.join(JoinConfiguration.separator(Component.newline()), motd));
         }
         
         boolean hidePlayers = ProfileManager.checkOption(entry.hidePlayersEnabled());
         
-        if(hidePlayers && ignoreMaintenance(event, "hidePlayers")){
+        if(hidePlayers && ignoreMaintenance(event, "hidePlayers") && ignoreMaintenance(event, "hidePlayersHover")){
             logger.debug(PingEventHandler.class, "'playerCount -> hidePlayers' enabled. Hiding player count...");
             
             event.hidePlayers();
@@ -167,8 +175,14 @@ public class PingEventHandler{
             );
         }
         
-        if(ProfileManager.checkOption(entry.players()) && !hidePlayers && ignoreMaintenance(event, "playerCountHover")){
-            logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying '%s'...", String.join("\\n", entry.players()));
+        boolean hidePlayersHover = ProfileManager.checkOption(entry.hidePlayersHoverEnabled());
+        if(hidePlayersHover){
+            logger.debug(PingEventHandler.class, "'playerCount -> hidePlayersHover' option set. Hiding Player Hover...");
+            event.setPlayersHidden();
+        }
+        
+        if(ProfileManager.checkOption(entry.players()) && !hidePlayers && !hidePlayersHover && ignoreMaintenance(event, "playerCountHover")){
+            logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying ['%s']...", String.join("', '", entry.players()));
             
             event.setPlayers(entry.players(), player, server);
         }

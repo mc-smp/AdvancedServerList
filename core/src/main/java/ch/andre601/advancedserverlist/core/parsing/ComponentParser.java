@@ -29,7 +29,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class ComponentParser{
@@ -52,12 +51,13 @@ public class ComponentParser{
         return new ComponentParser(text);
     }
     
-    public static ComponentParser list(List<String> lines){
-        return new ComponentParser(String.join("\n", lines));
+    public static ComponentParser textFormatted(String text, Object... args){
+        return text(String.format(text, args));
     }
     
     public ComponentParser modifyText(Function<String, String> function){
         this.text = function.apply(text);
+        
         return this;
     }
     
@@ -72,5 +72,9 @@ public class ComponentParser{
     @Override
     public String toString(){
         return legacy.serialize(toComponent());
+    }
+    
+    public String toStringStriped(){
+        return mm.stripTags(text);
     }
 }

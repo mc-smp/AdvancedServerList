@@ -49,6 +49,14 @@ checkUpdates: true
 debug: false
 
 #
+# Should the "ASL" ASCI art be displayed on plugin startup?
+# Setting this to false will hide the banner.
+#
+# Default: true
+#
+printBanner: true
+
+#
 # Sets how long Favicons should be cached. Value is in minutes with the lowest possible value being 1.
 #
 # This option only affects dynamic favicons created from a placeholder or URL. Local favicons will
@@ -83,6 +91,12 @@ disableDuringMaintenance:
   # Default: true
   #
   hidePlayers: true
+  #
+  # Whether hiding player list on hover should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  hidePlayersHover: true
   #
   # Whether player count text changing should be disabled while Maintenance mode is active.
   #

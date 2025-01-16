@@ -120,6 +120,11 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
+    public void setPlayersHidden(){
+        ping.getPlayers().setSample(new ServerPing.PlayerInfo[0]);
+    }
+    
+    @Override
     public void setFavicon(Favicon favicon){
         ping.setFavicon(favicon);
     }

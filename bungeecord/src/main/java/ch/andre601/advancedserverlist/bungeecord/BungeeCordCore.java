@@ -51,6 +51,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
+import org.sayandev.sayanvanish.bungeecord.api.SayanVanishBungeeAPI;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -59,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
@@ -77,12 +79,13 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     
     @Override
     public void onLoad(){
-        logger.info("Loading libraries. This may take a while...");
+        // Using getLogger() here, because PluginLogger requires MiniMessage, which isn't loaded at this stage.
+        getLogger().info("Loading libraries. This may take a while...");
         successfulLoad = loadLibs();
         if(successfulLoad){
-            logger.info("Library loading completed successfully!");
+            getLogger().info("Library loading completed successfully!");
         }else{
-            logger.warn("Library loading completed with errors!");
+            getLogger().warning("Library loading completed with errors!");
         }
     }
     
@@ -90,7 +93,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     public void onEnable(){
         if(!successfulLoad){
             logger.warn("There were issues during the plugins Loading-phase! Please see the console for possible reasons.");
-            logger.warn("The plugin won't be enabled to avoid problems.");
+            logger.warn("Aborting further enabling of the plugin to avoid errors.");
             return;
         }
         
@@ -103,11 +106,13 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     public void onDisable(){
         core.disable();
         getProxy().getScheduler().cancel(this);
+        audiences.close();
     }
     
     @Override
     public void loadCommands(){
         getProxy().getPluginManager().registerCommand(this, new CmdAdvancedServerList(this));
+        getPluginLogger().success("Registered <white>/advancedserverlist</white>!");
     }
     
     @Override
@@ -213,6 +218,9 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         // Exclude players when PremiumVanish is enabled and player is hidden.
         if(getProxy().getPluginManager().getPlugin("PremiumVanish") != null){
             players.removeIf(BungeeVanishAPI::isInvisible);
+        }else // Do the same if SayanVanish is enabled.
+        if(getProxy().getPluginManager().getPlugin("SayanVanish") != null){
+            players.removeIf(player -> SayanVanishBungeeAPI.getInstance().isVanished(player.getUniqueId()));
         }
         
         return players.size();
@@ -233,7 +241,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
             
             return true;
         }catch(Exception ex){
-            logger.warn("Encountered an Exception while trying to load dependencies.", ex);
+            getLogger().log(Level.WARNING, "Encountered an Exception while trying to load dependencies.", ex);
             return false;
         }
     }

@@ -4,57 +4,108 @@ icon: octicons/pencil-24
 
 # Formatting
 
-All text options, with exception of [`Conditions`](index.md#condition), allow the usage of formatting options using [MiniMessage].
+This page explains specific points of formatting in AdvancedServerList, be it [text formatting](#text-formatting) or special quirks of [YAML formatting](#yaml-formatting).  
+If you have questions, don't hesitate to join the [M.O.S.S. Discord][discord] and ask in the `#asl-support` channel.
 
-/// info | Online Tool
-The devs of the Adventure library provide a handy online tool to create the right formatting codes to display the text properly.  
-You can find the tool at https://webui.advntr.dev/
+## Text Formatting
+
+AdvancedServerList uses the [MiniMessage Text Formatting][minimessage] for all formatting of text options ([`motd`](index.md#motd), [`playerCount -> hover`](index.md#hover) and [`playerCount -> text`](index.md#text)).  
+It supports all available [formatting tags][tags] with a [few exceptions and limitations](#exceptions-and-limitations).
+
+/// note
+Please note that the available tags in MiniMessage depend heavily on the version used on the Server or Proxy.  
+While AdvancedServerList downloads MiniMessage for BungeeCord, is it using the built-in version on Paper and Velocity. Due to this could the version used be older than the one the plugin is compiled against.
 ///
 
-## Before starting
+[minimessage]: https://docs.advntr.dev/minimessage/index.html
+[tags]: https://docs.advntr.dev/minimessage/format.html
 
-Please make sure to surround your text with either single quotes (`'`) or double quotes (`"`).  
-This avoids possible issues where the YAML parser would treat lines starting with specific characters as special options (i.e. `<` would be treated as a scolar value).
+### Why MiniMessage and not `&`/`§`? { #why-minimessage }
 
-Also, should your text contain single quotes (for example when using `you're`), either surround the text with double quotes, or change the single quote in your text into two single quotes (`you're -> you''re`).
+The reason to only support MiniMessage and not the so-called legacy color and formatting codes can be boiled down to 3 specific reasons:
 
-```yaml title="Wrong formatting"
-motd:
-  - <red>This will cause
-  - <red>Errors
-```
+1.  **MiniMessage tags are more clear on what they do.**  
+    `<aqua>` makes it clear that it colors the text while `&b` is not as clear on that matter.
+2.  **MiniMessage allows easier combination of color and formatting codes.**  
+    MiniMessage "remembers" what colors and formatting you applied, meaning if you close a tag and a previous one was set before it, that will continue.
+    
+    /// details | Example
+        type: example
+    
+    Below is a comparison of the same text made in MiniMessage and Color codes.
+    
+    //// tab | MiniMessage
+    ```
+    <aqua>Hello <green><bold>World! <red>How</bold> are</red> you?
+    ```
+    ////
+    
+    //// tab | Color Codes
+    ```
+    # We add &c after "How" to avoid a "bold space"
+    
+    &bHello &a&lWorld! &c&lHow&c are &ayou?
+    ```
+    ////
+    ///
+    
+3.  **MiniMessage adds easier support for advanced features (RGB colors, gradients, etc.)**  
+    With MiniMessage is it significantly more easy to use more advanced features such as gradients, rgb colors and similar.  
+    While legacy colors have a form of RGB support is the format weird to look at and gradients become a mess. This is even worse when including bold for specific characters.
+    
+    /// details | Example
+        type: example
+    
+    Below is an example of a Gradient starting at `#084CFB` (:octicons-dot-fill-24:{ style="color: #084CFB;" }) and ending at `#ADF3FD` (:octicons-dot-fill-24:{ style="color: #ADF3FD;" }).
+    
+    //// tab | MiniMessage
+    ```
+    <gradient:#084CFB:#ADF3FD>Hello World!</gradient>
+    ```
+    ////
+    
+    //// tab | Color Codes
+    ```
+    &#084CFBH&#195DFBe&#296DFBl&#3A7EFCl&#4A8FFCo &#6BB0FCW&#7CC1FCo&#8CD2FDr&#9DE2FDl&#ADF3FDd
+    ```
+    ////
+    ///
 
-```yaml title="Right formatting"
-motd:
-  - "<green>This will be formatted"
-  - "<green>properly."
-```
+In general is MiniMessage a lot easier to manage and read as legacy color codes, as their appearance is more distinct from normal text.
 
-## Unsupported options
+### Exceptions and Limitations
 
-The following options are **not** supported, no matter what option they are used in:
+Due to the situation MiniMessage is used in are not all of its features available to use.  
+Below is a list of all features that cannot be used by AdvancedServerList, or can only be used by it under specific conditions.
 
-- Hover Actions (Show text, Show Advancement, etc)
-- Click Actions (Run command, Suggest command, etc.)
-- Custom Fonts (May work if player already has the resource pack loaded)
+| Feature       | Tag                          | Supported?                                                                                                                         |
+|---------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| RGB Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                            |
+| RGB Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                            |
+| Click Actions | `<click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                     |
+| Hover Actions | `<hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                   |
+| Insertions    | `<insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                     |
+| Font          | `<font:_font_>`              | May work with the default fonts (`default`, `alt` and `uniform`) and with custom ones should the client already have it.           |
+| Selector      | `<selector:_sel_>`           | Tag will be rendered, but clicking the text won't do anything.                                                                     |
+| Score         | `<score:_name_:_objective_>` | Will not render due to requiring the player to be on the server.                                                                   |
+| Pride         | `<pride[:_flag_]>`           | Only works if the server (Paper) or Proxy (Velocity) use `v4.18.0` of MiniMessage. BungeeCord is unaffected due to downloading it. |
 
-## Colors
+## Yaml Formatting
 
-### Default colors
+YAML has some special quirks that require attention when editing the file.  
+Such quirks include features such as...
 
-Default colors such as `<red>`, `<green>`, `<aqua>`, etc. may be used in all text options.
+- Reading `~` and `null` as literal null values.
+- Reading `>` and `|` as multi-line indicators.
 
-### Hex Colors
+To avoid this should you always surround text values with single (`'`) or double quotes (`"`) to force the YAML parser to see those as Strings.
 
-Hexadecimal colors may be used in the [`motd`](index.md#motd) option using the `<#RRGGBB>` format.
+/// note | Note on Single quotes inside text
+Using single quotes, the YAML parser may get confused when the text itself also contains a single quote.  
+As an example `'You're banned'` would mess up the value because the `'` in `You're` is understood as the end of the String.
 
-### Gradients
+To avoid this issue, do one of the following:
 
-Gradients can be created by using `<gradient:<color1>:<color2>>`, replacing `<color1>` with a starting color name or hex color value and `<color2>` with an ending color name or hex color value.  
-Only the [`motd`](index.md#motd) option may support hex color gradients and in all other options will it be downsampled.
-
-## Formatting
-
-Formatting options (`<bold>`, `<italic>`, etc.) are available for all text options.
-
-[MiniMessage]: https://docs.adventure.kyori.net/minimessage/index.html
+- Surround the text with Double quotes instead of Single quotes (`"You're banned"`)
+- Use two single quotes (`''`) inside the text every time you want to display a single quote character (`'You''re banned'`)
+///

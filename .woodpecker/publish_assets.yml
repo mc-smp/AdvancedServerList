@@ -5,20 +5,22 @@ when:
 steps:
   - name: "Build Jar and Upload"
     image: maven:3.9.9-eclipse-temurin-21
-    secrets:
-      - modrinth_api_token
-      - hangar_api_token
-      - discord_webhook_url
     environment:
       CODEBERG_API_TOKEN:
         from_secret: cb_token
+      MODRINTH_API_TOKEN:
+        from_secret: modrinth_api_token
+      HANGAR_API_TOKEN:
+        from_secret: hangar_api_token
+      DISCORD_WEBHOOK_URL:
+        from_secret: discord_webhook_url
     commands:
       - mvn clean install
       - cd version-uploader/target
       - mv VersionUploader.jar ../../
       - cd ../../
       - java -jar VersionUploader.jar --all
-  - name: "Upload Jars to Codeber"
+  - name: "Upload Jars to Codeberg"
     image: woodpeckerci/plugin-gitea-release
     settings:
       base_url: https://codeberg.org

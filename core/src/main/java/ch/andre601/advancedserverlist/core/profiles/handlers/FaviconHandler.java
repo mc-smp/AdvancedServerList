@@ -130,15 +130,15 @@ public class FaviconHandler<F>{
     private void loadLocalFavicons(){
         this.localFavicons.clear();
         
-        logger.info("Loading local image files as Favicons...");
+        logger.info("[-] Loading local image files as Favicons...");
         
         Path folder = core.getPlugin().getFolderPath().resolve("favicons");
         if(!Files.exists(folder)){
             try{
                 Files.createDirectories(folder);
-                logger.info("Created favicons folder.");
+                logger.debugSuccess(FaviconHandler.class, "Created favicons folder.");
             }catch(IOException ex){
-                logger.warn("Cannot create favicons folder. Encountered an IOException.", ex);
+                logger.failure("Cannot create favicons folder. Encountered an IOException.", ex);
                 return;
             }
         }
@@ -147,8 +147,10 @@ public class FaviconHandler<F>{
             pathStream.filter(Files::isRegularFile)
                 .filter(file -> file.getFileName().toString().endsWith(".png"))
                 .forEach(this::loadFile);
+            
+            logger.success("Loaded <white>%d</white> local Favicons.", localFavicons.size());
         }catch(IOException ex){
-            logger.warn("Cannot load files from Favicons folder.", ex);
+            logger.failure("Cannot load files from favicons folder.", ex);
         }
     }
     
@@ -156,14 +158,14 @@ public class FaviconHandler<F>{
         try(InputStream stream = Files.newInputStream(path)){
             F favicon = createFavicon(stream);
             if(favicon == null){
-                logger.warn("Cannot create Favicon from file '%s'. Received Favicon was null.", path.getFileName().toString());
+                logger.failure("Cannot create Favicon from file '<white>%s</white>'. Received Favicon was null.", path.getFileName().toString());
                 return;
             }
             
             localFavicons.put(path.getFileName().toString().toLowerCase(Locale.ROOT), favicon);
-            logger.info("Loaded file '%s' as Favicon.", path.getFileName().toString());
+            logger.debugSuccess(FaviconHandler.class, "Loaded file '<white>%s</white>' as Favicon.", path.getFileName().toString());
         }catch(IOException ex){
-            logger.warn("Cannot create Favicon from file '%s'. Encountered IOException.", ex);
+            logger.failure("Cannot create Favicon from file '<white>%s</white>'. Encountered IOException.", ex);
         }
     }
     
@@ -178,11 +180,11 @@ public class FaviconHandler<F>{
             try(InputStream stream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body()){
                 return createFavicon(stream);
             }catch(InterruptedException | IOException ex){
-                logger.warn("Cannot create Favicon from URL '%s'. Encountered an Exception.", ex, url);
+                logger.warn("Cannot create Favicon from URL '<white>%s</white>'. Encountered an Exception.", ex, url);
                 return null;
             }
         }catch(URISyntaxException ex){
-            logger.warn("Cannot create Favicon from URL '%s'. Encountered an IOException.", ex, url);
+            logger.warn("Cannot create Favicon from URL '<white>%s</white>'. Encountered a URISyntaxException.", ex, url);
             return null;
         }
     }

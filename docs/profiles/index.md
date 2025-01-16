@@ -91,6 +91,8 @@ motd:
 
 ## Motd
 
+<!-- admo:tip Start a line with <code>&lt;center&gt;</code> to have it centered. -->
+
 The `motd` option allows you to alter the "Message of the day" that is being displayed on a server in the multiplayer screen.  
 Please see the [Formatting](formatting.md) for all supported formatting options.
 
@@ -195,6 +197,13 @@ playerCount:
 
 </div>
 ///
+
+### HidePlayersHover
+
+The `playerCount -> hidePlayersHover` option takes a boolean (`true` or `false`) to set whether the hover displayed on the player count should be hidden or not.
+
+When set to true will hovering over the player count show nothing.  
+In addition will [`playerCount -> hover`](#hover) not be used.
 
 ### Hover
 

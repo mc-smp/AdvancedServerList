@@ -41,7 +41,7 @@
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
-        <plugin.config.version>6</plugin.config.version>
+        <plugin.config.version>8</plugin.config.version>
     </properties>
     
     <repositories>
@@ -77,9 +77,11 @@
         <dependency>
             <groupId>ch.andre601</groupId>
             <artifactId>expressionparser</artifactId>
-            <version>1.4.3</version>
+            <version>1.5.0</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- Configuration -->
         <dependency>
             <groupId>org.spongepowered</groupId>
             <artifactId>configurate-yaml</artifactId>
@@ -129,7 +131,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.3.1-jre</version>
+            <version>33.4.0-jre</version>
             <scope>provided</scope>
         </dependency>
         
@@ -137,7 +139,7 @@
         <dependency>
             <groupId>net.william278</groupId>
             <artifactId>papiproxybridge</artifactId>
-            <version>1.7.1</version>
+            <version>1.7.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -157,7 +159,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.11.3</version>
+            <version>5.11.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -168,6 +170,16 @@
             <resource>
                 <filtering>true</filtering>
                 <directory>${project.basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>char-widths.json.gz</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <includes>
+                    <include>char-widths.json.gz</include>
+                </includes>
             </resource>
         </resources>
         <plugins>

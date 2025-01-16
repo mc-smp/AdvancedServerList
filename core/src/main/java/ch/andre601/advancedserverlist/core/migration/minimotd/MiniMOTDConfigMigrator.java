@@ -56,7 +56,7 @@ public class MiniMOTDConfigMigrator{
         
         Path mainConf = core.getPlugin().getFolderPath().getParent().resolve(folder).resolve("main.conf");
         if(!Files.exists(mainConf)){
-            logger.warn("[Migrator - MiniMOTD] Cannot find a main.conf file in /plugins/%s/ folder.", folder);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Cannot find a main.conf file in <white>/plugins/%s/</white> folder.", folder);
             sender.sendErrorMsg(" -> <red>No main.conf file found.");
             return false;
         }
@@ -76,13 +76,13 @@ public class MiniMOTDConfigMigrator{
             
             config = node.get(MiniMOTDConfig.class);
         }catch(IOException ex){
-            logger.warn("[Migrator - MiniMOTD] Encountered IOException while loading main.conf file.", ex);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Encountered IOException while loading main.conf file.", ex);
             sender.sendErrorMsg(" -> <red>IOException while loading</red> main.conf <red>file.");
             return false;
         }
         
         if(config == null){
-            logger.warn("[Migrator - MiniMOTD] Retrieved main.conf file returned null.");
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Retrieved main.conf file returned null.");
             sender.sendErrorMsg(" -> <red>Received invalid</red> main.conf <red>file.");
             return false;
         }
@@ -110,14 +110,14 @@ public class MiniMOTDConfigMigrator{
         if(config.iconEnabled()){
             if(config.motds().size() == 1){
                 MiniMOTDConfig.Motd motd = config.motds().get(0);
-                if(!motd.icon().isEmpty() && !motd.icon().equalsIgnoreCase("random")){
+                if(!motd.icon().isEmpty()){
                     profileBuilder.favicon(motd.icon());
                 }
             }else
             if(config.motds().size() > 1){
                 for(int i = 0; i < config.motds().size(); i++){
                     MiniMOTDConfig.Motd motd = config.motds().get(i);
-                    if(!motd.icon().isEmpty() && !motd.icon().equalsIgnoreCase("random")){
+                    if(!motd.icon().isEmpty()){
                         profilesBuilders.get(i).favicon(motd.icon());
                     }
                 }
@@ -147,14 +147,14 @@ public class MiniMOTDConfigMigrator{
         
         boolean profilesInvalid = profiles.isEmpty() || profiles.stream().allMatch(ProfileEntry::isInvalid);
         if(entry.isInvalid() && profilesInvalid){
-            logger.warn("[Migrator - MiniMOTD] Main ProfileEntry was invalid and profiles were empty.");
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Main ProfileEntry was invalid and profiles were empty.");
             sender.sendErrorMsg(" -> <red>Received invalid configuration.");
             return false;
         }
         
         Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve("minimotd_migrated.yml");
         if(Files.exists(profile)){
-            logger.warn("[Migrator - MiniMOTD] Cannot create new file minimotd_migrated.yml. One with the same name is already present.");
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Cannot create new file minimotd_migrated.yml. One with the same name is already present.");
             sender.sendErrorMsg(" -> <red>File</red> minimotd_migrated.yml <red>already present.");
             
             return false;
@@ -163,7 +163,7 @@ public class MiniMOTDConfigMigrator{
         try{
             Files.createFile(profile);
         }catch(IOException ex){
-            logger.warn("[Migrator - MiniMOTD] Encountered an IOException while trying to create file minimotd_migrated.yml.", ex);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Encountered an IOException while trying to create file minimotd_migrated.yml.", ex);
             sender.sendErrorMsg(" -> <red>File creation error.");
             
             return false;
@@ -180,14 +180,14 @@ public class MiniMOTDConfigMigrator{
         try{
             migrated = yamlLoader.load();
         }catch(IOException ex){
-            logger.warn("[Migrator - MiniMOTD] Encountered an IOException while trying to load file minimotd_migrated.yml.", ex);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Encountered an IOException while trying to load file minimotd_migrated.yml.", ex);
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return false;
         }
         
         if(migrated == null){
-            logger.warn("[Migrator - MiniMOTD] Cannot migrate Configuration. ConfigurationNode was null.");
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Cannot migrate Configuration. ConfigurationNode was null.");
             sender.sendErrorMsg(" -> <red>File loading error.");
             
             return false;
@@ -202,7 +202,7 @@ public class MiniMOTDConfigMigrator{
             
             migrated.set(entry);
         }catch(SerializationException ex){
-            logger.warn("[Migrator - MiniMOTD] Encountered a SerializationException while setting values.", ex);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Encountered a SerializationException while setting values.", ex);
             sender.sendErrorMsg(" -> <red>Error while updating file</red> minimotd_migrated.yml<red>.");
             
             return false;
@@ -214,7 +214,7 @@ public class MiniMOTDConfigMigrator{
             
             return true;
         }catch(IOException ex){
-            logger.warn("[Migrator - MiniMOTD] Encountered an IOException while trying to save new file minimotd_migrated.yml.", ex);
+            logger.warn("[<white>Migrator - MiniMOTD</white>] Encountered an IOException while trying to save new file minimotd_migrated.yml.", ex);
             sender.sendErrorMsg(" -> <red>File saving error.");
             
             return false;

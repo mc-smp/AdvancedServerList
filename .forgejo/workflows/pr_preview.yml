@@ -16,6 +16,7 @@ on:
 
 env:
   BRANCH_NAME: "${{ github.event.repository.name }}/${{ github.event.pull_request.number }}"
+  RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_number }}"
 
 jobs:
   createPreview:
@@ -91,7 +92,7 @@ jobs:
             |---------|----------------------------------------------------------------------------------------------------------|
             | Commit  | ${{ github.event.pull_request.head.sha }}                                                                |
             | Preview | https://preview.andre601.ch/@${{ github.event.repository.name }}~${{ github.event.pull_request.number }} |
-            | Logs    | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}                      |
+            | Logs    | ${{ env.RUN_URL }}                                                                                       |
           comment-id: "${{ steps.comment.outputs.comment-id }}"
           issue-number: "${{ github.event.pull_request.number }}"
           token: "${{ secrets.BOT_TOKEN }}"
@@ -105,10 +106,10 @@ jobs:
 
             Pull request Preview failed! Check the logs for details.
 
-            | Name    | Link                                                                                |
-            |---------|-------------------------------------------------------------------------------------|
-            | Commit  | ${{ github.event.pull_request.head.sha }}                                           |
-            | Logs    | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+            | Name    | Link                                      |
+            |---------|-------------------------------------------|
+            | Commit  | ${{ github.event.pull_request.head.sha }} |
+            | Logs    | ${{ RUN_URL }}                            |
           comment-id: "${{ steps.comment.outputs.comment-id }}"
           issue-number: "${{ github.event.pull_request.number }}"
           token: "${{ secrets.BOT_TOKEN }}"

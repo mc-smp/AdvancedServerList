@@ -41,10 +41,7 @@ AdvancedServerList is available on the following places (Please note the current
 
 </div>
 
-[modrinth]: https://modrinth.com/plugin/advancedserverlist
-[codeberg]: https://codeberg.org/Andre601/AdvancedServerList
 [spigot]: https://www.spigotmc.org/resources/102910/
-[hangar]: https://hangar.papermc.io/Andre_601/AdvancedServerList
 
 The plugin is available for Paper, BungeeCord, Waterfall and Velocity, and has been tested on these platforms. It may support additional forks, but this is not guaranteed.
 
@@ -116,11 +113,11 @@ The plugin also supports these additional plugins. They are all optional.
 Installing the plugin is as simple as moving the jar file into the `plugins` folder. Just make sure to download the right version of AdvancedServerList for the right platform.  
 Here is a quick table showing the jar file name with the platforms it is made for:
 
-| Jar file name                                 | Platforms             |
-|-----------------------------------------------|-----------------------|
-| `AdvancedServerList-Paper-{version}.jar`      | Paper                 |
-| `AdvancedServerList-BungeeCord-{version}.jar` | BungeeCord, Waterfall |
-| `AdvancedServerList-Velocity-{version}.jar`   | Velocity              |
+| Jar file name                                                                       | Platforms             |
+|-------------------------------------------------------------------------------------|-----------------------|
+| `AdvancedServerList-Paper-{version}.jar`{ data-md-component="plugin-version" }      | Paper                 |
+| `AdvancedServerList-BungeeCord-{version}.jar`{ data-md-component="plugin-version" } | BungeeCord, Waterfall |
+| `AdvancedServerList-Velocity-{version}.jar`{ data-md-component="plugin-version" }   | Velocity              |
 
 After you added it to your plugins folder - alongside any other dependency you may want - (re)start your server or proxy to enable the plugin.  
 If everything goes well should AdvancedServerList create a folder named `AdvancedServerList` (`advancedserverlist` on Velocity) with additional files and folders inside of it.
@@ -246,6 +243,15 @@ playerCount:
   # Read more: https://asl.andre601.ch/profiles/#hideplayers
   #
   hidePlayers: false
+  #
+  # Set whether the List of players is shown when hovering over the player count.
+  # Setting this to true will also make the plugin ignore the hover option below.
+  #
+  # If not present, defaults to false.
+  #
+  # Read more: https://asl.andre601.ch/profiles/#hideplayershover
+  #
+  hidePlayersHover: false
   #
   # Set the lines shown when the player hovers over the player count.
   # Unlike the MOTD option does this one only support basic color and formatting codes. Any RGB colors will be
@@ -425,6 +431,14 @@ checkUpdates: true
 debug: false
 
 #
+# Should the "ASL" ASCI art be displayed on plugin startup?
+# Setting this to false will hide the banner.
+#
+# Default: true
+#
+printBanner: true
+
+#
 # Sets how long Favicons should be cached. Value is in minutes with the lowest possible value being 1.
 #
 # This option only affects dynamic favicons created from a placeholder or URL. Local favicons will
@@ -460,6 +474,12 @@ disableDuringMaintenance:
   #
   hidePlayers: true
   #
+  # Whether hiding player list on hover should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  hidePlayersHover: true
+  #
   # Whether player count text changing should be disabled while Maintenance mode is active.
   #
   # Default: true
@@ -483,6 +503,12 @@ disableDuringMaintenance:
   # Default: true
   #
   maxPlayers: true
+  #
+  # Whether the online players feature should be disabled while Maintenance mode is active.
+  #
+  # Default: true
+  #
+  onlinePlayers: true
 
 #
 # DO NOT EDIT!
@@ -490,7 +516,7 @@ disableDuringMaintenance:
 # This is used internally to determine if the config needs to be migrated.
 # Changing or even removing this option could result in your config being broken.
 #
-config-version: 5
+configVersion: 7
 ```
 ///
 

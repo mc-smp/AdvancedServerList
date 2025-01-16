@@ -76,7 +76,14 @@ public class CustomExpressionTokenizer{
                 }
             }
             
-            collector.appendWarningFormatted(position.getIndex(), "Illegal Token '%c'.", text.charAt(position.getIndex()));
+            if(position.getIndex() >= text.length()){
+                collector.appendWarningFormatted(
+                    "Current index position (%d) is larger or equal to Text length (%d) for condition '%s'",
+                    position.getIndex(), text.length(), text
+                );
+            }else{
+                collector.appendWarningFormatted(position.getIndex(), "Illegal Token '%c'.", text.charAt(position.getIndex()));
+            }
             break;
         }
         

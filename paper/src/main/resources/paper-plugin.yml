@@ -5,7 +5,7 @@ description: '${plugin.description}'
 
 main: 'ch.andre601.advancedserverlist.paper.PaperCore'
 
-api-version: '1.19'
+api-version: '1.20'
 
 folia-supported: true
 
@@ -23,15 +23,6 @@ dependencies:
     ServerListPlus:
       load: BEFORE
       required: false
-
-# The below stuff is NOT used by Paper plugin.
-commands:
-  advancedserverlist:
-    description: 'Main command of AdvancedServerList'
-    usage: '/<command> [help|reload]'
-    aliases:
-      - 'asl'
-    permission: 'advancedserverlist.admin'
 
 # This is actually supported(?)
 permissions:

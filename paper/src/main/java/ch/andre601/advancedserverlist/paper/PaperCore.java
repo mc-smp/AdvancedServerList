@@ -67,18 +67,6 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     @Override
     public void onEnable(){
-        try{
-            Class.forName("io.papermc.paper.configuration.ConfigurationLoaders");
-        }catch(ClassNotFoundException ignored){
-            try{
-                // Above class only exists since 1.19+. This is a fallback to see if an older version is used.
-                Class.forName("com.destroystokyo.paper.PaperConfig");
-            }catch(ClassNotFoundException ex){
-                printNoPaperWarning();
-                return;
-            }
-        }
-        
         this.core = AdvancedServerList.init(this, new PaperPlayerPlaceholders(), new PaperServerPlaceholders(this));
         
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
@@ -101,9 +89,9 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     @Override
     public void loadCommands(){
         if(getServer().getCommandMap().register("asl", new CmdAdvancedServerList(this))){
-            getPluginLogger().info("Registered /advancedserverlist:advancedserverlist");
+            getPluginLogger().success("Registered <white>/advancedserverlist:advancedserverlist</white>!");
         }else{
-            getPluginLogger().info("Registered /asl:advancedserverlist");
+            getPluginLogger().success("Registered <white>/asl:advancedserverlist</white>!");
         }
     }
     
@@ -225,28 +213,6 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         return players.size();
     }
     
-    private void printNoPaperWarning(){
-        getPluginLogger().warn("======================================================================================");
-        getPluginLogger().warn("THIS SERVER IS NOT RUNNING PAPER OR A PAPER-COMPATIBLE FORK!");
-        getPluginLogger().warn("");
-        getPluginLogger().warn("Support for Spigot-based Servers was dropped in v3.6.0 of AdvancedServerList.");
-        getPluginLogger().warn("This means that only Servers running Paper or a Fork supporting the Paper-Plugin");
-        getPluginLogger().warn("System may work.");
-        getPluginLogger().warn("");
-        getPluginLogger().warn("Reasons for Removal of Spigot Support include:");
-        getPluginLogger().warn("  - The reliance on a 3rd-party Plugin (ProtocolLib) for core features of the Plugin.");
-        getPluginLogger().warn("  - Library/Dependency Loading being limited to MavenCentral only.");
-        getPluginLogger().warn("");
-        getPluginLogger().warn("Please consider switching to Paper or a Server supporting the Paper-Plugin System");
-        getPluginLogger().warn("for performance improvements and other Quality of Life features.");
-        getPluginLogger().warn("");
-        getPluginLogger().warn("If you believe this to be a mistake, file an issue on Codeberg:");
-        getPluginLogger().warn("https://codeberg.org/Andre601/AdvancedServerList/issues");
-        getPluginLogger().warn("======================================================================================");
-        
-        Bukkit.getPluginManager().disablePlugin(this);
-    }
-    
     private String getNewVersion(){
         ServerBuildInfo info = ServerBuildInfo.buildInfo();
         
@@ -256,7 +222,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         
         OptionalInt build = info.buildNumber();
         if(build.isEmpty())
-            return String.format("%s (%s, Version: %s)", name, id, version);
+            return String.format("%s (ID: %s, Version: %s)", name, id, version);
         
         return String.format("%s (ID: %s, Version: %s, Build: %d)", name, id, version, build.getAsInt());
     }

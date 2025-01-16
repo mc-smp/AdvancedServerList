@@ -68,6 +68,21 @@ extra:
 plugins:
   - search
   - glightbox
+  - redirects:
+      redirect_maps:
+        # Plugin Migration Pages
+        'migration/minimotd.md': 'migration/plugins/minimotd.md'
+        'migration/serverlistplus.md': 'migration/plugins/serverlistplus.md'
+        #
+        # Version Migration Pages
+        'migration/v3_8_0-to-v3_9_0.md': 'migration/versions/v3.8.0-to-v3.9.0.md'
+        'migration/v3_7_0-to-v3_8_0.md': 'migration/versions/v3.7.0-to-v3.8.0.md'
+        'migration/pre-v3_7_0-to-v3_7_0.md': 'migration/versions/pre-v3.7.0-to-v3.7.0.md'
+        'migration/v1_9_0-to-v1_10_0.md': 'migration/versions/v1.9.0-to-v1.10.0.md'
+        'migration/v1_5_3-to-v1_6_0.md': 'migration/versions/v1.5.3-to-v1.6.0.md'
+        #
+        # PlaceholderAPI page
+        'placeholderapi/index.md': 'profiles/placeholders.md#own-placeholders'
   - pagenav-generator
 
 markdown_extensions:
@@ -103,6 +118,7 @@ markdown_extensions:
   - pymdownx.blocks.tab:
       alternate_style: true
   - pymdownx.blocks.details:
+  - pymdownx.caret:
 
 hooks:
   - docs/.hooks/badges.py
@@ -123,16 +139,18 @@ nav:
   - Migration:
     - migration/index.md
     - Other Plugins:
-      - MiniMOTD: migration/minimotd.md
-      - ServerListPlus: migration/serverlistplus.md
+      - MiniMOTD: migration/plugins/minimotd.md
+      - ServerListPlus: migration/plugins/serverlistplus.md
     - AdvancedServerList:
-      - v3.8.0 to v3.9.0: migration/v3_8_0-to-v3_9_0.md
-      - v3.7.0 to v3.8.0: migration/v3_7_0-to-v3_8_0.md
-      - '< v3.7.0 to v3.7.0': migration/pre-v3_7_0-to-v3_7_0.md
-      - v1.9.0 to v1.10.0: migration/v1_9_0-to-v1_10_0.md
-      - v1.5.3 to v1.6.0: migration/v1_5_3-to-v1_6_0.md
+      - v3.8.0 to v3.9.0: migration/versions/v3.8.0-to-v3.9.0.md
+      - v3.7.0 to v3.8.0: migration/versions/v3.7.0-to-v3.8.0.md
+      - '< v3.7.0 to v3.7.0': migration/versions/pre-v3.7.0-to-v3.7.0.md
+      - v1.9.0 to v1.10.0: migration/versions/v1.9.0-to-v1.10.0.md
+      - v1.5.3 to v1.6.0: migration/versions/v1.5.3-to-v1.6.0.md
   - API:
     - api/index.md
+    - Adding Placeholders: api/adding-placeholders.md
+    - Listening for Events: api/listening-for-events.md
     - Changelog: api/changelog.md
     - Javadocs: api/javadocs.md
     - Source Code: api/source.md
@@ -185,4 +203,3 @@ nav:
   - Addons:
     - addons/index.md
     - BanPlugins: addons/banplugins.md
-  - PlaceholderAPI: placeholderapi/index.md

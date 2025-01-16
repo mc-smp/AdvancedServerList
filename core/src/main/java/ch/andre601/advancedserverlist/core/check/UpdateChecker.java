@@ -123,11 +123,11 @@ public class UpdateChecker{
     
     private void startUpdateChecker(){
         executor.scheduleAtFixedRate(() -> {
-            logger.info("Looking for an update...");
+            logger.info("[-] Looking for an update...");
             
             performUpdateCheck().whenComplete((version, throwable) -> {
                 if(version == null || throwable != null){
-                    logger.warn("Failed to look for any updates. Check previous messages for causes.");
+                    logger.failure("Failed to look for any updates. Check previous messages for causes.");
                     return;
                 }
                 
@@ -136,9 +136,9 @@ public class UpdateChecker{
                 int result = version.compare(core.getVersion());
                 switch(result){
                     case -1 -> printUpdateBanner(version);
-                    case 0 -> logger.info("You are running the latest version!");
+                    case 0 -> logger.success("You are running the latest version!");
                     case 1 -> logger.info(
-                        "Your version (%s) seems to be newer than the latest release (%s). Are you running a dev build?",
+                        "[?] Your version (<white>%s</white>) seems to be newer than the latest release (<white>%s</white>). Are you running a dev build?",
                         core.getVersion(), version.versionNumber()
                     );
                 }
@@ -185,18 +185,18 @@ public class UpdateChecker{
         logger.warn("=======================================================================");
         logger.warn("You are running an outdated version of AdvancedServerList!");
         logger.warn("");
-        logger.warn("Your version: %s", core.getVersion());
-        logger.warn("Modrinth:     %s", version.versionNumber());
+        logger.warn("Your version: <white>%s</white>", core.getVersion());
+        logger.warn("Modrinth:     <white>%s</white>", version.versionNumber());
         logger.warn("");
         
         if(!version.isRelease()){
-            logger.warn("WARNING!");
+            logger.warn("<bold>WARNING!</bold>");
             logger.warn("This is a %s version and may contain breaking changes and/or bugs!", version.versionType());
             logger.warn("");
         }
         
         logger.warn("Download the latest version from here:");
-        logger.warn("https://modrinth.com/plugin/advancedserverlist/version/%s", version.id());
+        logger.warn("<white>https://modrinth.com/plugin/advancedserverlist/version/%s</white>", version.id());
         logger.warn("=======================================================================");
     }
     

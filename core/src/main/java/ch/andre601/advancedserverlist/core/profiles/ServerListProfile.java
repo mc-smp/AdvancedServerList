@@ -51,13 +51,13 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
         boolean result = core.getParser().evaluate(condition, player, server, collector);
         
         if(collector.hasWarnings()){
-            logger.warn("Encountered %d Error(s) while parsing condition for file '%s':", collector.getWarnings().size(), file);
+            logger.warn("Encountered <white>%d</white> Error(s) while parsing condition for file '<white>%s</white>':", collector.getWarnings().size(), file);
             
             for(ParseWarnCollector.Context context : collector.getWarnings()){
-                logger.warn("  - At position %s:", context.position() == -1 ? "Unknown" : context.position());
-                logger.warn("    %s", condition);
-                logger.warn(" ".repeat(context.position() + 4) + "^");
-                logger.warn("    -> %s", context.message());
+                logger.warn("  - At position <white>%s</white>:", context.position() == -1 ? "<italic>Unknown</italic>" : context.position());
+                logger.warn("    <white>%s</white>", condition);
+                logger.warn(" ".repeat(context.position() + 3) + "<red>^</red>");
+                logger.warn("    <grey>-></grey> %s", context.message());
             }
         }
         
@@ -146,7 +146,7 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             try{
                 this.profiles = node.node("profiles").getList(ProfileEntry.class);
             }catch(SerializationException ex){
-                logger.warn("Encountered a SerializationException while resolving the profiles entry for %s", ex, fileName);
+                logger.warn("Encountered a SerializationException while resolving the profiles entry for <white>%s</white>", ex, fileName);
             }
             
             return this;
@@ -159,7 +159,7 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             try{
                 this.defaultProfile = node.get(ProfileEntry.class);
             }catch(SerializationException ex){
-                logger.warn("Encountered a SerializationException while resolving the global profile for %s", ex, fileName);
+                logger.warn("Encountered a SerializationException while resolving the global profile for <white>%s</white>", ex, fileName);
             }
             return this;
         }

@@ -36,7 +36,7 @@ public class PaperPlayerImpl implements BukkitPlayer{
     private final OfflinePlayer player;
     
     private final String name;
-    private int protocol;
+    private final int protocol;
     private final UUID uuid;
     
     private boolean playedBefore = false;
