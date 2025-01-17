@@ -441,7 +441,7 @@ public class CommandHandler{
                 .appendText("|")
                 .appendSpace()
                 // list
-                .appendLiteralArgument("list", "Lists all currently know profiles and wether they are valid or not.")
+                .appendLiteralArgument("list", "Lists all currently know profiles and whether they are valid or not.")
                 // Closing bracket
                 .appendText("></grey>")
                 .build();

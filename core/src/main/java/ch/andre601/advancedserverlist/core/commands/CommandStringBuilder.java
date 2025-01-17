@@ -32,7 +32,7 @@ public class CommandStringBuilder{
     private final List<CommandPart> commandParts = new ArrayList<>();
     
     public CommandStringBuilder(String subcommand, String description){
-        appendText("<hover:show_text:\"<grey>" + description + "</grey>\"><white>" + subcommand + "</white></hover>");
+        appendLiteralArgument(subcommand, description);
     }
     
     public CommandStringBuilder appendArgument(Argument argument){
