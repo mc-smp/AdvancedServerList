@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package ch.andre601.advancedserverlist.velocity.commands;
+package ch.andre601.advancedserverlist.core.commands;
 
-import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
-import com.velocitypowered.api.command.CommandSource;
-
-public record VelocityCmdSender(CommandSource sender) implements CmdSender{
-    @Override
-    public boolean hasPermission(String permission){
-        return sender.hasPermission(permission) || sender.hasPermission("advancedserverlist.admin");
-    }
+public class CommandExecutionHandler<C> {
     
-    @Override
-    public void sendMsg(String msg, Object... args){
-        sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
-    }
 }

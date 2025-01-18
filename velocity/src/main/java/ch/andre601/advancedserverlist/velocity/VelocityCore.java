@@ -30,6 +30,8 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
+import ch.andre601.advancedserverlist.velocity.commands.VelocityCmdSender;
+import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandHandler;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
@@ -43,6 +45,7 @@ import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -54,6 +57,7 @@ import de.myzelyam.api.vanish.VelocityVanishAPI;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
+import org.incendo.cloud.CommandManager;
 import org.sayandev.sayanvanish.velocity.api.SayanVanishVelocityAPI;
 
 import java.awt.image.BufferedImage;
@@ -65,16 +69,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class VelocityCore implements PluginCore<Favicon>{
+public class VelocityCore implements PluginCore<Favicon, VelocityCmdSender>{
     
     private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private final PluginLogger pluginLogger;
     private final ComponentLogger logger;
     
+    private final PluginContainer pluginContainer;
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
+    private final VelocityCommandHandler commandHandler;
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
@@ -84,14 +90,16 @@ public class VelocityCore implements PluginCore<Favicon>{
     private ScheduledTask scheduledTask = null;
     
     @Inject
-    public VelocityCore(ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
+    public VelocityCore(PluginContainer pluginContainer, ProxyServer proxy, @DataDirectory Path path, Metrics.Factory metrics){
         ComponentLogger logger = ComponentLogger.logger("AdvancedServerList");
         this.pluginLogger = new VelocityLogger(this, logger);
         this.logger = logger;
         
+        this.pluginContainer = pluginContainer;
         this.proxy = proxy;
         this.path = path;
         this.metrics = metrics;
+        this.commandHandler = new VelocityCommandHandler(pluginContainer, proxy);
     }
     
     @Subscribe
@@ -192,6 +200,11 @@ public class VelocityCore implements PluginCore<Favicon>{
     }
     
     @Override
+    public CommandManager<VelocityCmdSender> getCommandManager(){
+        return commandHandler.commandHandler();
+    }
+    
+    @Override
     public String getPlatformInfo(){
         return getProxy().getVersion().getName() + " " + getProxy().getVersion().getVersion();
     }
@@ -212,6 +225,10 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public Favicon createFavicon(BufferedImage image){
         return Favicon.create(image);
+    }
+    
+    public PluginContainer getPluginContainer(){
+        return pluginContainer;
     }
     
     public ProxyServer getProxy(){

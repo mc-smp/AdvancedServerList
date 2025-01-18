@@ -27,12 +27,14 @@ package ch.andre601.advancedserverlist.core.interfaces.core;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
+import org.incendo.cloud.CommandManager;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
-public interface PluginCore<F>{
+public interface PluginCore<F, S extends CmdSender>{
     
     void loadCommands();
     
@@ -55,6 +57,8 @@ public interface PluginCore<F>{
     PluginLogger getPluginLogger();
     
     FaviconHandler<F> getFaviconHandler();
+    
+    CommandManager<S> getCommandManager();
     
     String getPlatformInfo();
     

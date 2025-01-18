@@ -29,12 +29,20 @@ import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
 import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.core.check.UpdateChecker;
 import ch.andre601.advancedserverlist.core.commands.CommandHandler;
+import ch.andre601.advancedserverlist.core.commands.OldCommandHandler;
+import ch.andre601.advancedserverlist.core.commands.ProfileArgumentParser;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.advancedserverlist.core.profiles.handlers.PlayerHandler;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.parser.flag.CommandFlag;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,11 +50,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class AdvancedServerList<F>{
+import static org.incendo.cloud.parser.standard.StringParser.stringParser;
+
+public class AdvancedServerList<F, S extends CmdSender>{
     
-    private final PluginCore<F> plugin;
+    private final PluginCore<F, S> plugin;
     private final FileHandler fileHandler;
-    private final CommandHandler commandHandler;
+    private final OldCommandHandler commandHandler;
     private final PlayerHandler playerHandler;
     private final TextCenterUtil textCenterUtil;
     
@@ -57,10 +67,10 @@ public class AdvancedServerList<F>{
     
     private String version;
     
-    private AdvancedServerList(PluginCore<F> plugin, List<PlaceholderProvider> placeholders){
+    private AdvancedServerList(PluginCore<F, S> plugin, List<PlaceholderProvider> placeholders){
         this.plugin = plugin;
         this.fileHandler = new FileHandler(this);
-        this.commandHandler = new CommandHandler(this);
+        this.commandHandler = new OldCommandHandler(this);
         this.playerHandler = new PlayerHandler(this);
         this.textCenterUtil = new TextCenterUtil(this);
         
@@ -77,7 +87,7 @@ public class AdvancedServerList<F>{
         load();
     }
     
-    public static <F> AdvancedServerList<F> init(PluginCore<F> plugin, PlaceholderProvider... placeholders){
+    public static <F, S extends CmdSender> AdvancedServerList<F, S> init(PluginCore<F, S> plugin, PlaceholderProvider... placeholders){
         return new AdvancedServerList<>(plugin, Arrays.asList(placeholders));
     }
     
@@ -85,7 +95,7 @@ public class AdvancedServerList<F>{
         return api;
     }
     
-    public PluginCore<F> getPlugin(){
+    public PluginCore<F, S> getPlugin(){
         return plugin;
     }
     
@@ -93,7 +103,7 @@ public class AdvancedServerList<F>{
         return fileHandler;
     }
     
-    public CommandHandler getCommandHandler(){
+    public OldCommandHandler getCommandHandler(){
         return commandHandler;
     }
     
@@ -189,6 +199,49 @@ public class AdvancedServerList<F>{
         getPlugin().getPluginLogger().info("<#3b90ff> / ____ \\ \\ ____) | | |_|____");
         getPlugin().getPluginLogger().info("<#3b90ff>/_/_/  \\_\\_\\_____/_/|______|_|");
         getPlugin().getPluginLogger().info("");
+    }
+    
+    private void registerCommand(){
+        CommandManager<S> manager = plugin.getCommandManager();
+        
+        manager.createHelpHandler();
+        Command.Builder<S> builder = manager.commandBuilder("advancedserverlist", "asl");
+        
+        builder.literal("reload")
+            .appendHandler(CommandHandler.initReload(this));
+        builder.literal("clearcache")
+            .appendHandler(CommandHandler.initClearCache(this));
+        builder.literal("migrate")
+            .required("plugin", stringParser(), SuggestionProvider.suggesting(List.of(
+                Suggestion.suggestion("ServerListPlus"),
+                Suggestion.suggestion("MiniMOTD")
+            )))
+            .appendHandler(CommandHandler.initMigrate(this));
+        builder.literal("profiles")
+            .literal("list")
+            .appendHandler(CommandHandler.initProfilesList(this));
+        builder.literal("profiles")
+            .literal("add")
+            .required("name", stringParser())
+            .appendHandler(CommandHandler.initProfilesAdd(this));
+        builder.literal("profiles")
+            .literal("copy")
+            .required(
+                "profile",
+                ProfileArgumentParser.profileParser(getFileHandler().getProfiles()),
+                profilesSuggestionProvider()
+            )
+            .required("name", stringParser())
+            .flag(CommandFlag.builder("override").build())
+            .appendHandler(CommandHandler.initProfilesCopy(this));
+    }
+    
+    private SuggestionProvider<S> profilesSuggestionProvider(){
+        List<Suggestion> suggestions = getFileHandler().getProfiles().stream()
+            .map(profile -> Suggestion.suggestion(profile.file().substring(0, profile.file().lastIndexOf('.'))))
+            .toList();
+        
+        return SuggestionProvider.suggesting(suggestions);
     }
     
     private void resolveVersion(){

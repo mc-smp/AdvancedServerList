@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,44 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package ch.andre601.advancedserverlist.velocity.commands;
 
-import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.proxy.ProxyServer;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.SenderMapper;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.velocity.VelocityCommandManager;
 
-public record VelocityCmdSender(CommandSource sender) implements CmdSender{
-    @Override
-    public boolean hasPermission(String permission){
-        return sender.hasPermission(permission) || sender.hasPermission("advancedserverlist.admin");
+public class VelocityCommandHandler implements CommandHandler<CommandSource, VelocityCmdSender>{
+    
+    private final PluginContainer pluginContainer;
+    private final ProxyServer proxy;
+    
+    public VelocityCommandHandler(PluginContainer pluginContainer, ProxyServer proxy){
+        this.pluginContainer = pluginContainer;
+        this.proxy = proxy;
     }
     
     @Override
-    public void sendMsg(String msg, Object... args){
-        sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
+    public CommandManager<VelocityCmdSender> commandHandler(){
+        return new VelocityCommandManager<>(
+            pluginContainer,
+            proxy,
+            ExecutionCoordinator.asyncCoordinator(),
+            senderMapper()
+        );
+    }
+    
+    @Override
+    public SenderMapper<CommandSource, VelocityCmdSender> senderMapper(){
+        return SenderMapper.create(
+            VelocityCmdSender::new,
+            VelocityCmdSender::sender
+        );
     }
 }
