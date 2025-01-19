@@ -28,6 +28,7 @@ package ch.andre601.advancedserverlist.core;
 import ch.andre601.advancedserverlist.api.AdvancedServerListAPI;
 import ch.andre601.advancedserverlist.api.PlaceholderProvider;
 import ch.andre601.advancedserverlist.core.check.UpdateChecker;
+import ch.andre601.advancedserverlist.core.commands.CommandHandler;
 import ch.andre601.advancedserverlist.core.commands.OldCommandHandler;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
@@ -36,6 +37,7 @@ import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.advancedserverlist.core.profiles.handlers.PlayerHandler;
+import org.incendo.cloud.annotations.AnnotationParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,9 +45,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-public class AdvancedServerList<F, S extends CmdSender>{
+public class AdvancedServerList<F>{
     
-    private final PluginCore<F, S> plugin;
+    public static <F> AdvancedServerList<F> init(PluginCore<F> plugin, PlaceholderProvider... placeholders){
+        return new AdvancedServerList<>(plugin, Arrays.asList(placeholders));
+    }
+    
+    private final PluginCore<F> plugin;
     private final FileHandler fileHandler;
     private final OldCommandHandler commandHandler;
     private final PlayerHandler playerHandler;
@@ -58,7 +64,7 @@ public class AdvancedServerList<F, S extends CmdSender>{
     
     private String version;
     
-    private AdvancedServerList(PluginCore<F, S> plugin, List<PlaceholderProvider> placeholders){
+    private AdvancedServerList(PluginCore<F> plugin, List<PlaceholderProvider> placeholders){
         this.plugin = plugin;
         this.fileHandler = new FileHandler(this);
         this.commandHandler = new OldCommandHandler(this);
@@ -78,15 +84,11 @@ public class AdvancedServerList<F, S extends CmdSender>{
         load();
     }
     
-    public static <F, S extends CmdSender> AdvancedServerList<F, S> init(PluginCore<F, S> plugin, PlaceholderProvider... placeholders){
-        return new AdvancedServerList<>(plugin, Arrays.asList(placeholders));
-    }
-    
     public static AdvancedServerListAPI getApi(){
         return api;
     }
     
-    public PluginCore<F, S> getPlugin(){
+    public PluginCore<F> getPlugin(){
         return plugin;
     }
     
@@ -169,7 +171,10 @@ public class AdvancedServerList<F, S extends CmdSender>{
         }
         
         getPlugin().loadFaviconHandler(this);
-    
+        
+        AnnotationParser<CmdSender> annotationParser = new AnnotationParser<>(plugin.getCommandManager(), CmdSender.class);
+        annotationParser.parse(new CommandHandler<>(this));
+        
         plugin.loadCommands();
         plugin.loadEvents();
         getPlayerHandler().load();

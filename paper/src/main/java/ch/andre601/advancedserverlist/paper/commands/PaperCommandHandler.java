@@ -22,43 +22,37 @@
  * SOFTWARE.
  */
 
-package ch.andre601.advancedserverlist.velocity.commands;
+package ch.andre601.advancedserverlist.paper.commands;
 
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.proxy.ProxyServer;
+import ch.andre601.advancedserverlist.paper.PaperCore;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.velocity.VelocityCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
-public class VelocityCommandHandler implements CommandHandler<CommandSource>{
+public class PaperCommandHandler implements CommandHandler<CommandSourceStack>{
     
-    private final PluginContainer pluginContainer;
-    private final ProxyServer proxy;
+    private final PaperCore plugin;
     
-    public VelocityCommandHandler(PluginContainer pluginContainer, ProxyServer proxy){
-        this.pluginContainer = pluginContainer;
-        this.proxy = proxy;
+    public PaperCommandHandler(PaperCore plugin){
+        this.plugin = plugin;
     }
     
     @Override
     public CommandManager<CmdSender> commandHandler(){
-        return new VelocityCommandManager<>(
-            pluginContainer,
-            proxy,
-            ExecutionCoordinator.asyncCoordinator(),
-            senderMapper()
-        );
+        return PaperCommandManager.builder(senderMapper())
+            .executionCoordinator(ExecutionCoordinator.asyncCoordinator())
+            .buildOnEnable(plugin);
     }
     
     @Override
-    public SenderMapper<CommandSource, CmdSender> senderMapper(){
+    public SenderMapper<CommandSourceStack, CmdSender> senderMapper(){
         return SenderMapper.create(
-            VelocityCmdSender::new,
-            sender -> ((VelocityCmdSender)sender).sender()
+            cmdSourceStack -> new PaperCmdSender(cmdSourceStack.getSender()),
+            sender -> ((PaperCmdSender)sender).getCommandSourceStack()
         );
     }
 }

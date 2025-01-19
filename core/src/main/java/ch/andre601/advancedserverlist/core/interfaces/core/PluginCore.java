@@ -34,7 +34,7 @@ import org.incendo.cloud.CommandManager;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
-public interface PluginCore<F, S extends CmdSender>{
+public interface PluginCore<F>{
     
     void loadCommands();
     
@@ -58,7 +58,7 @@ public interface PluginCore<F, S extends CmdSender>{
     
     FaviconHandler<F> getFaviconHandler();
     
-    CommandManager<S> getCommandManager();
+    CommandManager<CmdSender> getCommandManager();
     
     String getPlatformInfo();
     

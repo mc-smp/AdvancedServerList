@@ -27,14 +27,25 @@ package ch.andre601.advancedserverlist.paper.commands;
 
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 
 public class PaperCmdSender implements CmdSender{
     
     private final CommandSender sender;
+    private final CommandSourceStack commandSourceStack;
     
     public PaperCmdSender(CommandSender sender){
+        this(sender, null);
+    }
+    
+    public PaperCmdSender(CommandSourceStack commandSourceStack){
+        this(null, commandSourceStack);
+    }
+    
+    private PaperCmdSender(CommandSender sender, CommandSourceStack commandSourceStack){
         this.sender = sender;
+        this.commandSourceStack = commandSourceStack;
     }
     
     @Override
@@ -45,5 +56,13 @@ public class PaperCmdSender implements CmdSender{
     @Override
     public void sendMsg(String msg, Object... args){
         sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
+    }
+    
+    public CommandSender sender(){
+        return sender;
+    }
+    
+    public CommandSourceStack getCommandSourceStack(){
+        return commandSourceStack;
     }
 }

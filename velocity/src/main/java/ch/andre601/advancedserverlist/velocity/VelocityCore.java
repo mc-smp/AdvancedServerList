@@ -27,10 +27,10 @@ package ch.andre601.advancedserverlist.velocity;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
-import ch.andre601.advancedserverlist.velocity.commands.VelocityCmdSender;
 import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandHandler;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
@@ -69,14 +69,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class VelocityCore implements PluginCore<Favicon, VelocityCmdSender>{
+public class VelocityCore implements PluginCore<Favicon>{
     
     private final Map<String, ServerPing> fetchedServers = new ConcurrentHashMap<>();
     
     private final PluginLogger pluginLogger;
     private final ComponentLogger logger;
     
-    private final PluginContainer pluginContainer;
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
@@ -95,7 +94,6 @@ public class VelocityCore implements PluginCore<Favicon, VelocityCmdSender>{
         this.pluginLogger = new VelocityLogger(this, logger);
         this.logger = logger;
         
-        this.pluginContainer = pluginContainer;
         this.proxy = proxy;
         this.path = path;
         this.metrics = metrics;
@@ -200,7 +198,7 @@ public class VelocityCore implements PluginCore<Favicon, VelocityCmdSender>{
     }
     
     @Override
-    public CommandManager<VelocityCmdSender> getCommandManager(){
+    public CommandManager<CmdSender> getCommandManager(){
         return commandHandler.commandHandler();
     }
     
@@ -225,10 +223,6 @@ public class VelocityCore implements PluginCore<Favicon, VelocityCmdSender>{
     @Override
     public Favicon createFavicon(BufferedImage image){
         return Favicon.create(image);
-    }
-    
-    public PluginContainer getPluginContainer(){
-        return pluginContainer;
     }
     
     public ProxyServer getProxy(){

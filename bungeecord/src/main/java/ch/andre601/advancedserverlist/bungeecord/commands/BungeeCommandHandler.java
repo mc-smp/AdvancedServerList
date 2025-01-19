@@ -22,43 +22,39 @@
  * SOFTWARE.
  */
 
-package ch.andre601.advancedserverlist.velocity.commands;
+package ch.andre601.advancedserverlist.bungeecord.commands;
 
+import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.proxy.ProxyServer;
+import net.md_5.bungee.api.CommandSender;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.SenderMapper;
+import org.incendo.cloud.bungee.BungeeCommandManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.velocity.VelocityCommandManager;
 
-public class VelocityCommandHandler implements CommandHandler<CommandSource>{
+public class BungeeCommandHandler implements CommandHandler<CommandSender>{
     
-    private final PluginContainer pluginContainer;
-    private final ProxyServer proxy;
+    private final BungeeCordCore plugin;
     
-    public VelocityCommandHandler(PluginContainer pluginContainer, ProxyServer proxy){
-        this.pluginContainer = pluginContainer;
-        this.proxy = proxy;
+    public BungeeCommandHandler(BungeeCordCore plugin){
+        this.plugin = plugin;
     }
     
     @Override
     public CommandManager<CmdSender> commandHandler(){
-        return new VelocityCommandManager<>(
-            pluginContainer,
-            proxy,
+        return new BungeeCommandManager<>(
+            plugin,
             ExecutionCoordinator.asyncCoordinator(),
             senderMapper()
         );
     }
     
     @Override
-    public SenderMapper<CommandSource, CmdSender> senderMapper(){
+    public SenderMapper<CommandSender, CmdSender> senderMapper(){
         return SenderMapper.create(
-            VelocityCmdSender::new,
-            sender -> ((VelocityCmdSender)sender).sender()
+            cmdSender -> new BungeeCmdSender(cmdSender, plugin.getAudiences()),
+            sender -> ((BungeeCmdSender)sender).sender()
         );
     }
 }

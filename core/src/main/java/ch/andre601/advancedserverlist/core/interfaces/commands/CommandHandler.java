@@ -27,9 +27,9 @@ package ch.andre601.advancedserverlist.core.interfaces.commands;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.SenderMapper;
 
-public interface CommandHandler<S, T extends CmdSender>{
+public interface CommandHandler<S>{
     
-    CommandManager<T> commandHandler();
+    CommandManager<CmdSender> commandHandler();
     
-    SenderMapper<S, T> senderMapper();
+    SenderMapper<S, CmdSender> senderMapper();
 }

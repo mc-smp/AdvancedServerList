@@ -49,4 +49,8 @@ public class BungeeCmdSender implements CmdSender{
     public void sendMsg(String msg, Object... args){
         bungeeAudiences.sender(sender).sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
     }
+    
+    public CommandSender sender(){
+        return sender;
+    }
 }
