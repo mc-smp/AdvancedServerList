@@ -50,7 +50,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-@Command(value = "advancedsercerlist", requiredSender = CmdSender.class)
+@Command("advancedsercerlist|asl")
 @CommandDescription("Main command of the plugin.")
 public class CommandHandler<F, S extends CmdSender>{
     
@@ -60,7 +60,7 @@ public class CommandHandler<F, S extends CmdSender>{
         this.core = core;
     }
     
-    @Command(value = "reload", requiredSender = CmdSender.class)
+    @Command("reload")
     @CommandDescription("Reloads the config.yml and all existing profiles.")
     public void reload(CmdSender sender){
         sender.sendPrefixedMsg("Reloading plugin...");
@@ -82,7 +82,7 @@ public class CommandHandler<F, S extends CmdSender>{
         sender.sendPrefixedMsg("<green>Reload complete!");
     }
     
-    @Command(value = "clearcache", requiredSender = CmdSender.class)
+    @Command("clearcache")
     @CommandDescription("Clears the Favicon and Player cache of the plugin.")
     public void clearCache(CmdSender sender){
         sender.sendPrefixedMsg("Clearing cache...");
@@ -96,7 +96,7 @@ public class CommandHandler<F, S extends CmdSender>{
         sender.sendPrefixedMsg("<green>Cache clearing complete!");
     }
     
-    @Command(value = "migrate <plugin>", requiredSender = CmdSender.class)
+    @Command("migrate <plugin>")
     @CommandDescription("Migrates Profiles from other plugins to itself.")
     public void migrate(
         CmdSender sender,
@@ -164,7 +164,7 @@ public class CommandHandler<F, S extends CmdSender>{
     @Command("profiles")
     @CommandDescription("Subcommand to list, add and copy profiles.")
     public record Profiles<F, S extends CmdSender>(AdvancedServerList<F, S> core){
-        @Command(value = "list", requiredSender = CmdSender.class)
+        @Command("list")
         @CommandDescription("Lists all available profiles with their priority, conditions and if they are valid.")
         public void list(CmdSender sender){
             sender.sendPrefixedMsg("Available Profiles");
@@ -178,7 +178,7 @@ public class CommandHandler<F, S extends CmdSender>{
                 );
         }
         
-        @Command(value = "add <name>", requiredSender = CmdSender.class)
+        @Command("add <name>")
         @CommandDescription("Creates a new profile with default values applied.")
         public void add(
             CmdSender sender,
@@ -206,7 +206,7 @@ public class CommandHandler<F, S extends CmdSender>{
             }
         }
         
-        @Command(value = "copy <profile> <name>", requiredSender = CmdSender.class)
+        @Command("copy <profile> <name>")
         @CommandDescription("Creates a copy of an existing profile.")
         public void copy(
             CmdSender sender,
