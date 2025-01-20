@@ -273,10 +273,10 @@ The event offers the following methods:
 
 Please check the server/proxy's documentation on how to listen for events with your plugin.
 
-[getentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#getentry()
-[setentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setentry(profileentry)
-[iscancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#iscancelled()
-[setcancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setcancelled(boolean)
+[getentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#getentry
+[setentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setentry
+[iscancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#iscancelled
+[setcancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setcancelled
 
 ### PostServerListSetEvent
 
@@ -297,4 +297,4 @@ A convenience method ([`builder()`][builder()]) exists to create a `Builder` ins
 This allows you to customize the Server list using your plugin. Just keep in mind that other plugins may also do the same, overriding your changes.
 
 [builder]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md
-[builder()]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/index.md#builder()
+[builder()]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/index.md#builder

@@ -3,25 +3,25 @@ api: true
 
 methods:
   - name: 'getEntry'
-    description: 'Gets the <a href="../../profiles/profileentry/"><code>ProfileEntry</code></a> currently set.'
+    description: 'Gets the [`ProfileEntry`](../profiles/profileentry/index.md) currently set.'
     returns: The currently used ProfileEntry.
     type:
       name: ProfileEntry
       type: object
-      link: '../../profiles/profileentry/'
+      link: '../profiles/profileentry/index.md'
   - name: 'setEntry'
     description: |-
-      Sets the new <a href="../../profiles/profileentry/"><code>ProfileEntry</code></a> to use.<br>
-      This may not be <code>null</code>.
+      Sets the new [`ProfileEntry`](../profiles/profileentry/index.md) to use.  
+      This may not be `null`.
     parameters:
       - name: 'entry'
-        description: 'The new <a href="../../profiles/profileentry/"><code>ProfileEntry</code></a> to use.'
+        description: 'The new [`ProfileEntry`](../profiles/profileentry/index.md) to use.'
         type: ProfileEntry
         attributes:
           - notnull
     throws:
       - name: 'IllegalArgumentException'
-        description: 'When the provided ProfileEntry is <code>null</code>'
+        description: 'When the provided ProfileEntry is `null`'
     type:
       name: 'void'
   - name: 'isCancelled'

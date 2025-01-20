@@ -11,11 +11,14 @@ methods:
 
 inherits:
   'ch.andre601.advancedserverlist.api.objects.GenericServer':
-    link: '../../../api/objects/genericserver/'
+    link: '../../../api/ch.andre601.advancedserverlist.api/objects/genericserver.md'
     list:
-      - 'getPlayersOnline()'
-      - 'getPlayersMax()'
-      - 'getHost()'
+      - name: 'getPlayersOnline()'
+        link: 'getplayersonline'
+      - name: 'getPlayersMax()'
+        link: 'getplayersmax'
+      - name: 'getHost()'
+        link: 'gethost'
 ---
 
 # <api__interface></api__interface> VelocityProxy

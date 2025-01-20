@@ -12,14 +12,14 @@
 {% set name.text = name.text ~ ")" %}
 
 {% if constructor.deprecated %}
-  {% set name.text = "<api__deprecated></api_deprecated> " ~ name.text %}
+  {% set name.text = "<api__deprecated></api__deprecated> " ~ name.text %}
 {% endif %}
 
 {% for attribute in constructor.attributes %}
   {% set name.text = "<api__{{- attribute -}}></api__{{- attribute -}}> " ~ name.text %}
 {% endfor %}
 
-### {{ name.text }} { #{{ name.text | lower() | replace(' ', '-') | e }} }
+### {{ name.text | e }} { #{{ constructor.name | lower() | replace(' ', '-') | e }} }
 
 {% if constructor.deprecated %}
 /// deprecated | Deprecation Warning
@@ -41,6 +41,18 @@
 {% for parameter in constructor.parameters %}
 - {% for attribute in parameter.attributes %}<api__{{- attribute -}}></api__{{- attribute -}}>{% endfor %} `{{ parameter.type | e}}: {{ parameter.name }}`{% if parameter.description %} - {{ parameter.description }}{% endif %}
 {% endfor %}
+{% endif %}
+
+{% if constructor.seealso %}
+#### See also: { #{{ constructor.name | lower() | replace(' ', '-') | e }}-see-also }
+
+<div class="api-detail__description" markdown>
+
+{% for see in constructor.seealso %}
+- [`{{ see.name }}`]({{ see.link }})
+{% endfor %}
+
+</div> 
 {% endif %}
 
 </div>
