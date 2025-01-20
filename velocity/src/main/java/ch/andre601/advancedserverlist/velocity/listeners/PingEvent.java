@@ -29,7 +29,6 @@ import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.api.velocity.events.PostServerListSetEvent;
 import ch.andre601.advancedserverlist.core.events.PingEventHandler;
 import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 
@@ -42,7 +41,7 @@ public class PingEvent{
         plugin.getProxy().getEventManager().register(plugin, this);
     }
     
-    @Subscribe(order = PostOrder.LAST) // Maintenance has LAST priority, so ASL needs it too.
+    @Subscribe(priority = Short.MIN_VALUE + 1) // Equivalent to PostOrder.LAST which maintenance uses.
     public void onProxyPing(ProxyPingEvent event){
         ProfileEntry entry = PingEventHandler.handleEvent(new VelocityEventWrapper(plugin, event));
         

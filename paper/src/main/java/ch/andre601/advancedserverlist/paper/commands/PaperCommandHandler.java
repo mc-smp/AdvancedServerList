@@ -33,6 +33,7 @@ import org.incendo.cloud.SenderMapper;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.PaperCommandManager;
 
+@SuppressWarnings("UnstableApiUsage")
 public class PaperCommandHandler implements CommandHandler<CommandSourceStack>{
     
     private final PaperCore plugin;
@@ -51,7 +52,7 @@ public class PaperCommandHandler implements CommandHandler<CommandSourceStack>{
     @Override
     public SenderMapper<CommandSourceStack, CmdSender> senderMapper(){
         return SenderMapper.create(
-            cmdSourceStack -> new PaperCmdSender(cmdSourceStack.getSender()),
+            PaperCmdSender::new,
             sender -> ((PaperCmdSender)sender).getCommandSourceStack()
         );
     }

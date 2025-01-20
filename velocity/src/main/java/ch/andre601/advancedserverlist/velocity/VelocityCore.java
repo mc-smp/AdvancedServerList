@@ -30,7 +30,6 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
-import ch.andre601.advancedserverlist.velocity.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandHandler;
 import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
@@ -41,7 +40,6 @@ import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityServ
 import com.alessiodp.libby.Library;
 import com.alessiodp.libby.VelocityLibraryManager;
 import com.google.inject.Inject;
-import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -102,6 +100,14 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Subscribe
     public void init(ProxyInitializeEvent event){
+        this.logger.info("Loading Libraries. This may take a while...");
+        if(loadLibraries()){
+            this.logger.info("Library Loading complete!");
+        }else{
+            this.logger.warn("There were issues while loading libraries. The plugin won't enable to avoid issues.");
+            return;
+        }
+        
         this.core = AdvancedServerList.init(this,
             VelocityPlayerPlaceholders.init(), VelocityServerPlaceholders.init(this), VelocityProxyPlaceholders.init(this));
     }
@@ -111,17 +117,6 @@ public class VelocityCore implements PluginCore<Favicon>{
         core.disable();
         if(scheduledTask != null)
             scheduledTask.cancel();
-    }
-    
-    @Override
-    public void loadCommands(){
-        CommandMeta command = getProxy().getCommandManager()
-            .metaBuilder("advancedserverlist")
-            .aliases("asl")
-            .build();
-        
-        getProxy().getCommandManager().register(command, new CmdAdvancedServerList(this));
-        getPluginLogger().success("Registered <white>/advancedserverlist</white>!");
     }
     
     @Override
@@ -248,6 +243,21 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     public Map<String, ServerPing> getFetchedServers(){
         return fetchedServers;
+    }
+    
+    private boolean loadLibraries(){
+        try{
+            if(libraryManager == null){
+                libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
+                libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+            }
+            
+            libraryManager.configureFromJSON("cloud-dependencies.json");
+            return true;
+        }catch(Exception ex){
+            this.logger.warn("Encountered an Exception while trying to load dependencies.", ex);
+            return false;
+        }
     }
     
     private void fetchServers(){

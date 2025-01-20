@@ -42,11 +42,18 @@
         
         <api.version>4.1.0</api.version>
 
+        <!-- Adventure versions -->
         <dependency.adventure-api>4.18.0</dependency.adventure-api>
         <dependency.adventure-text-minimessage>4.18.0</dependency.adventure-text-minimessage>
         <dependency.adventure-text-serializer-legacy>4.18.0</dependency.adventure-text-serializer-legacy>
         <dependency.adventure-platform-bungeecord>4.3.4</dependency.adventure-platform-bungeecord>
+        <!-- Configurate version -->
         <dependency.configurate-yaml>4.1.2</dependency.configurate-yaml>
+        <!-- Cloud versions -->
+        <dependency.cloud-annotations>2.0.0</dependency.cloud-annotations>
+        <dependency.cloud-bungee>2.0.0-beta.10</dependency.cloud-bungee>
+        <dependency.cloud-paper>2.0.0-beta.10</dependency.cloud-paper>
+        <dependency.cloud-velocity>2.0.0-beta.10</dependency.cloud-velocity>
         
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>

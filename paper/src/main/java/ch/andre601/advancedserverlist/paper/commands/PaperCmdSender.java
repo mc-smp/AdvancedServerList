@@ -30,6 +30,7 @@ import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 
+@SuppressWarnings("UnstableApiUsage")
 public class PaperCmdSender implements CmdSender{
     
     private final CommandSender sender;
@@ -40,7 +41,7 @@ public class PaperCmdSender implements CmdSender{
     }
     
     public PaperCmdSender(CommandSourceStack commandSourceStack){
-        this(null, commandSourceStack);
+        this(commandSourceStack.getSender(), commandSourceStack);
     }
     
     private PaperCmdSender(CommandSender sender, CommandSourceStack commandSourceStack){

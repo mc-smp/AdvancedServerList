@@ -1,0 +1,16 @@
+{
+  "libraries": [
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-annotations",
+      "version": "${dependency.cloud-annotations}",
+      "resolveTransitiveDependencies": true
+    },
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-paper",
+      "version": "${dependency.cloud-paper}",
+      "resolveTransitiveDependencies": true
+    }
+  ]
+}

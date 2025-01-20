@@ -26,7 +26,6 @@
 package ch.andre601.advancedserverlist.bungeecord;
 
 import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCommandHandler;
-import ch.andre601.advancedserverlist.bungeecord.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.bungeecord.listeners.JoinEvent;
 import ch.andre601.advancedserverlist.bungeecord.listeners.PingEvent;
 import ch.andre601.advancedserverlist.bungeecord.logging.BungeeLogger;
@@ -106,12 +105,6 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         core.disable();
         getProxy().getScheduler().cancel(this);
         audiences.close();
-    }
-    
-    @Override
-    public void loadCommands(){
-        getProxy().getPluginManager().registerCommand(this, new CmdAdvancedServerList(this));
-        getPluginLogger().success("Registered <white>/advancedserverlist</white>!");
     }
     
     @Override

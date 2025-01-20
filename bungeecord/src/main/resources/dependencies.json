@@ -23,6 +23,18 @@
       "artifactId": "configurate-yaml",
       "version": "${dependency.configurate-yaml}",
       "resolveTransitiveDependencies": true
+    },
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-annotations",
+      "version": "${dependency.cloud-annotations}",
+      "resolveTransitiveDependencies": true
+    },
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-bungee",
+      "version": "${dependency.cloud-bungee}",
+      "resolveTransitiveDependencies": true
     }
   ]
 }

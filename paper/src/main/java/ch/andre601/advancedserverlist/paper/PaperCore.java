@@ -30,7 +30,6 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
-import ch.andre601.advancedserverlist.paper.commands.CmdAdvancedServerList;
 import ch.andre601.advancedserverlist.paper.commands.PaperCommandHandler;
 import ch.andre601.advancedserverlist.paper.listeners.LoadEvent;
 import ch.andre601.advancedserverlist.paper.logging.PaperLogger;
@@ -56,6 +55,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.logging.Level;
 
 public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon>{
     
@@ -69,8 +69,28 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     private PaperLibraryManager libraryManager = null;
     
+    private boolean successfulLoad = false;
+    
+    @Override
+    public void onLoad(){
+        getLogger().info("Loading Libraries. This may take a while...");
+        successfulLoad = loadLibraries();
+        if(successfulLoad){
+            getLogger().info("Library Loading complete!");
+        }else{
+            getLogger().warning("There were issues while loading libraries.");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+    }
+    
     @Override
     public void onEnable(){
+        if(!successfulLoad){
+            getLogger().warning("Libraries couldn't be loaded during load. Disabling plugin...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        
         this.commandHandler = new PaperCommandHandler(this);
         this.core = AdvancedServerList.init(this, new PaperPlayerPlaceholders(), new PaperServerPlaceholders(this));
         
@@ -89,15 +109,6 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
             worldCache = null;
         
         getCore().disable();
-    }
-    
-    @Override
-    public void loadCommands(){
-        if(getServer().getCommandMap().register("asl", new CmdAdvancedServerList(this))){
-            getPluginLogger().success("Registered <white>/advancedserverlist:advancedserverlist</white>!");
-        }else{
-            getPluginLogger().success("Registered <white>/asl:advancedserverlist</white>!");
-        }
     }
     
     @Override
@@ -221,6 +232,21 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         });
         
         return players.size();
+    }
+    
+    private boolean loadLibraries(){
+        try{
+            if(libraryManager == null){
+                libraryManager = new PaperLibraryManager(this);
+                libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
+            }
+            
+            libraryManager.configureFromJSON("cloud-dependencies.json");
+            return true;
+        }catch(Exception ex){
+            getLogger().log(Level.WARNING, "Encountered an issue while loading dependencies.", ex);
+            return false;
+        }
     }
     
     private String getNewVersion(){

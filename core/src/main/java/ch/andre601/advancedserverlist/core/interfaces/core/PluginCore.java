@@ -36,8 +36,6 @@ import java.nio.file.Path;
 
 public interface PluginCore<F>{
     
-    void loadCommands();
-    
     void loadEvents();
     
     void loadMetrics();
