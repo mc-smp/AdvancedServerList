@@ -4,13 +4,73 @@
       "groupId": "org{}incendo",
       "artifactId": "cloud-annotations",
       "version": "${dependency.cloud-annotations}",
-      "resolveTransitiveDependencies": true
+      "resolveTransitiveDependencies": true,
+      "excludedTransitiveDependencies": [
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-api"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-minimessage"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-serializer-plain"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-key"
+        }
+      ]
     },
     {
       "groupId": "org{}incendo",
       "artifactId": "cloud-paper",
       "version": "${dependency.cloud-paper}",
-      "resolveTransitiveDependencies": true
+      "resolveTransitiveDependencies": true,
+      "excludedTransitiveDependencies": [
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-api"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-minimessage"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-serializer-plain"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-key"
+        }
+      ]
+    },
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-minecraft-extras",
+      "version": "${dependency.cloud-minecraft-extras}",
+      "resolveTransitiveDependencies": true,
+      "excludedTransitiveDependencies": [
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-api"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-minimessage"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-text-serializer-plain"
+        },
+        {
+          "groupId": "net{}kyori",
+          "artifactId": "adventure-key"
+        }
+      ]
     }
   ]
 }

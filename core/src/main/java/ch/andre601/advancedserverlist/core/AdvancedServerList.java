@@ -32,6 +32,7 @@ import ch.andre601.advancedserverlist.core.commands.CommandHandler;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
+import ch.andre601.advancedserverlist.core.interfaces.commands.PlayerOnly;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
@@ -165,15 +166,7 @@ public class AdvancedServerList<F>{
             return;
         }
         
-        getPlugin().loadFaviconHandler(this);
-        
-        CommandManager<CmdSender> commandManager = plugin.getCommandManager();
-        
-        commandManager.parameterInjectorRegistry().registerInjector(AdvancedServerList.class, ParameterInjector.constantInjector(this));
-        commandManager.createHelpHandler();
-        
-        AnnotationParser<CmdSender> annotationParser = new AnnotationParser<>(commandManager, CmdSender.class);
-        annotationParser.parse(new CommandHandler());
+        loadCommands();
         
         plugin.loadEvents();
         getPlayerHandler().load();
@@ -210,5 +203,22 @@ public class AdvancedServerList<F>{
     
     private void addPlaceholder(PlaceholderProvider placeholderProvider){
         AdvancedServerList.getApi().addPlaceholderProvider(placeholderProvider);
+    }
+    
+    private void loadCommands(){
+        getPlugin().loadFaviconHandler(this);
+        
+        CommandManager<CmdSender> commandManager = plugin.getCommandManager();
+        
+        commandManager.parameterInjectorRegistry().registerInjector(AdvancedServerList.class, ParameterInjector.constantInjector(this));
+        
+        AnnotationParser<CmdSender> annotationParser = new AnnotationParser<>(commandManager, CmdSender.class);
+        annotationParser.registerBuilderModifier(
+            PlayerOnly.class,
+            (annotation, builder) -> builder.meta(CommandHandler.PLAYER_ONLY, annotation.value())
+        );
+        annotationParser.parse(new CommandHandler(commandManager));
+        
+        getPlugin().getPluginLogger().success("Loaded Command <white>/advancedserverlist</white>!");
     }
 }

@@ -28,7 +28,9 @@ package ch.andre601.advancedserverlist.paper.commands;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PaperCmdSender implements CmdSender{
@@ -57,6 +59,16 @@ public class PaperCmdSender implements CmdSender{
     @Override
     public void sendMsg(String msg, Object... args){
         sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
+    }
+    
+    @Override
+    public Audience audience(){
+        return sender();
+    }
+    
+    @Override
+    public boolean isPlayer(){
+        return sender() instanceof Player;
     }
     
     public CommandSender sender(){

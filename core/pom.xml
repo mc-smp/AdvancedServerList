@@ -140,6 +140,12 @@
             <version>${dependency.cloud-annotations}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.incendo</groupId>
+            <artifactId>cloud-minecraft-extras</artifactId>
+            <version>${dependency.cloud-minecraft-extras}</version>
+            <scope>provided</scope>
+        </dependency>
         
         <!-- Plugins -->
         <dependency>

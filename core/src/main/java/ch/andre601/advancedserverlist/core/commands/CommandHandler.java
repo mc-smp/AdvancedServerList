@@ -24,24 +24,35 @@
 
 package ch.andre601.advancedserverlist.core.commands;
 
+import ch.andre601.advancedserverlist.api.objects.NullBool;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
+import ch.andre601.advancedserverlist.core.interfaces.commands.PlayerOnly;
 import ch.andre601.advancedserverlist.core.migration.minimotd.MiniMOTDConfigMigrator;
 import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
 import ch.andre601.advancedserverlist.core.profiles.ServerListProfile;
 import ch.andre601.advancedserverlist.core.profiles.profile.ProfileSerializer;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
+import org.incendo.cloud.help.result.CommandEntry;
+import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.minecraft.extras.MinecraftHelp;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,12 +61,44 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-@Command("advancedsercerlist|asl")
+@Command("advancedserverlist|asl")
 @CommandDescription("Main command of the plugin.")
+@Permission("advancedserverlist.admin")
+@PlayerOnly
 public class CommandHandler{
+    
+    public static final CloudKey<Boolean> PLAYER_ONLY = CloudKey.of("player_only", Boolean.class);
+    
+    private final CommandManager<CmdSender> commandManager;
+    private final MinecraftHelp<CmdSender> help;
+    
+    public CommandHandler(CommandManager<CmdSender> commandManager){
+        this.commandManager = commandManager;
+        this.help = MinecraftHelp.<CmdSender>builder()
+            .commandManager(commandManager)
+            .audienceProvider(CmdSender::audience)
+            .commandPrefix("/advancedserverlist help")
+            .colors(MinecraftHelp.helpColors(
+                NamedTextColor.WHITE, NamedTextColor.AQUA, NamedTextColor.WHITE, NamedTextColor.GRAY, NamedTextColor.DARK_GRAY
+            ))
+            .build();
+    }
+    
+    @Command("help [query]")
+    @CommandDescription("Displays the commands available for AdvancedServerList")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.help"})
+    @PlayerOnly
+    public void help(
+        CmdSender sender,
+        @Nullable @Argument(description = "Query to receive info of a specific command.", suggestions = "help") @Greedy String query
+    ){
+        this.help.queryCommands(query == null ? "" : query, sender);
+    }
     
     @Command("reload")
     @CommandDescription("Reloads the config.yml and all existing profiles.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.reload"})
+    @PlayerOnly
     public void reload(CmdSender sender, AdvancedServerList<?> core){
         sender.sendPrefixedMsg("Reloading plugin...");
         
@@ -69,7 +112,7 @@ public class CommandHandler{
         if(core.getFileHandler().reloadProfiles()){
             sender.sendPrefixedMsg("<green>(Re)loaded </green>%d<green> Profile(s)!", core.getFileHandler().getProfiles().size());
         }else{
-            sender.sendErrorMsg("<red>Errpr while (re)loading profiles.");
+            sender.sendErrorMsg("<red>Error while (re)loading profiles.");
             sender.sendErrorMsg("<red>Check console for details.");
         }
         
@@ -78,6 +121,8 @@ public class CommandHandler{
     
     @Command("clearcache")
     @CommandDescription("Clears the Favicon and Player cache of the plugin.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.clearcache"})
+    @PlayerOnly
     public void clearCache(CmdSender sender, AdvancedServerList<?> core){
         sender.sendPrefixedMsg("Clearing cache...");
         
@@ -92,6 +137,8 @@ public class CommandHandler{
     
     @Command("migrate <plugin>")
     @CommandDescription("Migrates Profiles from other plugins to itself.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.migrate"})
+    @PlayerOnly
     public void migrate(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -140,34 +187,60 @@ public class CommandHandler{
             sender.sendMsg(" <grey>-</grey> <click:suggest_command:/asl migrate minimotd>MiniMOTD</click>");
         }
     }
+    
     @Command("profiles list")
     @CommandDescription("Lists all available profiles with their priority, conditions and if they are valid.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @PlayerOnly
     public void list(CmdSender sender, AdvancedServerList<?> core){
-        sender.sendPrefixedMsg("Available Profiles");
         sender.sendMsg();
+        sender.sendPrefixedMsg("Available Profiles");
+        sender.sendMsg("<dark_grey>│");
         
-        core.getFileHandler().getProfiles().stream()
-            .sorted(Comparator.comparingInt(ServerListProfile::priority).reversed())
-            .forEach(
-                profile -> sender.sendMsg(" <grey>-</grey> " +
+        List<ServerListProfile> profiles = core.getFileHandler().getProfiles().stream()
+                .sorted(Comparator.comparingInt(ServerListProfile::priority).reversed())
+                .toList();
+        
+        if(profiles.isEmpty()){
+            sender.sendMsg("<dark_grey>├─</dark_grey> <i>No profiles found</i>");
+        }else{
+            for(int i = 0; i < profiles.size(); i++){
+                sender.sendMsg(
+                    "<dark_grey>%s─</dark_grey> <aqua>" +
                     "<hover:show_text:\"%s\">" +
                     "<click:suggest_command:/asl profiles info %s>" +
                     "%s" +
                     "</click>" +
-                    "</hover>", hover(profile), profile.file(), profile.file())
-            );
-        
+                    "</hover>" +
+                    "</aqua>",
+                    (i + 1) == profiles.size() ? "└" : "├",
+                    hover(profiles.get(i)),
+                    profiles.get(i).file(),
+                    profiles.get(i).file()
+                );
+            }
+        }
+        if(sender.isPlayer()){
+            sender.sendMsg();
+            sender.sendMsg("<grey>[<white>Hover a name for details. Click for a command</white>]</grey>");
+        }
         sender.sendMsg();
-        sender.sendMsg("<grey>[<white>Hover a name for details. Click for a command</white>]</grey>");
     }
     
     @Command("profiles info <profile>")
     @CommandDescription("Provides info about a profile.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @PlayerOnly(true)
     public void info(
         CmdSender sender,
         AdvancedServerList<?> core,
         @Nonnull @Argument(description = "Name of the profile to view.", suggestions = "profiles") String profile
     ){
+        if(!sender.isPlayer()){
+            sender.sendErrorMsg("<red>This command can only be executed play Players!");
+            return;
+        }
+        
         if(profile.isEmpty()){
             sender.sendErrorMsg("<red>Insufficient arguments.");
             sender.sendErrorMsg("<red>Please provide a proper profile name.");
@@ -186,86 +259,90 @@ public class CommandHandler{
             return;
         }
         
-        sender.sendPrefixedMsg("Profile Info - <white>%s</white>", slp.file());
         sender.sendMsg();
-        sender.sendMsg("<grey>Profiles [<white>Hover for info</white>]:");
+        sender.sendPrefixedMsg("Profile Info [<white>%s</white>]", slp.file());
+        sender.sendMsg("<dark_grey>│");
+        sender.sendMsg("<dark_grey>│</dark_grey> [<grey>Hover for details</grey>]");
+        sender.sendMsg("<dark_grey>│");
+        sender.sendMsg("<dark_grey>├─</dark_grey> [<aqua><hover:show_text:\"%d\">Priority</hover></aqua>]", slp.priority());
+        sender.sendMsg("<dark_grey>│");
+        sender.sendMsg(
+            "<dark_grey>├─</dark_grey> [<%s><hover:show_text:\"%s\">Condition</hover></%s>]",
+            slp.condition() == null || slp.condition().isEmpty() ? "red" : "green",
+            slp.condition() == null || slp.condition().isEmpty() ? "<i>Not set</i>" : slp.condition(),
+            slp.condition() == null || slp.condition().isEmpty() ? "red" : "green"
+        );
+        sender.sendMsg("<dark_grey>│");
+        sender.sendMsg(
+            "<dark_grey>├─</dark_grey> [<%s>Profiles</%s>]",
+            slp.profiles().isEmpty() ? "red" : "green",
+            slp.profiles().isEmpty() ? "red" : "green"
+        );
         if(slp.profiles().isEmpty()){
-            sender.sendMsg(" <grey>-</grey> <i>No profiles</i>");
+            sender.sendMsg("<dark_grey>│");
         }else{
             for(int i = 0; i < slp.profiles().size(); i++){
-                ProfileEntry entry = slp.profiles().get(i);
-                
-                sender.sendMsg(" <grey>-</grey> <hover:show_text:\"%s\">#%d</hover>", profileHover(entry), i + 1);
+                sender.sendMsg(
+                    "<dark_grey>│   %s─ <aqua><hover:show_text:\"%s\">#%d</hover>",
+                    (i + 1) == slp.profiles().size() ? "└" : "├",
+                    profileHover(slp.profiles().get(i)),
+                    i + 1
+                );
             }
         }
         
         ProfileEntry entry = slp.defaultProfile();
         
-        sender.sendMsg();
-        sender.sendMsg("<grey>MOTD:</grey>");
-        if(entry.motd().isEmpty()){
-            sender.sendMsg(" <grey>-</grey> <i>No MOTD</i>");
-        }else{
-            entry.motd().forEach(
-                line -> sender.sendMsg(" <grey>-</grey> %s", line)
-            );
-        }
-        
-        sender.sendMsg();
         sender.sendMsg(
-            "<grey>Favicon:</grey> %s",
-            entry.favicon() == null || entry.favicon().isEmpty() ? "<i>None</i>" : entry.favicon());
-        
-        sender.sendMsg();
-        sender.sendMsg(
-            "<grey>Hide Playercount?</grey> %s",
-            entry.hidePlayersEnabled().getOrDefault(false) ? "<green>Enabled</green>" : "<red>Disabled</red>"
+            """
+            <dark_grey>│
+            ├─ <white>[%s]</white>
+            │
+            ├─ <white>[%s]</white>
+            │
+            └─ <white>[<aqua>Player count</aqua>]</white>
+                │
+                ├─ <white>[%s]</white>
+                ├─ <white>[%s]</white>
+                │
+                ├─ <white>[%s]</white>
+                │
+                ├─ <white>[%s]</white>
+                │
+                ├─ <white>[<aqua>Extra Players</aqua>]</white>
+                │    │
+                │    ├─ <white>[%s]</white>
+                │    └─ <white>[%s]</white>
+                │
+                ├─ <white>[<aqua>Max Players</aqua>]</white>
+                │    │
+                │    ├─ <white>[%s]</white>
+                │    └─ <white>[%s]</white>
+                │
+                └─ <white>[<aqua>Online Players</aqua>]</white>
+                     │
+                     ├─ <white>[%s]</white>
+                     └─ <white>[%s]</white>
+            """,
+            optionHoverList("MOTD", entry.motd()),
+            optionHoverStr("Favicon", entry.favicon()),
+            optionHoverBool("Hide Player count?", entry.hidePlayersEnabled()),
+            optionHoverBool("Hide Player count hover?", entry.hidePlayersHoverEnabled()),
+            optionHoverList("Player count hover", entry.players()),
+            optionHoverStr("Player count text", entry.playerCountText()),
+            optionHoverBool("Enabled?", entry.extraPlayersEnabled()),
+            optionHoverStr("Amount", entry.extraPlayersCount()),
+            optionHoverBool("Enabled?", entry.maxPlayersEnabled()),
+            optionHoverStr("Amount", entry.maxPlayersCount()),
+            optionHoverBool("Enabled?", entry.onlinePlayersEnabled()),
+            optionHoverStr("Amount", entry.onlinePlayersCount())
         );
-        sender.sendMsg(
-            "<grey>Hide Playercount Hover?</grey> %s",
-            entry.hidePlayersHoverEnabled().getOrDefault(false) ? "<green>Enabled</green>" : "<red>Disabled</red>"
-        );
-        
-        sender.sendMsg();
-        sender.sendMsg("<grey>Playercount Hover:</grey>");
-        if(entry.players().isEmpty()){
-            sender.sendMsg(" <grey>-</grey> <i>None</i>");
-        }else{
-            entry.players().forEach(
-                line -> sender.sendMsg(" <grey>-</grey> %s", line)
-            );
-        }
-        
-        sender.sendMsg();
-        sender.sendMsg(
-            "<grey>Playercount Text:</grey> %s",
-            entry.playerCountText() == null || entry.playerCountText().isEmpty() ? "<i>None</i>" : entry.playerCountText()
-        );
-        
-        sender.sendMsg();
-        sender.sendMsg(
-            "<grey>Extra Players:</grey> %s",
-            entry.extraPlayersEnabled().getOrDefault(false) ?
-                (entry.extraPlayersCount() == null || entry.extraPlayersCount().isEmpty() ? "<i>None</i>" : entry.extraPlayersCount()) :
-                "<red>Disabled</red>"
-        );
-        sender.sendMsg(
-            "<grey>Max Players:</grey> %s",
-            entry.maxPlayersEnabled().getOrDefault(false) ?
-                (entry.maxPlayersCount() == null || entry.maxPlayersCount().isEmpty() ? "<i>None</i>" : entry.maxPlayersCount()) :
-                "<red>Disabled</red>"
-        );
-        sender.sendMsg(
-            "<grey>Online Players:</grey> %s",
-            entry.onlinePlayersEnabled().getOrDefault(false) ?
-                (entry.onlinePlayersCount() == null || entry.onlinePlayersCount().isEmpty() ? "<i>None</i>" : entry.onlinePlayersCount()) :
-                "<red>Disabled</red>"
-        );
-        sender.sendMsg();
     }
     
     @Command("profiles add <name>")
     @CommandDescription("Creates a new profile with default values applied.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @PlayerOnly
     public void add(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -295,6 +372,8 @@ public class CommandHandler{
     
     @Command("profiles copy <profile> <name>")
     @CommandDescription("Creates a copy of an existing profile.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @PlayerOnly
     public void copy(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -390,6 +469,23 @@ public class CommandHandler{
         }
     }
     
+    @Suggestions("help")
+    public List<String> helpQueries(CommandContext<CmdSender> context){
+        return this.commandManager.createHelpHandler()
+            .queryRootIndex(context.sender())
+            .entries()
+            .stream()
+            .filter(entry -> context.hasPermission(entry.command().commandPermission()))
+            .filter(entry -> {
+                if(entry.command().commandMeta().contains(PLAYER_ONLY) && entry.command().commandMeta().get(PLAYER_ONLY))
+                    return context.sender().isPlayer();
+                
+                return true;
+            })
+            .map(CommandEntry::syntax)
+            .toList();
+    }
+    
     @Suggestions("profiles")
     public List<String> profilesSuggestions(CommandInput input, AdvancedServerList<?> core){
         String name = input.readString();
@@ -433,6 +529,39 @@ public class CommandHandler{
                 profile.condition() == null || profile.condition().isEmpty() ? "<i>None</i>" : profile.condition(), 
                 profile.isInvalidProfile() ? "<red>x</red>" : "<green>✓</green>"
             );
+    }
+    
+    private String optionHoverBool(String name, NullBool value){
+        return optionHover0(
+            value != null && value.getOrDefault(false),
+            name,
+            value == null || !value.getOrDefault(false) ? "<red>Disabled</red>" : "<green>Enabled</green>"
+        );
+    }
+    
+    private String optionHoverStr(String name, String value){
+        return optionHover0(
+            value != null && !value.isEmpty(),
+            name,
+            value == null || value.isEmpty() ? "<i>Not set</i>" : value
+        );
+    }
+    
+    private String optionHoverList(String name, List<String> values){
+        return optionHover0(
+            values != null && !values.isEmpty(),
+            name,
+            values == null || values.isEmpty() ? "<i>Not set</i>" : String.join("\n<reset>", values)
+        );
+    }
+    
+    private String optionHover0(boolean set, String name, String value){
+        return "<%s><hover:show_text:\"%s\">%s</hover></%s>".formatted(
+            set ? "green" : "red",
+            value,
+            name,
+            set ? "green" : "red"
+        );
     }
     
     private String profileHover(ProfileEntry entry){

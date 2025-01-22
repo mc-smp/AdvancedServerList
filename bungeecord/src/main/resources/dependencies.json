@@ -35,6 +35,12 @@
       "artifactId": "cloud-bungee",
       "version": "${dependency.cloud-bungee}",
       "resolveTransitiveDependencies": true
+    },
+    {
+      "groupId": "org{}incendo",
+      "artifactId": "cloud-minecraft-extras",
+      "version": "${dependency.cloud-minecraft-extras}",
+      "resolveTransitiveDependencies": true
     }
   ]
 }

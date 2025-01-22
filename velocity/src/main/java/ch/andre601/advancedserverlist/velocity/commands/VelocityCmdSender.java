@@ -28,6 +28,8 @@ package ch.andre601.advancedserverlist.velocity.commands;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
+import net.kyori.adventure.audience.Audience;
 
 public record VelocityCmdSender(CommandSource sender) implements CmdSender{
     @Override
@@ -38,5 +40,15 @@ public record VelocityCmdSender(CommandSource sender) implements CmdSender{
     @Override
     public void sendMsg(String msg, Object... args){
         sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
+    }
+    
+    @Override
+    public Audience audience(){
+        return sender;
+    }
+    
+    @Override
+    public boolean isPlayer(){
+        return sender instanceof Player;
     }
 }

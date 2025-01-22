@@ -25,6 +25,8 @@
 
 package ch.andre601.advancedserverlist.core.interfaces.commands;
 
+import net.kyori.adventure.audience.Audience;
+
 public interface CmdSender{
     
     String prefix = "<grey>[<gradient:aqua:white>AdvancedServerList</gradient>] ";
@@ -45,4 +47,8 @@ public interface CmdSender{
     default void sendErrorMsg(String msg, Object... args){
         sendMsg(errorPrefix + msg, args);
     }
+    
+    Audience audience();
+    
+    boolean isPlayer();
 }

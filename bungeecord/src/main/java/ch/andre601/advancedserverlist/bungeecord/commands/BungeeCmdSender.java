@@ -27,8 +27,10 @@ package ch.andre601.advancedserverlist.bungeecord.commands;
 
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.parsing.ComponentParser;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class BungeeCmdSender implements CmdSender{
     
@@ -48,6 +50,16 @@ public class BungeeCmdSender implements CmdSender{
     @Override
     public void sendMsg(String msg, Object... args){
         bungeeAudiences.sender(sender).sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
+    }
+    
+    @Override
+    public Audience audience(){
+        return bungeeAudiences.sender(sender);
+    }
+    
+    @Override
+    public boolean isPlayer(){
+        return sender instanceof ProxiedPlayer;
     }
     
     public CommandSender sender(){

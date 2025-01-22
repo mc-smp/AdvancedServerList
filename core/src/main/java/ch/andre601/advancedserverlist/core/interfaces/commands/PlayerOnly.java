@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package ch.andre601.advancedserverlist.core.interfaces.commands;
 
-import java.util.Locale;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public abstract class PluginCommand{
-    
-    private final String name;
-    
-    public PluginCommand(String name){
-        this.name = name;
-    }
-    
-    public String name(){
-        return name;
-    }
-    
-    public String permission(){
-        return "advancedserverlist.command." + name().toLowerCase(Locale.ROOT);
-    }
-    
-    public abstract void handle(CmdSender sender, String[] args);
-    
-    public abstract String usage();
-    
-    public abstract String description();
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface PlayerOnly{
+    boolean value() default false;
 }
