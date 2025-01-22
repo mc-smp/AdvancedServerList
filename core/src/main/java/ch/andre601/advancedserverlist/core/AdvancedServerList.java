@@ -32,7 +32,7 @@ import ch.andre601.advancedserverlist.core.commands.CommandHandler;
 import ch.andre601.advancedserverlist.core.compat.maintenance.MaintenancePlaceholder;
 import ch.andre601.advancedserverlist.core.file.FileHandler;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.interfaces.commands.PlayerOnly;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandType;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
@@ -214,8 +214,8 @@ public class AdvancedServerList<F>{
         
         AnnotationParser<CmdSender> annotationParser = new AnnotationParser<>(commandManager, CmdSender.class);
         annotationParser.registerBuilderModifier(
-            PlayerOnly.class,
-            (annotation, builder) -> builder.meta(CommandHandler.PLAYER_ONLY, annotation.value())
+            CommandType.class,
+            (annotation, builder) -> builder.meta(CommandHandler.COMMAND_TYPE, annotation.value())
         );
         annotationParser.parse(new CommandHandler(commandManager));
         

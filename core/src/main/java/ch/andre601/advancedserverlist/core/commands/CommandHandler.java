@@ -28,7 +28,7 @@ import ch.andre601.advancedserverlist.api.objects.NullBool;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.interfaces.commands.PlayerOnly;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandType;
 import ch.andre601.advancedserverlist.core.migration.minimotd.MiniMOTDConfigMigrator;
 import ch.andre601.advancedserverlist.core.migration.serverlistplus.SLPConfigMigrator;
 import ch.andre601.advancedserverlist.core.profiles.ServerListProfile;
@@ -64,10 +64,10 @@ import java.util.Locale;
 @Command("advancedserverlist|asl")
 @CommandDescription("Main command of the plugin.")
 @Permission("advancedserverlist.admin")
-@PlayerOnly
+@CommandType(CommandType.Type.ALL)
 public class CommandHandler{
     
-    public static final CloudKey<Boolean> PLAYER_ONLY = CloudKey.of("player_only", Boolean.class);
+    public static final CloudKey<CommandType.Type> COMMAND_TYPE = CloudKey.of("command_type", CommandType.Type.class);
     
     private final CommandManager<CmdSender> commandManager;
     private final MinecraftHelp<CmdSender> help;
@@ -87,7 +87,7 @@ public class CommandHandler{
     @Command("help [query]")
     @CommandDescription("Displays the commands available for AdvancedServerList")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.help"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void help(
         CmdSender sender,
         @Nullable @Argument(description = "Query to receive info of a specific command.", suggestions = "help") @Greedy String query
@@ -98,7 +98,7 @@ public class CommandHandler{
     @Command("reload")
     @CommandDescription("Reloads the config.yml and all existing profiles.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.reload"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void reload(CmdSender sender, AdvancedServerList<?> core){
         sender.sendPrefixedMsg("Reloading plugin...");
         
@@ -122,7 +122,7 @@ public class CommandHandler{
     @Command("clearcache")
     @CommandDescription("Clears the Favicon and Player cache of the plugin.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.clearcache"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void clearCache(CmdSender sender, AdvancedServerList<?> core){
         sender.sendPrefixedMsg("Clearing cache...");
         
@@ -138,7 +138,7 @@ public class CommandHandler{
     @Command("migrate <plugin>")
     @CommandDescription("Migrates Profiles from other plugins to itself.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.migrate"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void migrate(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -191,7 +191,7 @@ public class CommandHandler{
     @Command("profiles list")
     @CommandDescription("Lists all available profiles with their priority, conditions and if they are valid.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void list(CmdSender sender, AdvancedServerList<?> core){
         sender.sendMsg();
         sender.sendPrefixedMsg("Available Profiles");
@@ -230,7 +230,7 @@ public class CommandHandler{
     @Command("profiles info <profile>")
     @CommandDescription("Provides info about a profile.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
-    @PlayerOnly(true)
+    @CommandType(CommandType.Type.PLAYER_ONLY)
     public void info(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -342,7 +342,7 @@ public class CommandHandler{
     @Command("profiles add <name>")
     @CommandDescription("Creates a new profile with default values applied.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void add(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -373,7 +373,7 @@ public class CommandHandler{
     @Command("profiles copy <profile> <name>")
     @CommandDescription("Creates a copy of an existing profile.")
     @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
-    @PlayerOnly
+    @CommandType(CommandType.Type.ALL)
     public void copy(
         CmdSender sender,
         AdvancedServerList<?> core,
@@ -477,10 +477,9 @@ public class CommandHandler{
             .stream()
             .filter(entry -> context.hasPermission(entry.command().commandPermission()))
             .filter(entry -> {
-                if(entry.command().commandMeta().contains(PLAYER_ONLY) && entry.command().commandMeta().get(PLAYER_ONLY))
-                    return context.sender().isPlayer();
+                CommandType.Type type = entry.command().commandMeta().getOrDefault(COMMAND_TYPE, CommandType.Type.ALL);
                 
-                return true;
+                return type == CommandType.Type.ALL || type == CommandType.Type.PLAYER_ONLY && context.sender().isPlayer();
             })
             .map(CommandEntry::syntax)
             .toList();

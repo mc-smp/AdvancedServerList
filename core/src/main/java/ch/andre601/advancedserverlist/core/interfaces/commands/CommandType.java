@@ -31,6 +31,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface PlayerOnly{
-    boolean value() default false;
+public @interface CommandType{
+    Type value();
+    
+    enum Type{
+        ALL,
+        PLAYER_ONLY
+    }
 }
