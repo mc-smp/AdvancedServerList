@@ -23,8 +23,7 @@ The following subcommands are available (Subcommands are case-insensitive):
 
 ### `help [query]` { #help }
 
-**Permission:** `advancedserverlist.command.help`
-
+**Permission:** `advancedserverlist.command.help`  
 **Arguments:**
 
 - `[query]` - Optional search query to receive help info from.
@@ -51,8 +50,7 @@ Clears the currently cached favicons and players.
 
 ### `migrate <plugin>` { #migrate }
 
-**Permission:** `advancedserverlist.command.migrate`
-
+**Permission:** `advancedserverlist.command.migrate`  
 **Arguments:**
 
 - `<plugin>` - The plugin to migrate from.
@@ -64,8 +62,7 @@ Check the [Migration Page](../migration/index.md) for a list of supported plugin
 
 ### `profiles <add <profile> | copy <profile> <name> | info <profile> | list>` { #profiles }
 
-**Permission:** `advancedserverlist.command.profiles`
-
+**Permission:** `advancedserverlist.command.profiles`  
 **Arguments:**
 
 - `add <profile>` - Creates a new profile with name `<profile>` using the default profile values.
