@@ -237,7 +237,7 @@ public class CommandHandler{
         @Nonnull @Argument(description = "Name of the profile to view.", suggestions = "profiles") String profile
     ){
         if(!sender.isPlayer()){
-            sender.sendErrorMsg("<red>This command can only be executed play Players!");
+            sender.sendErrorMsg("<red>This command can only be executed by Players!");
             return;
         }
         
@@ -261,18 +261,14 @@ public class CommandHandler{
         
         sender.sendMsg();
         sender.sendPrefixedMsg("Profile Info [<white>%s</white>]", slp.file());
-        sender.sendMsg("<dark_grey>│");
         sender.sendMsg("<dark_grey>│</dark_grey> [<grey>Hover for details</grey>]");
-        sender.sendMsg("<dark_grey>│");
         sender.sendMsg("<dark_grey>├─</dark_grey> [<aqua><hover:show_text:\"%d\">Priority</hover></aqua>]", slp.priority());
-        sender.sendMsg("<dark_grey>│");
         sender.sendMsg(
             "<dark_grey>├─</dark_grey> [<%s><hover:show_text:\"%s\">Condition</hover></%s>]",
             slp.condition() == null || slp.condition().isEmpty() ? "red" : "green",
             slp.condition() == null || slp.condition().isEmpty() ? "<i>Not set</i>" : slp.condition(),
             slp.condition() == null || slp.condition().isEmpty() ? "red" : "green"
         );
-        sender.sendMsg("<dark_grey>│");
         sender.sendMsg(
             "<dark_grey>├─</dark_grey> [<%s>Profiles</%s>]",
             slp.profiles().isEmpty() ? "red" : "green",
@@ -283,7 +279,7 @@ public class CommandHandler{
         }else{
             for(int i = 0; i < slp.profiles().size(); i++){
                 sender.sendMsg(
-                    "<dark_grey>│   %s─ <aqua><hover:show_text:\"%s\">#%d</hover>",
+                    "<dark_grey>│  %s─ <aqua><hover:show_text:\"%s\">#%d</hover>",
                     (i + 1) == slp.profiles().size() ? "└" : "├",
                     profileHover(slp.profiles().get(i)),
                     i + 1
@@ -295,34 +291,22 @@ public class CommandHandler{
         
         sender.sendMsg(
             """
-            <dark_grey>│
+            <dark_grey>├─ <white>[%s]</white>
             ├─ <white>[%s]</white>
-            │
-            ├─ <white>[%s]</white>
-            │
             └─ <white>[<aqua>Player count</aqua>]</white>
-                │
-                ├─ <white>[%s]</white>
-                ├─ <white>[%s]</white>
-                │
-                ├─ <white>[%s]</white>
-                │
-                ├─ <white>[%s]</white>
-                │
-                ├─ <white>[<aqua>Extra Players</aqua>]</white>
-                │    │
-                │    ├─ <white>[%s]</white>
-                │    └─ <white>[%s]</white>
-                │
-                ├─ <white>[<aqua>Max Players</aqua>]</white>
-                │    │
-                │    ├─ <white>[%s]</white>
-                │    └─ <white>[%s]</white>
-                │
-                └─ <white>[<aqua>Online Players</aqua>]</white>
-                     │
-                     ├─ <white>[%s]</white>
-                     └─ <white>[%s]</white>
+               ├─ <white>[%s]</white>
+               ├─ <white>[%s]</white>
+               ├─ <white>[%s]</white>
+               ├─ <white>[%s]</white>
+               ├─ <white>[<aqua>Extra Players</aqua>]</white>
+               │  ├─ <white>[%s]</white>
+               │  └─ <white>[%s]</white>
+               ├─ <white>[<aqua>Max Players</aqua>]</white>
+               │  ├─ <white>[%s]</white>
+               │  └─ <white>[%s]</white>
+               └─ <white>[<aqua>Online Players</aqua>]</white>
+                  ├─ <white>[%s]</white>
+                  └─ <white>[%s]</white>
             """,
             optionHoverList("MOTD", entry.motd()),
             optionHoverStr("Favicon", entry.favicon()),
