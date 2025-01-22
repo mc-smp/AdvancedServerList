@@ -9,21 +9,25 @@ The main command is `/advancedserverlist` but an alias called `/asl` is also reg
 
 ## Permissions
 
-The main permission is `advancedserverlist.admin` for all commands, but you can also grant access to specific commands using `advancedserverlist.command.<subcommand>` instead (i.e. `advancedserverlist.command.help` to grant access to [`/asl help`](#help)).
+The main permission is `advancedserverlist.admin` for all commands, but you can also grant access to specific commands using `advancedserverlist.command.<subcommand>` instead (i.e. `advancedserverlist.command.help` to grant access to [`/asl help [query]`](#help)).
 
 ## Subcommands
 
 The following subcommands are available (Subcommands are case-insensitive):
 
-- [`help`](#help)
+- [`help [query]`](#help)
 - [`reload`](#reload)
 - [`clearCache`](#clearcache)
 - [`migrate <plugin>`](#migrate)
-- [`profiles <add <profile> | copy <profile> <name> | list>`](#profiles)
+- [`profiles <add <profile> | copy <profile> <name> | info <profile> | list>`](#profiles)
 
-### `help`
+### `help [query]` { #help }
 
 **Permission:** `advancedserverlist.command.help`
+
+**Arguments:**
+
+- `[query]` - Optional search query to receive help info from.
 
 Shows a list of all available [subcommands](#subcommands) for AdvancedServerList.
 
@@ -58,7 +62,7 @@ Check the [Migration Page](../migration/index.md) for a list of supported plugin
 
 ----
 
-### `profiles <add <profile> | copy <profile> <name> | list>` { #profiles }
+### `profiles <add <profile> | copy <profile> <name> | info <profile> | list>` { #profiles }
 
 **Permission:** `advancedserverlist.command.profiles`
 
@@ -66,6 +70,7 @@ Check the [Migration Page](../migration/index.md) for a list of supported plugin
 
 - `add <profile>` - Creates a new profile with name `<profile>` using the default profile values.
 - `copy <profile> <name>` - Creates a copy of `<profile>` and saves it as `<name>`.
+- `info <profile>` - Returns information about the provided `<profile>`.
 - `list` - Lists all loaded profiles. The entries have hover text for extra info.
 
 Creates, copies or shows profiles in AdvancedServerList.
