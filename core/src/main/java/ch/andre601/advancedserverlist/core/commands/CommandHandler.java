@@ -56,10 +56,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Command("advancedserverlist|asl")
 @CommandDescription("Main command of the plugin.")
@@ -142,18 +139,9 @@ public class CommandHandler{
     public void migrate(
         CmdSender sender,
         AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "The plugin to migrate from.", suggestions = "plugins") String plugin
+        @Nonnull @Argument(description = "The plugin to migrate from.") Plugin plugin
     ){
-        if(plugin.isEmpty()){
-            sender.sendErrorMsg("<red>Insufficient arguments. Please provide a supported plugin to migrate from.");
-            sender.sendMsg("<grey>[Click the plugin name for the command]");
-            sender.sendMsg();
-            sender.sendMsg(" <grey>-</grey> <click:suggest_command:/asl migrate serverlistplus>ServerListPlus</click>");
-            sender.sendMsg(" <grey>-</grey> <click:suggest_command:/asl migrate minimotd>MiniMOTD</click>");
-            return;
-        }
-        
-        if(plugin.equalsIgnoreCase("serverlistplus")){
+        if(plugin == Plugin.SERVERLISTPLUS){
             if(!core.getPlugin().isPluginEnabled("ServerListPlus")){
                 sender.sendErrorMsg("<red>ServerListPlus is not enabled.");
                 sender.sendErrorMsg("<red>The plugin is required for the migration to work.");
@@ -170,7 +158,7 @@ public class CommandHandler{
                 sender.sendPrefixedMsg("<green>Successfully migrated </green>%d<green> Profile(s)", migrated);
             }
         }else
-        if(plugin.equalsIgnoreCase("minimotd")){
+        if(plugin == Plugin.MINIMOTD){
             sender.sendPrefixedMsg("Migrating from MiniMOTD...");
             
             if(MiniMOTDConfigMigrator.migrate(core, sender)){
@@ -247,11 +235,7 @@ public class CommandHandler{
             return;
         }
         
-        String profileName = profileName(profile);
-        ServerListProfile slp = core.getFileHandler().getProfiles().stream()
-            .filter(p -> p.file().equalsIgnoreCase(profileName))
-            .findFirst()
-            .orElse(null);
+        ServerListProfile slp = profile(core, profile);
         
         if(slp == null){
             sender.sendErrorMsg("<red>Unable to find profile with name </red>%s<red>.", profile);
@@ -259,68 +243,114 @@ public class CommandHandler{
             return;
         }
         
-        sender.sendMsg();
-        sender.sendPrefixedMsg("Profile Info [<white>%s</white>]", slp.file());
-        sender.sendMsg("<dark_grey>│</dark_grey> [<grey>Hover for details</grey>]");
-        sender.sendMsg("<dark_grey>├─</dark_grey> [<aqua><hover:show_text:\"%d\">Priority</hover></aqua>]", slp.priority());
-        sender.sendMsg(
-            "<dark_grey>├─</dark_grey> [<%s><hover:show_text:\"%s\">Condition</hover></%s>]",
-            slp.condition() == null || slp.condition().isEmpty() ? "red" : "green",
-            slp.condition() == null || slp.condition().isEmpty() ? "<i>Not set</i>" : slp.condition(),
-            slp.condition() == null || slp.condition().isEmpty() ? "red" : "green"
-        );
-        sender.sendMsg(
-            "<dark_grey>├─</dark_grey> [<%s>Profiles</%s>]",
-            slp.profiles().isEmpty() ? "red" : "green",
-            slp.profiles().isEmpty() ? "red" : "green"
-        );
-        if(slp.profiles().isEmpty()){
-            sender.sendMsg("<dark_grey>│");
-        }else{
+        ProfileOptionsSender optionsSender = new ProfileOptionsSender(slp.file());
+        
+        optionsSender
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Priority", slp.priority())
+                    .option("priority")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Condition", slp.condition())
+                    .option("condition")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Profiles")
+                    .color(slp.profiles().isEmpty() ? ProfileOptionsSender.ColorName.RED : ProfileOptionsSender.ColorName.GREEN)
+            );
+        
+        if(!slp.profiles().isEmpty()){
             for(int i = 0; i < slp.profiles().size(); i++){
-                sender.sendMsg(
-                    "<dark_grey>│  %s─ <aqua><hover:show_text:\"%s\">#%d</hover>",
-                    (i + 1) == slp.profiles().size() ? "└" : "├",
-                    profileHover(slp.profiles().get(i)),
-                    i + 1
+                optionsSender.append(
+                    ProfileOptionsSender.OptionStringBuilder.of("#" + (i + 1), profileHover(slp.profiles().get(i)))
+                        .prefix("│    %s─".formatted((i + 1) == slp.profiles().size() ? "└" : "├"))
+                        .color(ProfileOptionsSender.ColorName.AQUA)
                 );
             }
         }
         
         ProfileEntry entry = slp.defaultProfile();
         
-        sender.sendMsg(
-            """
-            <dark_grey>├─ <white>[%s]</white>
-            ├─ <white>[%s]</white>
-            └─ <white>[<aqua>Player count</aqua>]</white>
-               ├─ <white>[%s]</white>
-               ├─ <white>[%s]</white>
-               ├─ <white>[%s]</white>
-               ├─ <white>[%s]</white>
-               ├─ <white>[<aqua>Extra Players</aqua>]</white>
-               │  ├─ <white>[%s]</white>
-               │  └─ <white>[%s]</white>
-               ├─ <white>[<aqua>Max Players</aqua>]</white>
-               │  ├─ <white>[%s]</white>
-               │  └─ <white>[%s]</white>
-               └─ <white>[<aqua>Online Players</aqua>]</white>
-                  ├─ <white>[%s]</white>
-                  └─ <white>[%s]</white>
-            """,
-            optionHoverList("MOTD", entry.motd()),
-            optionHoverStr("Favicon", entry.favicon()),
-            optionHoverBool("Hide Player count?", entry.hidePlayersEnabled()),
-            optionHoverBool("Hide Player count hover?", entry.hidePlayersHoverEnabled()),
-            optionHoverList("Player count hover", entry.players()),
-            optionHoverStr("Player count text", entry.playerCountText()),
-            optionHoverBool("Enabled?", entry.extraPlayersEnabled()),
-            optionHoverStr("Amount", entry.extraPlayersCount()),
-            optionHoverBool("Enabled?", entry.maxPlayersEnabled()),
-            optionHoverStr("Amount", entry.maxPlayersCount()),
-            optionHoverBool("Enabled?", entry.onlinePlayersEnabled()),
-            optionHoverStr("Amount", entry.onlinePlayersCount())
-        );
+        optionsSender
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("MOTD", entry.motd())
+                    .option("motd")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Favicon", entry.favicon())
+                    .option("favicon")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Player count")
+                    .prefix("└─")
+                    .color(ProfileOptionsSender.ColorName.AQUA)
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Hide Player count?", entry.hidePlayersEnabled())
+                    .prefix("     ├─")
+                    .option("playercount.hideplayers")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Hide Player count hover?", entry.hidePlayersHoverEnabled())
+                    .prefix("     ├─")
+                    .option("playercount.hideplayershover")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Player count hover", entry.players())
+                    .prefix("     ├─")
+                    .option("playercount.hover")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Player count text", entry.playerCountText())
+                    .prefix("     ├─")
+                    .option("playercount.text")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Extra Players")
+                    .prefix("     ├─")
+                    .color(ProfileOptionsSender.ColorName.AQUA)
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Enabled?", entry.extraPlayersEnabled())
+                    .prefix("     │    ├─")
+                    .option("playercount.extraplayers.enabled")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Amount", entry.extraPlayersCount())
+                    .prefix("     │    └─")
+                    .option("playercount.extraplayers.amount")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Max Players")
+                    .prefix("     ├─")
+                    .color(ProfileOptionsSender.ColorName.AQUA)
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Enabled?", entry.maxPlayersEnabled())
+                    .prefix("     │    ├─")
+                    .option("playercount.maxplayers.enabled")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Amount", entry.maxPlayersCount())
+                    .prefix("     │    └─")
+                    .option("playercount.maxplayers.amount")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Online Players")
+                    .prefix("     └─")
+                    .color(ProfileOptionsSender.ColorName.AQUA)
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Enabled?", entry.onlinePlayersEnabled())
+                    .prefix("          ├─")
+                    .option("playercount.onlineplayers.enabled")
+            )
+            .append(
+                ProfileOptionsSender.OptionStringBuilder.of("Amount", entry.onlinePlayersCount())
+                    .prefix("          └─")
+                    .option("playercount.onlineplayers.amount")
+            )
+            .send(sender);
     }
     
     @Command("profiles add <name>")
@@ -338,12 +368,12 @@ public class CommandHandler{
             return;
         }
         
-        String fileName = profileName(name);
-        
-        if(core.getFileHandler().getProfiles().stream().anyMatch(profile -> profile.file().equalsIgnoreCase(fileName))){
+        if(profile(core, name) != null){
             sender.sendErrorMsg("<red>A profile with name </red>%s<red> already exists.", name);
             return;
         }
+        
+        String fileName = profileName(name);
         
         if(core.getFileHandler().createFile(fileName)){
             sender.sendPrefixedMsg("<green>Successfully created </green>%s<green>!", fileName);
@@ -373,12 +403,8 @@ public class CommandHandler{
         String profileName = profileName(profile);
         String copyName = profileName(name);
         
-        ServerListProfile targetProfile = core.getFileHandler().getProfiles().stream()
-            .filter(p -> p.file().equalsIgnoreCase(profileName))
-            .findFirst()
-            .orElse(null);
-        boolean copyExists = core.getFileHandler().getProfiles().stream()
-            .anyMatch(p -> p.file().equalsIgnoreCase(copyName));
+        ServerListProfile targetProfile = profile(core, profile);
+        boolean copyExists = profile(core, name) != null;
         
         if(targetProfile == null){
             sender.sendErrorMsg("<red>No profile with name </red>%s<red> exists.", profile);
@@ -453,6 +479,257 @@ public class CommandHandler{
         }
     }
     
+    @Command("profiles set <profile> <option> [value]")
+    @CommandDescription("Sets the value of a profile option, or resets it.")
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @CommandType(CommandType.Type.ALL)
+    public void set(
+        CmdSender sender,
+        AdvancedServerList<?> core,
+        @Nonnull @Argument(description = "The profile to edit.", suggestions = "profiles") String profile,
+        @Nonnull @Argument(description = "The option to edit.", suggestions = "options") String option,
+        @Argument(description = "The value to set. Leave empty to reset value.") @Greedy String value
+    ){
+        ServerListProfile slp = profile(core, profile);
+        if(slp == null){
+            sender.sendErrorMsg("<red>No profile with name</red> %s <red>found!", profile);
+            return;
+        }
+        
+        int priority = slp.priority();
+        String condition = slp.condition();
+        ProfileEntry.Builder builder = slp.defaultProfile().builder();
+        
+        String valueHover = null;
+        
+        switch(option.toLowerCase(Locale.ROOT)){
+            case "priority" -> {
+                if(value == null || value.isEmpty()){
+                    priority = 0;
+                    break;
+                }
+                
+                try{
+                    priority = Integer.parseInt(value);
+                    valueHover = String.valueOf(priority);
+                }catch(NumberFormatException ex){
+                    sender.sendErrorMsg("<red>Invalid value provided. Expected number but got</red> %s", value);
+                    return;
+                }
+            }
+            case "condition" -> {
+                if(value == null || value.isEmpty()){
+                    condition = "";
+                    break;
+                }
+                
+                condition = value;
+                valueHover = value;
+            }
+            case "motd" -> {
+                if(value == null || value.isEmpty()){
+                    builder.motd(Collections.emptyList());
+                    break;
+                }
+                
+                core.getPlugin().getPluginLogger().info(value);
+                
+                String[] lines = value.split("\\n|<newline>");
+                if(lines.length == 0){
+                    builder.motd(Collections.emptyList());
+                    break;
+                }
+                
+                builder.motd(Arrays.asList(lines));
+                valueHover = String.join("\n<reset>", value);
+            }
+            case "favicon" -> {
+                if(value == null || value.isEmpty()){
+                    builder.favicon("");
+                    break;
+                }
+                
+                builder.favicon(value);
+                valueHover = value;
+            }
+            case "playercount.hideplayers" -> {
+                if(value == null || value.isEmpty()){
+                    builder.hidePlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.hidePlayersEnabled(bool);
+                valueHover = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.hideplayershover" -> {
+                if(value == null || value.isEmpty()){
+                    builder.hidePlayersHoverEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.hidePlayersHoverEnabled(bool);
+                valueHover = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.hover" -> {
+                if(value == null || value.isEmpty()){
+                    builder.players(Collections.emptyList());
+                    break;
+                }
+                
+                String[] lines = value.split("\\n|<newline>");
+                if(lines.length == 0){
+                    builder.players(Collections.emptyList());
+                    break;
+                }
+                
+                builder.players(Arrays.asList(lines));
+                valueHover = String.join("\n<reset>", lines);
+            }
+            case "playercount.text" -> {
+                if(value == null || value.isEmpty()){
+                    builder.playerCountText("");
+                    break;
+                }
+                
+                builder.playerCountText(value);
+                valueHover = value;
+            }
+            case "playercount.extraplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.extraPlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.extraPlayersEnabled(bool);
+                valueHover = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.extraplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.extraPlayersCount("");
+                    break;
+                }
+                
+                builder.extraPlayersCount(value);
+                valueHover = value;
+            }
+            case "playercount.maxplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.maxPlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.maxPlayersEnabled(bool);
+                valueHover = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.maxplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.maxPlayersCount("");
+                    break;
+                }
+                
+                builder.maxPlayersCount(value);
+                valueHover = value;
+            }
+            case "playercount.onlineplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.onlinePlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.onlinePlayersEnabled(bool);
+                valueHover = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.onlineplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.onlinePlayersCount("");
+                    break;
+                }
+                
+                builder.onlinePlayersCount(value);
+                valueHover = value;
+            }
+            default -> {
+                sender.sendErrorMsg("<red>Unknown option</red> %s<red>!", option);
+                return;
+            }
+        }
+        
+        Path path = core.getPlugin().getFolderPath().resolve("profiles").resolve(profileName(profile));
+        if(!Files.exists(path)){
+            sender.sendErrorMsg("<red>No file with name</red> %s <red>found!", profile);
+            return;
+        }
+        
+        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(path)
+            .indent(2)
+            .nodeStyle(NodeStyle.BLOCK)
+            .defaultOptions(opt -> opt.serializers(optBuilder -> optBuilder.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
+            .build();
+        
+        ConfigurationNode node;
+        try{
+            node = loader.load();
+        }catch(IOException ex){
+            sender.sendErrorMsg("<red>Encountered an IOException while trying to load file</red> %s<red>.", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s.yml</white>", profile);
+            return;
+        }
+        
+        if(node == null){
+            sender.sendErrorMsg("<red>Unable to load file</red> %s<red>.", profile);
+            return;
+        }
+        
+        try{
+            node.node("priority").set(priority);
+            node.node("condition").set(condition);
+            node.node("profiles").setList(ProfileEntry.class, slp.profiles());
+            node.set(ProfileEntry.class, builder.build());
+        }catch(SerializationException ex){
+            sender.sendErrorMsg("<red>Encountered a SerializationException while updating</red> %s<red>!", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered SerializationException while updating <white>%s</white>", profile);
+            return;
+        }
+        
+        try{
+            loader.save(node);
+            
+            if(valueHover == null){
+                sender.sendPrefixedMsg("<green>Successfully reset value for <white>[<grey>%s</grey>]</white>!", option);
+            }else{
+                if(sender.isPlayer()){
+                    sender.sendPrefixedMsg(
+                        "<green>Successfully updated value for <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
+                        valueHover,
+                        option
+                    );
+                }else{
+                    sender.sendPrefixedMsg(
+                        "<green>Successfully updated value for <white>[<grey>%s</grey>]</white> to <white>[<grey>%s</grey>]</white>!",
+                        option,
+                        valueHover.replace("\n", ", ")
+                    );
+                }
+                sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply the changes.");
+            }
+        }catch(IOException ex){
+            sender.sendErrorMsg("<red>Encountered an IOException while trying to save file</red> %s<red>.", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered IOException while saving file <white>%s.yml</white>", profile);
+        }
+    }
+    
     @Suggestions("help")
     public List<String> helpQueries(CommandContext<CmdSender> context){
         return this.commandManager.createHelpHandler()
@@ -487,19 +764,24 @@ public class CommandHandler{
         return matches;
     }
     
-    @Suggestions("plugins")
-    public List<String> pluginsSuggestions(CommandInput commandInput){
-        String plugin = commandInput.readString();
-        if(plugin.isEmpty())
-            return List.of("ServerListPlus", "MiniMOTD");
-        
-        List<String> matches = new ArrayList<>(2);
-        for(String str : List.of("ServerListPlus", "MiniMOTD")){
-            if(str.length() >= plugin.length() && str.regionMatches(0, plugin, 0, plugin.length()))
-                matches.add(str);
-        }
-        
-        return matches;
+    @Suggestions("options")
+    public List<String> optionsSuggestion(){
+        return List.of(
+            "priority",
+            "condition",
+            "motd",
+            "favicon",
+            "playercount.hideplayers",
+            "playercount.hideplayershover",
+            "playercount.hover",
+            "playercount.text",
+            "playercount.extraplayers.enabled",
+            "playercount.extraplayers.amount",
+            "playercount.maxplayers.enabled",
+            "playercount.maxplayers.amount",
+            "playercount.onlineplayers.enabled",
+            "playercount.onlineplayers.amount"
+        );
     }
     
     private String hover(ServerListProfile profile){
@@ -510,41 +792,8 @@ public class CommandHandler{
             Is valid? %s""".formatted(
                 profile.priority(),
                 profile.condition() == null || profile.condition().isEmpty() ? "<i>None</i>" : profile.condition(), 
-                profile.isInvalidProfile() ? "<red>x</red>" : "<green>✓</green>"
+                profile.isInvalidProfile() ? "<red>No</red>" : "<green>Yes</green>"
             );
-    }
-    
-    private String optionHoverBool(String name, NullBool value){
-        return optionHover0(
-            value != null && value.getOrDefault(false),
-            name,
-            value == null || !value.getOrDefault(false) ? "<red>Disabled</red>" : "<green>Enabled</green>"
-        );
-    }
-    
-    private String optionHoverStr(String name, String value){
-        return optionHover0(
-            value != null && !value.isEmpty(),
-            name,
-            value == null || value.isEmpty() ? "<i>Not set</i>" : value
-        );
-    }
-    
-    private String optionHoverList(String name, List<String> values){
-        return optionHover0(
-            values != null && !values.isEmpty(),
-            name,
-            values == null || values.isEmpty() ? "<i>Not set</i>" : String.join("\n<reset>", values)
-        );
-    }
-    
-    private String optionHover0(boolean set, String name, String value){
-        return "<%s><hover:show_text:\"%s\">%s</hover></%s>".formatted(
-            set ? "green" : "red",
-            value,
-            name,
-            set ? "green" : "red"
-        );
     }
     
     private String profileHover(ProfileEntry entry){
@@ -587,5 +836,17 @@ public class CommandHandler{
         String filename = name.toLowerCase(Locale.ROOT);
         
         return filename.endsWith(".yml") ? filename : filename + ".yml";
+    }
+    
+    private ServerListProfile profile(AdvancedServerList<?> core, String name){
+        return core.getFileHandler().getProfiles().stream()
+            .filter(p -> p.file().equalsIgnoreCase(profileName(name)))
+            .findFirst()
+            .orElse(null);
+    }
+    
+    enum Plugin {
+        SERVERLISTPLUS,
+        MINIMOTD
     }
 }

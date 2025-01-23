@@ -19,7 +19,7 @@ The following subcommands are available (Subcommands are case-insensitive):
 - [`reload`](#reload)
 - [`clearCache`](#clearcache)
 - [`migrate <plugin>`](#migrate)
-- [`profiles <add <profile> | copy <profile> <name> | info <profile> | list>`](#profiles)
+- [`profiles {add <name> | copy <profile> <name> | info <profile> | list}`](#profiles)
 
 ### `help [query]` { #help }
 
@@ -60,7 +60,7 @@ Check the [Migration Page](../migration/index.md) for a list of supported plugin
 
 ----
 
-### `profiles <add <profile> | copy <profile> <name> | info <profile> | list>` { #profiles }
+### `profiles {add <profile> | copy <profile> <name> | info <profile> | list}` { #profiles }
 
 **Permission:** `advancedserverlist.command.profiles`  
 **Arguments:**
