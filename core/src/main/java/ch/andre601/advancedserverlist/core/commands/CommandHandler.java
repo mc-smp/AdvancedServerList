@@ -498,9 +498,11 @@ public class CommandHandler{
         
         int priority = slp.priority();
         String condition = slp.condition();
+        ProfileEntry entry = slp.defaultProfile();
         ProfileEntry.Builder builder = slp.defaultProfile().builder();
         
-        String valueHover = null;
+        String oldValue = "<i>None</i>";
+        String newValue = null;
         
         switch(option.toLowerCase(Locale.ROOT)){
             case "priority" -> {
@@ -511,7 +513,9 @@ public class CommandHandler{
                 
                 try{
                     priority = Integer.parseInt(value);
-                    valueHover = String.valueOf(priority);
+                    
+                    oldValue = String.valueOf(slp.priority());
+                    newValue = String.valueOf(priority);
                 }catch(NumberFormatException ex){
                     sender.sendErrorMsg("<red>Invalid value provided. Expected number but got</red> %s", value);
                     return;
@@ -524,7 +528,9 @@ public class CommandHandler{
                 }
                 
                 condition = value;
-                valueHover = value;
+                
+                oldValue = slp.condition();
+                newValue = value;
             }
             case "motd" -> {
                 if(value == null || value.isEmpty()){
@@ -532,16 +538,16 @@ public class CommandHandler{
                     break;
                 }
                 
-                core.getPlugin().getPluginLogger().info(value);
-                
-                String[] lines = value.split("\\n|<newline>");
+                String[] lines = value.split("\\\\n|<newline>");
                 if(lines.length == 0){
                     builder.motd(Collections.emptyList());
                     break;
                 }
                 
                 builder.motd(Arrays.asList(lines));
-                valueHover = String.join("\n<reset>", value);
+                
+                oldValue = String.join("<reset>,<red> ", entry.motd());
+                newValue = String.join("<reset>,<green> ", value);
             }
             case "favicon" -> {
                 if(value == null || value.isEmpty()){
@@ -550,7 +556,9 @@ public class CommandHandler{
                 }
                 
                 builder.favicon(value);
-                valueHover = value;
+                
+                oldValue = entry.favicon();
+                newValue = value;
             }
             case "playercount.hideplayers" -> {
                 if(value == null || value.isEmpty()){
@@ -560,7 +568,9 @@ public class CommandHandler{
                 
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.hidePlayersEnabled(bool);
-                valueHover = String.valueOf(bool.getOrDefault(false));
+                
+                oldValue = entry.hidePlayersEnabled().isNotSet() ? "" : String.valueOf(entry.hidePlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
             }
             case "playercount.hideplayershover" -> {
                 if(value == null || value.isEmpty()){
@@ -570,7 +580,11 @@ public class CommandHandler{
                 
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.hidePlayersHoverEnabled(bool);
-                valueHover = String.valueOf(bool.getOrDefault(false));
+                
+                oldValue = entry.hidePlayersHoverEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
             }
             case "playercount.hover" -> {
                 if(value == null || value.isEmpty()){
@@ -578,14 +592,16 @@ public class CommandHandler{
                     break;
                 }
                 
-                String[] lines = value.split("\\n|<newline>");
+                String[] lines = value.split("\\\\n|<newline>");
                 if(lines.length == 0){
                     builder.players(Collections.emptyList());
                     break;
                 }
                 
                 builder.players(Arrays.asList(lines));
-                valueHover = String.join("\n<reset>", lines);
+                
+                oldValue = String.join("<reset>,<red> ", entry.players());
+                newValue = String.join("<reset>,<green> ", lines);
             }
             case "playercount.text" -> {
                 if(value == null || value.isEmpty()){
@@ -594,7 +610,9 @@ public class CommandHandler{
                 }
                 
                 builder.playerCountText(value);
-                valueHover = value;
+                
+                oldValue = entry.playerCountText();
+                newValue = value;
             }
             case "playercount.extraplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -604,7 +622,11 @@ public class CommandHandler{
                 
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.extraPlayersEnabled(bool);
-                valueHover = String.valueOf(bool.getOrDefault(false));
+                
+                oldValue = entry.extraPlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.extraPlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
             }
             case "playercount.extraplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -613,7 +635,9 @@ public class CommandHandler{
                 }
                 
                 builder.extraPlayersCount(value);
-                valueHover = value;
+                
+                oldValue = entry.extraPlayersCount();
+                newValue = value;
             }
             case "playercount.maxplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -623,7 +647,11 @@ public class CommandHandler{
                 
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.maxPlayersEnabled(bool);
-                valueHover = String.valueOf(bool.getOrDefault(false));
+                
+                oldValue = entry.maxPlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.maxPlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
             }
             case "playercount.maxplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -632,7 +660,9 @@ public class CommandHandler{
                 }
                 
                 builder.maxPlayersCount(value);
-                valueHover = value;
+                
+                oldValue = entry.maxPlayersCount();
+                newValue = value;
             }
             case "playercount.onlineplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -642,7 +672,11 @@ public class CommandHandler{
                 
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.onlinePlayersEnabled(bool);
-                valueHover = String.valueOf(bool.getOrDefault(false));
+                
+                oldValue = entry.onlinePlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.onlinePlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
             }
             case "playercount.onlineplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -651,7 +685,9 @@ public class CommandHandler{
                 }
                 
                 builder.onlinePlayersCount(value);
-                valueHover = value;
+                
+                oldValue = entry.onlinePlayersCount();
+                newValue = value;
             }
             default -> {
                 sender.sendErrorMsg("<red>Unknown option</red> %s<red>!", option);
@@ -704,20 +740,20 @@ public class CommandHandler{
         try{
             loader.save(node);
             
-            if(valueHover == null){
+            if(newValue == null){
                 sender.sendPrefixedMsg("<green>Successfully reset value for <white>[<grey>%s</grey>]</white>!", option);
             }else{
                 if(sender.isPlayer()){
                     sender.sendPrefixedMsg(
                         "<green>Successfully updated value for <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
-                        valueHover,
+                        changeValueHover(oldValue, newValue),
                         option
                     );
                 }else{
                     sender.sendPrefixedMsg(
                         "<green>Successfully updated value for <white>[<grey>%s</grey>]</white> to <white>[<grey>%s</grey>]</white>!",
                         option,
-                        valueHover.replace("\n", ", ")
+                        newValue.replace("\n", ", ")
                     );
                 }
                 sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply the changes.");
@@ -843,6 +879,13 @@ public class CommandHandler{
             .filter(p -> p.file().equalsIgnoreCase(profileName(name)))
             .findFirst()
             .orElse(null);
+    }
+    
+    private String changeValueHover(String oldValue, String newValue){
+        return "<red>%s</red><reset> ➡ <green>%s</green>".formatted(
+            oldValue == null || oldValue.isEmpty() ? "<i>Not set</i>" : oldValue,
+            newValue == null || newValue.isEmpty() ? "<i>Not set</i>" : newValue
+        );
     }
     
     enum Plugin {
