@@ -38,7 +38,8 @@ inherits:
   'org.bukkit.event.Event':
     link: 'https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/Event.html'
     list:
-      - 'getHandlers()'
+      - name: 'getHandlers()'
+        link: 'getHandlers()'
 ---
 
 # <api__class></api__class> PostServerListSetEvent
