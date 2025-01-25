@@ -115,13 +115,15 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
         
         BukkitServer finalServer = new PaperServerImpl(plugin.getWorldCache().worlds(), online, max, host);
         return switch(identifier.toLowerCase(Locale.ROOT)){
-            case "motd" -> getOption(entry.motd(), pl, player, finalServer, true);
             case "favicon" -> getOption(entry.favicon(), pl, player, finalServer);
+            case "motd" -> getOption(entry.motd(), pl, player, finalServer, true);
+            case "playercount_extraplayers" -> extraPlayers == null ? "" : String.valueOf(extraPlayers);
+            case "playercount_hideplayers" -> String.valueOf(entry.hidePlayersEnabled().getOrDefault(false));
+            case "playercount_hideplayershover" -> String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false));
             case "playercount_hover" -> getOption(entry.players(), pl, player, finalServer, false);
+            case "playercount_maxplayers" -> maxPlayers == null ? "" : String.valueOf(maxPlayers);
+            case "playercount_onlineplayers" -> onlinePlayers == null ? "" : String.valueOf(onlinePlayers);
             case "playercount_text" -> getOption(entry.playerCountText(), pl, player, finalServer);
-            case "playercount_extraplayers" -> extraPlayers == null ? "null" : String.valueOf(extraPlayers);
-            case "playercount_maxplayers" -> maxPlayers == null ? "null" : String.valueOf(maxPlayers);
-            case "playercount_onlineplayers" -> onlinePlayers == null ? "null" : String.valueOf(onlinePlayers);
             case "server_playersmax" -> String.valueOf(max);
             default -> null;
         };
@@ -137,10 +139,16 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
     }
     
     private String getOption(String str, Player pl, BukkitPlayer player, BukkitServer server){
+        if(str == null)
+            return "";
+        
         return getOption(Collections.singletonList(str), pl, player, server, false);
     }
     
     private String getOption(List<String> list, Player pl, BukkitPlayer player, BukkitServer server, boolean isMotd){
+        if(list.isEmpty())
+            return "";
+        
         return list.stream()
             .map(line -> ComponentParser.text(line)
                 .modifyText(text -> StringReplacer.replace(text, player, server))
