@@ -65,6 +65,345 @@ import java.util.*;
 public class CommandHandler{
     
     public static final CloudKey<CommandType.Type> COMMAND_TYPE = CloudKey.of("command_type", CommandType.Type.class);
+    public static final CloudKey<String> OPTION = CloudKey.of("profile_option", String.class);
+    public static final List<String> PROFILE_OPTIONS = List.of(
+        "priority",
+        "condition",
+        "motd",
+        "favicon",
+        "playercount.hideplayers",
+        "playercount.hideplayershover",
+        "playercount.hover",
+        "playercount.text",
+        "playercount.extraplayers.enabled",
+        "playercount.extraplayers.amount",
+        "playercount.maxplayers.enabled",
+        "playercount.maxplayers.amount",
+        "playercount.onlineplayers.enabled",
+        "playercount.onlineplayers.amount"
+    );
+    
+    public static void handleSet(AdvancedServerList<?> core, CommandContext<CmdSender> context){
+        CmdSender sender = context.sender();
+        String profile = context.get("profile");
+        String value = getOptionValue(context.getOrDefault("value", null));
+        String option = context.command().commandMeta().getOrDefault(OPTION, "");
+        
+        ServerListProfile slp = profile(core, profile);
+        if(slp == null){
+            sender.sendErrorMsg("<red>No profile with name</red> %s <red>found!", profile);
+            return;
+        }
+        
+        int priority = slp.priority();
+        String condition = slp.condition();
+        ProfileEntry entry = slp.defaultProfile();
+        ProfileEntry.Builder builder = slp.defaultProfile().builder();
+        
+        String oldValue = "<i>None</i>";
+        String newValue = null;
+        
+        switch(option.toLowerCase(Locale.ROOT)){
+            case "priority" -> {
+                if(value == null || value.isEmpty()){
+                    priority = 0;
+                    break;
+                }
+                
+                try{
+                    priority = Integer.parseInt(value);
+                    
+                    oldValue = String.valueOf(slp.priority());
+                    newValue = String.valueOf(priority);
+                }catch(NumberFormatException ex){
+                    sender.sendErrorMsg("<red>Invalid value provided. Expected number but got</red> %s", value);
+                    return;
+                }
+            }
+            case "condition" -> {
+                if(value == null || value.isEmpty()){
+                    condition = "";
+                    break;
+                }
+                
+                condition = value;
+                
+                oldValue = slp.condition();
+                newValue = value;
+            }
+            case "motd" -> {
+                if(value == null || value.isEmpty()){
+                    builder.motd(Collections.emptyList());
+                    break;
+                }
+                
+                String[] lines = value.split("\\\\n|<newline>");
+                if(lines.length == 0){
+                    builder.motd(Collections.emptyList());
+                    break;
+                }
+                
+                builder.motd(Arrays.asList(lines));
+                
+                oldValue = String.join("<reset>,<red> ", entry.motd());
+                newValue = String.join("<reset>,<green> ", value);
+            }
+            case "favicon" -> {
+                if(value == null || value.isEmpty()){
+                    builder.favicon("");
+                    break;
+                }
+                
+                builder.favicon(value);
+                
+                oldValue = entry.favicon();
+                newValue = value;
+            }
+            case "playercount.hideplayers" -> {
+                if(value == null || value.isEmpty()){
+                    builder.hidePlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.hidePlayersEnabled(bool);
+                
+                oldValue = entry.hidePlayersEnabled().isNotSet() ? "" : String.valueOf(entry.hidePlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.hideplayershover" -> {
+                if(value == null || value.isEmpty()){
+                    builder.hidePlayersHoverEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.hidePlayersHoverEnabled(bool);
+                
+                oldValue = entry.hidePlayersHoverEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.hover" -> {
+                if(value == null || value.isEmpty()){
+                    builder.players(Collections.emptyList());
+                    break;
+                }
+                
+                String[] lines = value.split("\\\\n|<newline>");
+                if(lines.length == 0){
+                    builder.players(Collections.emptyList());
+                    break;
+                }
+                
+                builder.players(Arrays.asList(lines));
+                
+                oldValue = String.join("<reset>,<red> ", entry.players());
+                newValue = String.join("<reset>,<green> ", lines);
+            }
+            case "playercount.text" -> {
+                if(value == null || value.isEmpty()){
+                    builder.playerCountText("");
+                    break;
+                }
+                
+                builder.playerCountText(value);
+                
+                oldValue = entry.playerCountText();
+                newValue = value;
+            }
+            case "playercount.extraplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.extraPlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.extraPlayersEnabled(bool);
+                
+                oldValue = entry.extraPlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.extraPlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.extraplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.extraPlayersCount("");
+                    break;
+                }
+                
+                builder.extraPlayersCount(value);
+                
+                oldValue = entry.extraPlayersCount();
+                newValue = value;
+            }
+            case "playercount.maxplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.maxPlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.maxPlayersEnabled(bool);
+                
+                oldValue = entry.maxPlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.maxPlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.maxplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.maxPlayersCount("");
+                    break;
+                }
+                
+                builder.maxPlayersCount(value);
+                
+                oldValue = entry.maxPlayersCount();
+                newValue = value;
+            }
+            case "playercount.onlineplayers.enabled" -> {
+                if(value == null || value.isEmpty()){
+                    builder.onlinePlayersEnabled(NullBool.NOT_SET);
+                    break;
+                }
+                
+                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
+                builder.onlinePlayersEnabled(bool);
+                
+                oldValue = entry.onlinePlayersEnabled().isNotSet()
+                    ? ""
+                    : String.valueOf(entry.onlinePlayersEnabled().getOrDefault(false));
+                newValue = String.valueOf(bool.getOrDefault(false));
+            }
+            case "playercount.onlineplayers.amount" -> {
+                if(value == null || value.isEmpty()){
+                    builder.onlinePlayersCount("");
+                    break;
+                }
+                
+                builder.onlinePlayersCount(value);
+                
+                oldValue = entry.onlinePlayersCount();
+                newValue = value;
+            }
+            default -> {
+                sender.sendErrorMsg("<red>Unknown option</red> %s<red>!", option);
+                return;
+            }
+        }
+        
+        Path path = core.getPlugin().getFolderPath().resolve("profiles").resolve(profileName(profile));
+        if(!Files.exists(path)){
+            sender.sendErrorMsg("<red>No file with name</red> %s <red>found!", profile);
+            return;
+        }
+        
+        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(path)
+            .indent(2)
+            .nodeStyle(NodeStyle.BLOCK)
+            .defaultOptions(opt -> opt.serializers(optBuilder -> optBuilder.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
+            .build();
+        
+        ConfigurationNode node;
+        try{
+            node = loader.load();
+        }catch(IOException ex){
+            sender.sendErrorMsg("<red>Encountered an IOException while trying to load file</red> %s<red>.", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s.yml</white>", profile);
+            return;
+        }
+        
+        if(node == null){
+            sender.sendErrorMsg("<red>Unable to load file</red> %s<red>.", profile);
+            return;
+        }
+        
+        try{
+            node.node("priority").set(priority);
+            node.node("condition").set(condition);
+            node.node("profiles").setList(ProfileEntry.class, slp.profiles());
+            node.set(ProfileEntry.class, builder.build());
+        }catch(SerializationException ex){
+            sender.sendErrorMsg("<red>Encountered a SerializationException while updating</red> %s<red>!", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered SerializationException while updating <white>%s</white>", profile);
+            return;
+        }
+        
+        try{
+            loader.save(node);
+            
+            if(newValue == null){
+                sender.sendPrefixedMsg("<green>Successfully reset value for <white>[<grey>%s</grey>]</white>!", option);
+            }else{
+                if(sender.isPlayer()){
+                    sender.sendPrefixedMsg(
+                        "<green>Successfully updated value for <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
+                        changeValueHover(oldValue, newValue),
+                        option
+                    );
+                }else{
+                    sender.sendPrefixedMsg(
+                        "<green>Successfully updated value for <white>[<grey>%s</grey>]</white> to <white>[<grey>%s</grey>]</white>!",
+                        option,
+                        newValue.replace("\n", ", ")
+                    );
+                }
+                sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply the changes.");
+            }
+        }catch(IOException ex){
+            sender.sendErrorMsg("<red>Encountered an IOException while trying to save file</red> %s<red>.", profile);
+            sender.sendErrorMsg("<red>Check console for details.");
+            
+            core.getPlugin().getPluginLogger().warn("Encountered IOException while saving file <white>%s.yml</white>", profile);
+        }
+    }
+    
+    private static ServerListProfile profile(AdvancedServerList<?> core, String name){
+        return core.getFileHandler().getProfiles().stream()
+            .filter(p -> p.file().equalsIgnoreCase(profileName(name)))
+            .findFirst()
+            .orElse(null);
+    }
+    
+    private static String profileName(String name){
+        if(name == null || name.isEmpty())
+            return "";
+        
+        String filename = name.toLowerCase(Locale.ROOT);
+        
+        return filename.endsWith(".yml") ? filename : filename + ".yml";
+    }
+    
+    private static String changeValueHover(String oldValue, String newValue){
+        return "<red>%s</red><reset> ➡ <green>%s</green>".formatted(
+            oldValue == null || oldValue.isEmpty() ? "<i>Not set</i>" : oldValue,
+            newValue == null || newValue.isEmpty() ? "<i>Not set</i>" : newValue
+        );
+    }
+    
+    private static String getOptionValue(Object obj){
+        if(obj == null)
+            return "";
+        
+        if(obj instanceof Boolean bool){
+            return Boolean.toString(bool);
+        }else
+        if(obj instanceof Integer integer){
+            return Integer.toString(integer);
+        }else
+        if(obj instanceof String str){
+            return str;
+        }else{
+            return obj.toString();
+        }
+    }
     
     private final CommandManager<CmdSender> commandManager;
     private final MinecraftHelp<CmdSender> help;
@@ -479,293 +818,6 @@ public class CommandHandler{
         }
     }
     
-    @Command("profiles set <profile> <option> [value]")
-    @CommandDescription("Sets the value of a profile option, or resets it.")
-    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
-    @CommandType(CommandType.Type.ALL)
-    public void set(
-        CmdSender sender,
-        AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "The profile to edit.", suggestions = "profiles") String profile,
-        @Nonnull @Argument(description = "The option to edit.", suggestions = "options") String option,
-        @Argument(description = "The value to set. Leave empty to reset value.") @Greedy String value
-    ){
-        ServerListProfile slp = profile(core, profile);
-        if(slp == null){
-            sender.sendErrorMsg("<red>No profile with name</red> %s <red>found!", profile);
-            return;
-        }
-        
-        int priority = slp.priority();
-        String condition = slp.condition();
-        ProfileEntry entry = slp.defaultProfile();
-        ProfileEntry.Builder builder = slp.defaultProfile().builder();
-        
-        String oldValue = "<i>None</i>";
-        String newValue = null;
-        
-        switch(option.toLowerCase(Locale.ROOT)){
-            case "priority" -> {
-                if(value == null || value.isEmpty()){
-                    priority = 0;
-                    break;
-                }
-                
-                try{
-                    priority = Integer.parseInt(value);
-                    
-                    oldValue = String.valueOf(slp.priority());
-                    newValue = String.valueOf(priority);
-                }catch(NumberFormatException ex){
-                    sender.sendErrorMsg("<red>Invalid value provided. Expected number but got</red> %s", value);
-                    return;
-                }
-            }
-            case "condition" -> {
-                if(value == null || value.isEmpty()){
-                    condition = "";
-                    break;
-                }
-                
-                condition = value;
-                
-                oldValue = slp.condition();
-                newValue = value;
-            }
-            case "motd" -> {
-                if(value == null || value.isEmpty()){
-                    builder.motd(Collections.emptyList());
-                    break;
-                }
-                
-                String[] lines = value.split("\\\\n|<newline>");
-                if(lines.length == 0){
-                    builder.motd(Collections.emptyList());
-                    break;
-                }
-                
-                builder.motd(Arrays.asList(lines));
-                
-                oldValue = String.join("<reset>,<red> ", entry.motd());
-                newValue = String.join("<reset>,<green> ", value);
-            }
-            case "favicon" -> {
-                if(value == null || value.isEmpty()){
-                    builder.favicon("");
-                    break;
-                }
-                
-                builder.favicon(value);
-                
-                oldValue = entry.favicon();
-                newValue = value;
-            }
-            case "playercount.hideplayers" -> {
-                if(value == null || value.isEmpty()){
-                    builder.hidePlayersEnabled(NullBool.NOT_SET);
-                    break;
-                }
-                
-                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
-                builder.hidePlayersEnabled(bool);
-                
-                oldValue = entry.hidePlayersEnabled().isNotSet() ? "" : String.valueOf(entry.hidePlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
-            }
-            case "playercount.hideplayershover" -> {
-                if(value == null || value.isEmpty()){
-                    builder.hidePlayersHoverEnabled(NullBool.NOT_SET);
-                    break;
-                }
-                
-                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
-                builder.hidePlayersHoverEnabled(bool);
-                
-                oldValue = entry.hidePlayersHoverEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
-            }
-            case "playercount.hover" -> {
-                if(value == null || value.isEmpty()){
-                    builder.players(Collections.emptyList());
-                    break;
-                }
-                
-                String[] lines = value.split("\\\\n|<newline>");
-                if(lines.length == 0){
-                    builder.players(Collections.emptyList());
-                    break;
-                }
-                
-                builder.players(Arrays.asList(lines));
-                
-                oldValue = String.join("<reset>,<red> ", entry.players());
-                newValue = String.join("<reset>,<green> ", lines);
-            }
-            case "playercount.text" -> {
-                if(value == null || value.isEmpty()){
-                    builder.playerCountText("");
-                    break;
-                }
-                
-                builder.playerCountText(value);
-                
-                oldValue = entry.playerCountText();
-                newValue = value;
-            }
-            case "playercount.extraplayers.enabled" -> {
-                if(value == null || value.isEmpty()){
-                    builder.extraPlayersEnabled(NullBool.NOT_SET);
-                    break;
-                }
-                
-                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
-                builder.extraPlayersEnabled(bool);
-                
-                oldValue = entry.extraPlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.extraPlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
-            }
-            case "playercount.extraplayers.amount" -> {
-                if(value == null || value.isEmpty()){
-                    builder.extraPlayersCount("");
-                    break;
-                }
-                
-                builder.extraPlayersCount(value);
-                
-                oldValue = entry.extraPlayersCount();
-                newValue = value;
-            }
-            case "playercount.maxplayers.enabled" -> {
-                if(value == null || value.isEmpty()){
-                    builder.maxPlayersEnabled(NullBool.NOT_SET);
-                    break;
-                }
-                
-                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
-                builder.maxPlayersEnabled(bool);
-                
-                oldValue = entry.maxPlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.maxPlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
-            }
-            case "playercount.maxplayers.amount" -> {
-                if(value == null || value.isEmpty()){
-                    builder.maxPlayersCount("");
-                    break;
-                }
-                
-                builder.maxPlayersCount(value);
-                
-                oldValue = entry.maxPlayersCount();
-                newValue = value;
-            }
-            case "playercount.onlineplayers.enabled" -> {
-                if(value == null || value.isEmpty()){
-                    builder.onlinePlayersEnabled(NullBool.NOT_SET);
-                    break;
-                }
-                
-                NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
-                builder.onlinePlayersEnabled(bool);
-                
-                oldValue = entry.onlinePlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.onlinePlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
-            }
-            case "playercount.onlineplayers.amount" -> {
-                if(value == null || value.isEmpty()){
-                    builder.onlinePlayersCount("");
-                    break;
-                }
-                
-                builder.onlinePlayersCount(value);
-                
-                oldValue = entry.onlinePlayersCount();
-                newValue = value;
-            }
-            default -> {
-                sender.sendErrorMsg("<red>Unknown option</red> %s<red>!", option);
-                return;
-            }
-        }
-        
-        Path path = core.getPlugin().getFolderPath().resolve("profiles").resolve(profileName(profile));
-        if(!Files.exists(path)){
-            sender.sendErrorMsg("<red>No file with name</red> %s <red>found!", profile);
-            return;
-        }
-        
-        YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
-            .path(path)
-            .indent(2)
-            .nodeStyle(NodeStyle.BLOCK)
-            .defaultOptions(opt -> opt.serializers(optBuilder -> optBuilder.register(ProfileEntry.class, ProfileSerializer.INSTANCE)))
-            .build();
-        
-        ConfigurationNode node;
-        try{
-            node = loader.load();
-        }catch(IOException ex){
-            sender.sendErrorMsg("<red>Encountered an IOException while trying to load file</red> %s<red>.", profile);
-            sender.sendErrorMsg("<red>Check console for details.");
-            
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s.yml</white>", profile);
-            return;
-        }
-        
-        if(node == null){
-            sender.sendErrorMsg("<red>Unable to load file</red> %s<red>.", profile);
-            return;
-        }
-        
-        try{
-            node.node("priority").set(priority);
-            node.node("condition").set(condition);
-            node.node("profiles").setList(ProfileEntry.class, slp.profiles());
-            node.set(ProfileEntry.class, builder.build());
-        }catch(SerializationException ex){
-            sender.sendErrorMsg("<red>Encountered a SerializationException while updating</red> %s<red>!", profile);
-            sender.sendErrorMsg("<red>Check console for details.");
-            
-            core.getPlugin().getPluginLogger().warn("Encountered SerializationException while updating <white>%s</white>", profile);
-            return;
-        }
-        
-        try{
-            loader.save(node);
-            
-            if(newValue == null){
-                sender.sendPrefixedMsg("<green>Successfully reset value for <white>[<grey>%s</grey>]</white>!", option);
-            }else{
-                if(sender.isPlayer()){
-                    sender.sendPrefixedMsg(
-                        "<green>Successfully updated value for <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
-                        changeValueHover(oldValue, newValue),
-                        option
-                    );
-                }else{
-                    sender.sendPrefixedMsg(
-                        "<green>Successfully updated value for <white>[<grey>%s</grey>]</white> to <white>[<grey>%s</grey>]</white>!",
-                        option,
-                        newValue.replace("\n", ", ")
-                    );
-                }
-                sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply the changes.");
-            }
-        }catch(IOException ex){
-            sender.sendErrorMsg("<red>Encountered an IOException while trying to save file</red> %s<red>.", profile);
-            sender.sendErrorMsg("<red>Check console for details.");
-            
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while saving file <white>%s.yml</white>", profile);
-        }
-    }
-    
     @Suggestions("help")
     public List<String> helpQueries(CommandContext<CmdSender> context){
         return this.commandManager.createHelpHandler()
@@ -798,26 +850,6 @@ public class CommandHandler{
         }
         
         return matches;
-    }
-    
-    @Suggestions("options")
-    public List<String> optionsSuggestion(){
-        return List.of(
-            "priority",
-            "condition",
-            "motd",
-            "favicon",
-            "playercount.hideplayers",
-            "playercount.hideplayershover",
-            "playercount.hover",
-            "playercount.text",
-            "playercount.extraplayers.enabled",
-            "playercount.extraplayers.amount",
-            "playercount.maxplayers.enabled",
-            "playercount.maxplayers.amount",
-            "playercount.onlineplayers.enabled",
-            "playercount.onlineplayers.amount"
-        );
     }
     
     private String hover(ServerListProfile profile){
@@ -862,29 +894,6 @@ public class CommandHandler{
                 entry.extraPlayersEnabled().getOrDefault(false) ? entry.extraPlayersCount() : "<red>Disabled</red>",
                 entry.maxPlayersEnabled().getOrDefault(false) ? entry.maxPlayersCount() : "<red>Disabled</red>",
                 entry.onlinePlayersEnabled().getOrDefault(false) ? entry.onlinePlayersCount() : "<red>Disabled</red>"
-        );
-    }
-    
-    private String profileName(String name){
-        if(name == null || name.isEmpty())
-            return "";
-        
-        String filename = name.toLowerCase(Locale.ROOT);
-        
-        return filename.endsWith(".yml") ? filename : filename + ".yml";
-    }
-    
-    private ServerListProfile profile(AdvancedServerList<?> core, String name){
-        return core.getFileHandler().getProfiles().stream()
-            .filter(p -> p.file().equalsIgnoreCase(profileName(name)))
-            .findFirst()
-            .orElse(null);
-    }
-    
-    private String changeValueHover(String oldValue, String newValue){
-        return "<red>%s</red><reset> ➡ <green>%s</green>".formatted(
-            oldValue == null || oldValue.isEmpty() ? "<i>Not set</i>" : oldValue,
-            newValue == null || newValue.isEmpty() ? "<i>Not set</i>" : newValue
         );
     }
     

@@ -35,11 +35,20 @@ import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CommandType;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.parsing.TextCenterUtil;
+import ch.andre601.advancedserverlist.core.profiles.ServerListProfile;
 import ch.andre601.advancedserverlist.core.profiles.conditions.ProfileConditionParser;
 import ch.andre601.advancedserverlist.core.profiles.handlers.PlayerHandler;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.annotations.AnnotationParser;
+import org.incendo.cloud.description.Description;
 import org.incendo.cloud.injection.ParameterInjector;
+import org.incendo.cloud.parser.ParserDescriptor;
+import org.incendo.cloud.parser.standard.BooleanParser;
+import org.incendo.cloud.parser.standard.IntegerParser;
+import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.permission.Permission;
+import org.incendo.cloud.suggestion.Suggestion;
+import org.incendo.cloud.suggestion.SuggestionProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -219,6 +228,59 @@ public class AdvancedServerList<F>{
         );
         annotationParser.parse(new CommandHandler(commandManager));
         
+        for(String option : CommandHandler.PROFILE_OPTIONS){
+            commandManager.command(
+                commandManager.commandBuilder("advancedserverlist", "asl")
+                    .literal("profiles")
+                    .literal("set")
+                    .required(
+                        "profile",
+                        StringParser.stringParser(),
+                        Description.of("The profile to edit."),
+                        SuggestionProvider.suggesting(
+                            getFileHandler().getProfiles().stream()
+                                .map(ServerListProfile::file)
+                                .map(Suggestion::suggestion)
+                                .toList()
+                        )
+                    )
+                    .literal(option)
+                    .optional("value", descriptor(option), description(option))
+                    .commandDescription(Description.of("Sets or resets profile values."))
+                    .handler(context -> CommandHandler.handleSet(this, context))
+                    .meta(CommandHandler.OPTION, option)
+                    .permission(
+                        Permission.anyOf(
+                            Permission.permission("advancedserverlist.admin"), 
+                            Permission.permission("advancedserverlist.command.profiles")
+                        )
+                    )
+            );
+        }
+        
         getPlugin().getPluginLogger().success("Loaded Command <white>/advancedserverlist</white>!");
+    }
+    
+    private ParserDescriptor<CmdSender, ?> descriptor(String option){
+        return switch(option){
+            case "playercount.hideplayers", "playercount.hideplayershover", "playercount.extraplayers.enabled",
+                "playercount.maxplayers.enabled", "playercount.onlineplayers.enabled" -> BooleanParser.booleanParser();
+            case "priority" -> IntegerParser.integerParser();
+            default -> StringParser.greedyStringParser();
+        };
+    }
+    
+    private Description description(String option){
+        return switch(option){
+            case "playercount.hideplayers", "playercount.hideplayershover", "playercount.extraplayers.enabled",
+                "playercount.maxplayers.enabled", "playercount.onlineplayers.enabled" -> Description.of(
+                "Whether this option should be enabled or not. Leave empty to unset it."
+            );
+            case "priority" -> Description.of("Priority this Profile should have. Leave empty to reset.");
+            case "motd", "playercount.hover" -> Description.of(
+                "Lines to set. Use \\n or <newline> to set a linebreak. Leave empty to reset."
+            );
+            default -> Description.of("The Value to use for this option. Leave empty to reset.");
+        };
     }
 }
