@@ -29,8 +29,8 @@ import net.kyori.adventure.audience.Audience;
 
 public interface CmdSender{
     
-    String prefix = "<grey>[<gradient:aqua:white>AdvancedServerList</gradient>] ";
-    String errorPrefix = "<grey>[<gradient:dark_red:red>AdvancedServerList</gradient>] ";
+    String prefix = "<grey>[<gradient:aqua:white>ASL</gradient>] ";
+    String errorPrefix = "<grey>[<gradient:dark_red:red>ASL</gradient>] ";
     
     boolean hasPermission(String permission);
     

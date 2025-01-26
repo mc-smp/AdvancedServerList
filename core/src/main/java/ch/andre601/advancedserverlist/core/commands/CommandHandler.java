@@ -143,10 +143,17 @@ public class CommandHandler{
                     break;
                 }
                 
-                builder.motd(Arrays.asList(lines));
+                if(lines.length > 1){
+                    if(lines.length > 2)
+                        sender.sendPrefixedMsg("<gold>Found %d Lines for MOTD. Only using first 2 lines...", lines.length);
+                        
+                    builder.motd(Arrays.asList(lines).subList(0, 1));
+                }else{
+                    builder.motd(Collections.singletonList(lines[0]));
+                }
                 
-                oldValue = String.join("<reset>,<red> ", entry.motd());
-                newValue = String.join("<reset>,<green> ", value);
+                oldValue = String.join("<reset>\n<red>-</red> ", entry.motd());
+                newValue = String.join("<reset>\n<green>+</green> ", lines);
             }
             case "favicon" -> {
                 if(value == null || value.isEmpty()){
@@ -199,8 +206,8 @@ public class CommandHandler{
                 
                 builder.players(Arrays.asList(lines));
                 
-                oldValue = String.join("<reset>,<red> ", entry.players());
-                newValue = String.join("<reset>,<green> ", lines);
+                oldValue = String.join("<reset>\n<red>-</red> ", entry.players());
+                newValue = String.join("<reset>\n<green>+</green> ", lines);
             }
             case "playercount.text" -> {
                 if(value == null || value.isEmpty()){
@@ -382,7 +389,10 @@ public class CommandHandler{
     }
     
     private static String changeValueHover(String oldValue, String newValue){
-        return "<red>%s</red><reset> ➡ <green>%s</green>".formatted(
+        return """
+            <red>-</red> %s
+            
+            <green>+</green> %s""".formatted(
             oldValue == null || oldValue.isEmpty() ? "<i>Not set</i>" : oldValue,
             newValue == null || newValue.isEmpty() ? "<i>Not set</i>" : newValue
         );
