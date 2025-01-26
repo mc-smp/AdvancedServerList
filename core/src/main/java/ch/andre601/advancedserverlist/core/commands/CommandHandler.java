@@ -147,7 +147,7 @@ public class CommandHandler{
                     if(lines.length > 2)
                         sender.sendPrefixedMsg("<gold>Found %d Lines for MOTD. Only using first 2 lines...", lines.length);
                         
-                    builder.motd(Arrays.asList(lines).subList(0, 1));
+                    builder.motd(Arrays.asList(lines));
                 }else{
                     builder.motd(Collections.singletonList(lines[0]));
                 }
