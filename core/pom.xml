@@ -145,6 +145,12 @@
             <artifactId>cloud-minecraft-extras</artifactId>
             <version>${dependency.cloud-minecraft-extras}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.kyori</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Plugins -->
