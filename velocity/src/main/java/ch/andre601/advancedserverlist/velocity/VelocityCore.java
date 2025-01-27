@@ -100,14 +100,6 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Subscribe
     public void init(ProxyInitializeEvent event){
-        this.logger.info("Loading Libraries. This may take a while...");
-        if(loadLibraries()){
-            this.logger.info("Library Loading complete!");
-        }else{
-            this.logger.warn("There were issues while loading libraries. The plugin won't enable to avoid issues.");
-            return;
-        }
-        
         this.core = AdvancedServerList.init(this,
             VelocityPlayerPlaceholders.init(), VelocityServerPlaceholders.init(this), VelocityProxyPlaceholders.init(this));
     }
@@ -243,21 +235,6 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     public Map<String, ServerPing> getFetchedServers(){
         return fetchedServers;
-    }
-    
-    private boolean loadLibraries(){
-        try{
-            if(libraryManager == null){
-                libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
-                libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
-            }
-            
-            libraryManager.configureFromJSON("cloud-dependencies.json");
-            return true;
-        }catch(Exception ex){
-            this.logger.warn("Encountered an Exception while trying to load dependencies.", ex);
-            return false;
-        }
     }
     
     private void fetchServers(){

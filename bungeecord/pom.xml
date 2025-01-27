@@ -167,47 +167,50 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>net.byteflux.libby</pattern>
-                            <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.libby</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.alessiodp.libby</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.libby</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>ch.andre601.expressionparser</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.expressionparser</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.unascribed.flexver</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.flexver</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.incendo.cloud</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.bungeecord.depends.cloud</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>net/kyori/**</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
