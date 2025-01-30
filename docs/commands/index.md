@@ -19,7 +19,7 @@ The following subcommands are available (Subcommands are case-insensitive):
 - [`reload`](#reload)
 - [`clearCache`](#clearcache)
 - [`migrate <plugin>`](#migrate)
-- [`profiles {add <name> | copy <profile> <name> | info <profile> | list}`](#profiles)
+- [`profiles {add <name> | copy <profile> <name> | info <profile> | list | set <profile> <option> [value]}`](#profiles)
 
 ### `help [query]` { #help }
 
@@ -60,14 +60,22 @@ Check the [Migration Page](../migration/index.md) for a list of supported plugin
 
 ----
 
-### `profiles {add <profile> | copy <profile> <name> | info <profile> | list}` { #profiles }
+### `profiles {add <profile> | copy <profile> <name> | info <profile> | list | set <profile> <option> [value]}` { #profiles }
 
 **Permission:** `advancedserverlist.command.profiles`  
 **Arguments:**
 
-- `add <profile>` - Creates a new profile with name `<profile>` using the default profile values.
-- `copy <profile> <name>` - Creates a copy of `<profile>` and saves it as `<name>`.
-- `info <profile>` - Returns information about the provided `<profile>`.
+- `add <profile>` - Creates a new profile using the default profile values.
+    - `<profile>` - Name of the profile to use.
+- `copy <profile> <name>` - Creates a copy of an existing profile.
+    - `<profile>` - Name of the profile to copy from.
+    - `<name>` - Name of the copy to have.
+- `info <profile>` - Returns information of a profile. Only executable by players.
+    - `<profile>` - Name of the profile to fetch info from.
 - `list` - Lists all loaded profiles. The entries have hover text for extra info.
+- `set <profile> <option> [value]` - Edits values of a profile. Requires [`/asl reload`](#reload) to apply changes.
+    - `<profile>` - Name of the profile to edit.
+    - `<option>` - The option to edit.
+    - `[value]` - The new value to set. Leave empty to reset to the default.
 
 Creates, copies or shows profiles in AdvancedServerList.

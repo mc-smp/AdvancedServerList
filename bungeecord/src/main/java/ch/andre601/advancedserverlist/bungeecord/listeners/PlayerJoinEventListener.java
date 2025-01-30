@@ -23,37 +23,37 @@
  *
  */
 
-package ch.andre601.advancedserverlist.velocity.listeners;
+package ch.andre601.advancedserverlist.bungeecord.listeners;
 
-import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import ch.andre601.advancedserverlist.velocity.commands.VelocityCmdSender;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.PostLoginEvent;
-import com.velocitypowered.api.proxy.Player;
+import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
+import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCmdSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 import java.net.InetSocketAddress;
 
-public class JoinEvent{
+public class PlayerJoinEventListener implements Listener{
+    private final BungeeCordCore plugin;
     
-    private final VelocityCore plugin;
-    
-    public JoinEvent(VelocityCore plugin){
+    public PlayerJoinEventListener(BungeeCordCore plugin){
         this.plugin = plugin;
-        plugin.getProxy().getEventManager().register(plugin, this);
+        plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
     
-    @Subscribe
+    @EventHandler
     public void onJoin(PostLoginEvent event){
-        InetSocketAddress address = event.getPlayer().getRemoteAddress();
-        Player player = event.getPlayer();
+        InetSocketAddress address = (InetSocketAddress)event.getPlayer().getPendingConnection().getSocketAddress();
+        ProxiedPlayer player = event.getPlayer();
         
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getUsername(), player.getUniqueId());
+        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
         
         if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getCore().getUpdateChecker() == null)
+            if(plugin.getAudiences() == null || plugin.getCore().getUpdateChecker() == null)
                 return;
             
-            VelocityCmdSender sender = new VelocityCmdSender(player);
+            BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
             
             plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }

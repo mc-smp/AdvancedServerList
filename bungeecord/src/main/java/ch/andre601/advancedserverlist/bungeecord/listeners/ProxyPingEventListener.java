@@ -23,30 +23,29 @@
  *
  */
 
-package ch.andre601.advancedserverlist.paper.listeners;
+package ch.andre601.advancedserverlist.bungeecord.listeners;
 
-import ch.andre601.advancedserverlist.api.bukkit.events.PostServerListSetEvent;
+import ch.andre601.advancedserverlist.api.bungeecord.events.PostServerListSetEvent;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
+import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.events.PingEventHandler;
-import ch.andre601.advancedserverlist.paper.PaperCore;
-import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import net.md_5.bungee.api.event.ProxyPingEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
-public class PingEvent implements Listener{
+public class ProxyPingEventListener implements Listener{
     
-    private final PaperCore plugin;
+    private final BungeeCordCore plugin;
     
-    public PingEvent(PaperCore plugin){
+    public ProxyPingEventListener(BungeeCordCore plugin){
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST) // Maintenance plugin has HIGHEST priority, so ASL needs too.
-    public void onPaperServerListPing(PaperServerListPingEvent event){
-        ProfileEntry entry = PingEventHandler.handleEvent(new PaperEventWrapper(plugin, event));
+    @EventHandler(priority = 90) // Maintenance has Event Priority 80, so we need to be AFTER it.
+    public void onProxyPing(ProxyPingEvent event){
+        ProfileEntry entry = PingEventHandler.handleEvent(new BungeeEventWrapper(plugin, event));
         
-        plugin.getServer().getPluginManager().callEvent(new PostServerListSetEvent(entry));
+        plugin.getProxy().getPluginManager().callEvent(new PostServerListSetEvent(entry));
     }
 }

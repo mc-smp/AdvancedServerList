@@ -29,10 +29,8 @@ import net.kyori.adventure.audience.Audience;
 
 public interface CmdSender{
     
-    String prefix = "<grey>[<gradient:aqua:white>ASL</gradient>] ";
-    String errorPrefix = "<grey>[<gradient:dark_red:red>ASL</gradient>] ";
-    
-    boolean hasPermission(String permission);
+    String prefix = "<grey>[<aqua>ASL</aqua>] ";
+    String errorPrefix = "<grey>[<red>ASL</red>] ";
     
     void sendMsg(String msg, Object... args);
     

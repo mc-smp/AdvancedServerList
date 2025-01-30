@@ -101,8 +101,12 @@ public class UpdateChecker{
                 );
             }else
             if(result == 1){
-                sender.sendPrefixedMsg("You seem to run a newer Version (<white>%</white>) than what is available on Modrinth (<white>%s</white>).", core.getVersion(), version.versionNumber());
-                sender.sendPrefixedMsg("Are you running a development build?");
+                sender.sendPrefixedMsg(
+                    "Your version (<white>%</white>) is newer than what is available on Modrinth (<white>%s</white>).",
+                    core.getVersion(),
+                    version.versionNumber()
+                );
+                sender.sendPrefixedMsg("Are you using a Development Version?");
             }
         });
     }
@@ -137,10 +141,14 @@ public class UpdateChecker{
                 switch(result){
                     case -1 -> printUpdateBanner(version);
                     case 0 -> logger.success("You are running the latest version!");
-                    case 1 -> logger.info(
-                        "[?] Your version (<white>%s</white>) seems to be newer than the latest release (<white>%s</white>). Are you running a dev build?",
-                        core.getVersion(), version.versionNumber()
-                    );
+                    case 1 -> {
+                        logger.info(
+                            "[?] Your version (<white>%s</white>) is newer than what is available on Modrint (<white>%s</white>).",
+                            core.getVersion(),
+                            version.versionNumber()
+                        );
+                        logger.info("    Are you using a Development Version?");
+                    }
                 }
             });
         }, 0L, 12L, TimeUnit.HOURS);

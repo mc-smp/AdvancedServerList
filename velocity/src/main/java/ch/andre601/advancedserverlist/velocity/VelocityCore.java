@@ -31,8 +31,8 @@ import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandHandler;
-import ch.andre601.advancedserverlist.velocity.listeners.JoinEvent;
-import ch.andre601.advancedserverlist.velocity.listeners.PingEvent;
+import ch.andre601.advancedserverlist.velocity.listeners.PlayerJoinEventListener;
+import ch.andre601.advancedserverlist.velocity.listeners.ProxyPingEventListener;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityPlayerPlaceholders;
 import ch.andre601.advancedserverlist.velocity.objects.placeholders.VelocityProxyPlaceholders;
@@ -113,8 +113,8 @@ public class VelocityCore implements PluginCore<Favicon>{
     
     @Override
     public void loadEvents(){
-        new JoinEvent(this);
-        new PingEvent(this);
+        new PlayerJoinEventListener(this);
+        new ProxyPingEventListener(this);
     }
     
     @Override

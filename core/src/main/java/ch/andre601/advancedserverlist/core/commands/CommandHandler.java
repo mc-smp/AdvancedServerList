@@ -100,8 +100,8 @@ public class CommandHandler{
         ProfileEntry entry = slp.defaultProfile();
         ProfileEntry.Builder builder = slp.defaultProfile().builder();
         
-        String oldValue = "<i>None</i>";
-        String newValue = null;
+        List<String> oldValues = new ArrayList<>();
+        List<String> newValues = new ArrayList<>();
         
         switch(option.toLowerCase(Locale.ROOT)){
             case "priority" -> {
@@ -113,8 +113,8 @@ public class CommandHandler{
                 try{
                     priority = Integer.parseInt(value);
                     
-                    oldValue = String.valueOf(slp.priority());
-                    newValue = String.valueOf(priority);
+                    oldValues.add(String.valueOf(slp.priority()));
+                    newValues.add(String.valueOf(priority));
                 }catch(NumberFormatException ex){
                     sender.sendErrorMsg("<red>Invalid value provided. Expected number but got</red> %s", value);
                     return;
@@ -128,8 +128,8 @@ public class CommandHandler{
                 
                 condition = value;
                 
-                oldValue = slp.condition();
-                newValue = value;
+                oldValues.add(slp.condition());
+                newValues.add(value);
             }
             case "motd" -> {
                 if(value == null || value.isEmpty()){
@@ -152,8 +152,8 @@ public class CommandHandler{
                     builder.motd(Collections.singletonList(lines[0]));
                 }
                 
-                oldValue = String.join("<reset>\n<red>-</red> ", entry.motd());
-                newValue = String.join("<reset>\n<green>+</green> ", lines);
+                oldValues.addAll(entry.motd());
+                newValues.addAll(Arrays.asList(lines));
             }
             case "favicon" -> {
                 if(value == null || value.isEmpty()){
@@ -163,8 +163,8 @@ public class CommandHandler{
                 
                 builder.favicon(value);
                 
-                oldValue = entry.favicon();
-                newValue = value;
+                oldValues.add(entry.favicon());
+                newValues.add(value);
             }
             case "playercount.hideplayers" -> {
                 if(value == null || value.isEmpty()){
@@ -175,8 +175,10 @@ public class CommandHandler{
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.hidePlayersEnabled(bool);
                 
-                oldValue = entry.hidePlayersEnabled().isNotSet() ? "" : String.valueOf(entry.hidePlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
+                if(!entry.hidePlayersEnabled().isNotSet())
+                    oldValues.add(String.valueOf(entry.hidePlayersEnabled().getOrDefault(false)));
+                
+                newValues.add(String.valueOf(bool.getOrDefault(false)));
             }
             case "playercount.hideplayershover" -> {
                 if(value == null || value.isEmpty()){
@@ -187,10 +189,10 @@ public class CommandHandler{
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.hidePlayersHoverEnabled(bool);
                 
-                oldValue = entry.hidePlayersHoverEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
+                if(!entry.hidePlayersHoverEnabled().isNotSet())
+                    oldValues.add(String.valueOf(entry.hidePlayersHoverEnabled().getOrDefault(false)));
+                
+                newValues.add(String.valueOf(bool.getOrDefault(false)));
             }
             case "playercount.hover" -> {
                 if(value == null || value.isEmpty()){
@@ -206,8 +208,8 @@ public class CommandHandler{
                 
                 builder.players(Arrays.asList(lines));
                 
-                oldValue = String.join("<reset>\n<red>-</red> ", entry.players());
-                newValue = String.join("<reset>\n<green>+</green> ", lines);
+                oldValues.addAll(entry.players());
+                newValues.addAll(Arrays.asList(lines));
             }
             case "playercount.text" -> {
                 if(value == null || value.isEmpty()){
@@ -217,8 +219,10 @@ public class CommandHandler{
                 
                 builder.playerCountText(value);
                 
-                oldValue = entry.playerCountText();
-                newValue = value;
+                if(!entry.playerCountText().isEmpty()) 
+                    oldValues.add(entry.playerCountText());
+                
+                newValues.add(value);
             }
             case "playercount.extraplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -229,10 +233,10 @@ public class CommandHandler{
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.extraPlayersEnabled(bool);
                 
-                oldValue = entry.extraPlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.extraPlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
+                if(!entry.extraPlayersEnabled().isNotSet())
+                    oldValues.add(String.valueOf(entry.extraPlayersEnabled().getOrDefault(false)));
+                
+                newValues.add(String.valueOf(bool.getOrDefault(false)));
             }
             case "playercount.extraplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -242,8 +246,10 @@ public class CommandHandler{
                 
                 builder.extraPlayersCount(value);
                 
-                oldValue = entry.extraPlayersCount();
-                newValue = value;
+                if(!entry.extraPlayersCount().isEmpty())
+                    oldValues.add(entry.extraPlayersCount());
+                
+                newValues.add(value);
             }
             case "playercount.maxplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -254,10 +260,10 @@ public class CommandHandler{
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.maxPlayersEnabled(bool);
                 
-                oldValue = entry.maxPlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.maxPlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
+                if(!entry.maxPlayersEnabled().isNotSet())
+                    oldValues.add(String.valueOf(entry.maxPlayersEnabled().getOrDefault(false)));
+                
+                newValues.add(String.valueOf(bool.getOrDefault(false)));
             }
             case "playercount.maxplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -267,8 +273,10 @@ public class CommandHandler{
                 
                 builder.maxPlayersCount(value);
                 
-                oldValue = entry.maxPlayersCount();
-                newValue = value;
+                if(!entry.maxPlayersCount().isEmpty())
+                    oldValues.add(entry.extraPlayersCount());
+                
+                newValues.add(value);
             }
             case "playercount.onlineplayers.enabled" -> {
                 if(value == null || value.isEmpty()){
@@ -279,10 +287,10 @@ public class CommandHandler{
                 NullBool bool = NullBool.resolve(Boolean.parseBoolean(value));
                 builder.onlinePlayersEnabled(bool);
                 
-                oldValue = entry.onlinePlayersEnabled().isNotSet()
-                    ? ""
-                    : String.valueOf(entry.onlinePlayersEnabled().getOrDefault(false));
-                newValue = String.valueOf(bool.getOrDefault(false));
+                if(!entry.onlinePlayersEnabled().isNotSet())
+                    oldValues.add(String.valueOf(entry.onlinePlayersEnabled().getOrDefault(false)));
+                
+                newValues.add(String.valueOf(bool.getOrDefault(false)));
             }
             case "playercount.onlineplayers.amount" -> {
                 if(value == null || value.isEmpty()){
@@ -292,8 +300,10 @@ public class CommandHandler{
                 
                 builder.onlinePlayersCount(value);
                 
-                oldValue = entry.onlinePlayersCount();
-                newValue = value;
+                if(!entry.onlinePlayersCount().isEmpty())
+                    oldValues.add(entry.onlinePlayersCount());
+                
+                newValues.add(value);
             }
             default -> {
                 sender.sendErrorMsg("<red>Unknown option</red> %s<red>!", option);
@@ -346,24 +356,35 @@ public class CommandHandler{
         try{
             loader.save(node);
             
-            if(newValue == null){
-                sender.sendPrefixedMsg("<green>Successfully reset value for <white>[<grey>%s</grey>]</white>!", option);
+            if(sender.isPlayer()){
+                sender.sendPrefixedMsg(
+                    "<green>Successfully updated <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
+                    changeValueHover(oldValues, newValues),
+                    option
+                );
             }else{
-                if(sender.isPlayer()){
-                    sender.sendPrefixedMsg(
-                        "<green>Successfully updated value for <white>[<grey><hover:show_text:\"%s\">%s</hover></grey>]</white>!",
-                        changeValueHover(oldValue, newValue),
-                        option
-                    );
+                sender.sendPrefixedMsg("<green>Successfully updated <white>[<grey>%s</grey>]</white>:", option);
+                
+                if(oldValues.isEmpty()){
+                    sender.sendMsg("<red>-</red> <white><i>Not set</i></white>");
                 }else{
-                    sender.sendPrefixedMsg(
-                        "<green>Successfully updated value for <white>[<grey>%s</grey>]</white> to <white>[<grey>%s</grey>]</white>!",
-                        option,
-                        newValue.replace("\n", ", ")
-                    );
+                    oldValues.forEach(oldValue -> sender.sendMsg("<red>-</red> %s", oldValue));
                 }
-                sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply the changes.");
+                
+                sender.sendMsg();
+                
+                if(newValues.isEmpty()){
+                    sender.sendMsg("<green>+</green> <white><i>Reset to default</i></white>");
+                }else{
+                    newValues.forEach(newValue -> sender.sendMsg("<green>+</green> %s", newValue));
+                }
+                
+                sender.sendMsg();
             }
+            
+            sender.sendPrefixedMsg(
+                "<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to apply changes."
+            );
         }catch(IOException ex){
             sender.sendErrorMsg("<red>Encountered an IOException while trying to save file</red> %s<red>.", profile);
             sender.sendErrorMsg("<red>Check console for details.");
@@ -388,13 +409,13 @@ public class CommandHandler{
         return filename.endsWith(".yml") ? filename : filename + ".yml";
     }
     
-    private static String changeValueHover(String oldValue, String newValue){
+    private static String changeValueHover(List<String> oldValues, List<String> newValues){
         return """
             <red>-</red> %s
             
             <green>+</green> %s""".formatted(
-            oldValue == null || oldValue.isEmpty() ? "<i>Not set</i>" : oldValue,
-            newValue == null || newValue.isEmpty() ? "<i>Not set</i>" : newValue
+            oldValues.isEmpty() ? "<i>Not set</i>" : String.join("<reset>\n<red>-</red> ", oldValues),
+            newValues.isEmpty() ? "<i>Not set</i>" : String.join("<reset>\n<green>+</green> ", newValues)
         );
     }
     
@@ -539,7 +560,7 @@ public class CommandHandler{
                 .toList();
         
         if(profiles.isEmpty()){
-            sender.sendMsg("<dark_grey>├─</dark_grey> <i>No profiles found</i>");
+            sender.sendMsg("<dark_grey>└─</dark_grey> <i>No profiles found</i>");
         }else{
             for(int i = 0; i < profiles.size(); i++){
                 sender.sendMsg(
@@ -726,7 +747,7 @@ public class CommandHandler{
         
         if(core.getFileHandler().createFile(fileName)){
             sender.sendPrefixedMsg("<green>Successfully created </green>%s<green>!", fileName);
-            sender.sendPrefixedMsg("<green>Use </green><click:suggest_command:/asl reload>/asl reload</click><green> to load the file.");
+            sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to load the file.");
         }else{
             sender.sendErrorMsg("<red>Error while creating new profile.");
             sender.sendErrorMsg("<red>Check console for details.");

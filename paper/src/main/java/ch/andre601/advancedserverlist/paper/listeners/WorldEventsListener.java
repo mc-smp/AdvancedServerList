@@ -23,28 +23,29 @@
  *
  */
 
-package ch.andre601.advancedserverlist.velocity.listeners;
+package ch.andre601.advancedserverlist.paper.listeners;
 
-import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
-import ch.andre601.advancedserverlist.api.velocity.events.PostServerListSetEvent;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
-import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import ch.andre601.advancedserverlist.paper.PaperCore;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.event.world.WorldUnloadEvent;
 
-public class PingEvent{
+public class WorldEventsListener implements Listener{
     
-    private final VelocityCore plugin;
+    private final PaperCore plugin;
     
-    public PingEvent(VelocityCore plugin){
+    public WorldEventsListener(PaperCore plugin){
         this.plugin = plugin;
-        plugin.getProxy().getEventManager().register(plugin, this);
     }
     
-    @Subscribe(priority = Short.MIN_VALUE + 1) // Equivalent to PostOrder.LAST which maintenance uses.
-    public void onProxyPing(ProxyPingEvent event){
-        ProfileEntry entry = PingEventHandler.handleEvent(new VelocityEventWrapper(plugin, event));
-        
-        plugin.getProxy().getEventManager().fire(new PostServerListSetEvent(entry));
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent event){
+        plugin.getWorldCache().addWorld(event.getWorld());
+    }
+    
+    @EventHandler
+    public void onWorldUnload(WorldUnloadEvent event){
+        plugin.getWorldCache().removeWorld(event.getWorld().getName());
     }
 }

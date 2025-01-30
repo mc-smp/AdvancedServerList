@@ -23,37 +23,41 @@
  *
  */
 
-package ch.andre601.advancedserverlist.bungeecord.listeners;
+package ch.andre601.advancedserverlist.paper.listeners;
 
-import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
-import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCmdSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import ch.andre601.advancedserverlist.paper.PaperCore;
+import ch.andre601.advancedserverlist.paper.commands.PaperCmdSender;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.net.InetSocketAddress;
 
-public class JoinEvent implements Listener{
-    private final BungeeCordCore plugin;
+public class PlayerJoinEventListener implements Listener{
     
-    public JoinEvent(BungeeCordCore plugin){
+    private final PaperCore plugin;
+    
+    public PlayerJoinEventListener(PaperCore plugin){
         this.plugin = plugin;
-        plugin.getProxy().getPluginManager().registerListener(plugin, this);
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
-    public void onJoin(PostLoginEvent event){
-        InetSocketAddress address = (InetSocketAddress)event.getPlayer().getPendingConnection().getSocketAddress();
-        ProxiedPlayer player = event.getPlayer();
+    public void onJoin(PlayerJoinEvent event){
+        InetSocketAddress address = event.getPlayer().getAddress();
+        if(address == null)
+            return;
         
+        Player player = event.getPlayer();
         plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
         
-        if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getAudiences() == null || plugin.getCore().getUpdateChecker() == null)
+        if(player.hasPermission("advancedserverlist.admin")  || player.hasPermission("advancedserverlist.updatecheck")){
+            if(plugin.getCore().getUpdateChecker() == null)
                 return;
             
-            BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
+            PaperCmdSender sender = new PaperCmdSender(player);
             
             plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }

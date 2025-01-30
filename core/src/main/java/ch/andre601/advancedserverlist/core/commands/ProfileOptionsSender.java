@@ -164,7 +164,6 @@ public class ProfileOptionsSender{
         GREEN,
         AQUA;
         
-        
         @Override
         public String toString(){
             return this.name().toLowerCase(Locale.ROOT);
