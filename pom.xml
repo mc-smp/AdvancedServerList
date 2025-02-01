@@ -36,6 +36,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.build_id/>
         
         <plugin.version>5.4.1</plugin.version>
         <plugin.description>Create multiple Server lists based on conditions.</plugin.description>
@@ -51,6 +52,20 @@
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
+    
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <project.build.build_id>_${env.BUILD_NUMBER}</project.build.build_id>
+            </properties>
+        </profile>
+    </profiles>
     
     <repositories>
         <repository>

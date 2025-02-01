@@ -82,7 +82,7 @@
     </dependencies>
 
     <build>
-        <finalName>VersionUploader</finalName>
+        <finalName>VersionUploader${project.build.build_id}</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>
