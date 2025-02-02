@@ -51,7 +51,7 @@
         </repository>
         <repository>
             <id>repo-sayandevelopment</id>
-            <url>https://repo.sayandev.org/snapshots</url>
+            <url>https://repo.sayandev.org/snapshots/</url>
         </repository>
     </repositories>
     
@@ -131,13 +131,13 @@
         <dependency>
             <groupId>org.sayandev</groupId>
             <artifactId>sayanvanish-api</artifactId>
-            <version>1.6.3</version>
+            <version>1.6.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.sayandev</groupId>
             <artifactId>sayanvanish-proxy-bungeecord</artifactId>
-            <version>1.6.3</version>
+            <version>1.6.1</version>
             <scope>provided</scope>
         </dependency>
         
