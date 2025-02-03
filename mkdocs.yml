@@ -87,10 +87,14 @@ plugins:
         # Addons page
         'addons/banplugins.md': 'addons/first-party/banplugins.md'
   - pagenav-generator
+  - macros:
+      include_dir: docs/.overrides
+      module_name: docs/.hooks/api_docs
 
 markdown_extensions:
   - markdown.extensions.toc:
       permalink: true
+      toc_depth: 3
   - markdown.extensions.attr_list:
   - markdown.extensions.footnotes:
   - markdown.extensions.md_in_html:
