@@ -516,7 +516,7 @@ disableDuringMaintenance:
 # This is used internally to determine if the config needs to be migrated.
 # Changing or even removing this option could result in your config being broken.
 #
-configVersion: 7
+configVersion: 8
 ```
 ///
 

@@ -39,8 +39,9 @@
     <version>${plugin.version}</version>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <repositories>
@@ -50,7 +51,7 @@
         </repository>
         <repository>
             <id>repo-sayandevelopment</id>
-            <url>https://repo.sayandev.org/snapshots</url>
+            <url>https://repo.sayandev.org/releases/</url>
         </repository>
     </repositories>
     
@@ -102,13 +103,13 @@
         <dependency>
             <groupId>org.sayandev</groupId>
             <artifactId>sayanvanish-api</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.sayandev</groupId>
             <artifactId>sayanvanish-proxy-velocity</artifactId>
-            <version>1.6.1</version>
+            <version>1.6.4</version>
             <scope>provided</scope>
         </dependency>
         
@@ -128,7 +129,7 @@
     </dependencies>
     
     <build>
-        <finalName>AdvancedServerList-Velocity-${plugin.version}</finalName>
+        <finalName>AdvancedServerList-Velocity-${plugin.version}${project.build.build_id}</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

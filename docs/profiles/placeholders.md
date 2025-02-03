@@ -5,7 +5,7 @@ icon: material/percent
 # Placeholders
 
 AdvancedServerList provides a set of pre-made placeholders using the `${<identifier> <placeholder>}` format adobted from BungeeTabListPlus.  
-It also has built-in [PlaceholderAPI support](#placeholderapi) for Spigot and Paper Servers and since v2 can even allow you to [add your own placeholders](#custom-placeholders) by using its [API](../api/index.md).
+It also has built-in [PlaceholderAPI support](#placeholderapi) for Spigot and Paper Servers and since v2 can even allow you to [add your own placeholders](#adding-your-own-placeholders) by using its [API](../api/index.md).
 
 ## Built-in Placeholders
 

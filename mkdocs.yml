@@ -83,11 +83,18 @@ plugins:
         #
         # PlaceholderAPI page
         'placeholderapi/index.md': 'profiles/placeholders.md#own-placeholders'
+        #
+        # Addons page
+        'addons/banplugins.md': 'addons/first-party/banplugins.md'
   - pagenav-generator
+  - macros:
+      include_dir: docs/.overrides
+      module_name: docs/.hooks/api_docs
 
 markdown_extensions:
   - markdown.extensions.toc:
       permalink: true
+      toc_depth: 3
   - markdown.extensions.attr_list:
   - markdown.extensions.footnotes:
   - markdown.extensions.md_in_html:
@@ -202,4 +209,7 @@ nav:
             - api/reference/platform-velocity/ch.andre601.advancedserverlist.api.velocity/objects/velocityproxy.md
   - Addons:
     - addons/index.md
-    - BanPlugins: addons/banplugins.md
+    - First-party:
+      - BanPlugins: addons/first-party/banplugins.md
+    - Third-party:
+      - SayanVanish: addons/third-party/sayanvanish.md

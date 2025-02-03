@@ -37,8 +37,8 @@
     <artifactId>version-uploader</artifactId>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.11.0</version>
+            <version>2.12.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <version>5.4.1</version>
+            <version>5.4.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -82,7 +82,7 @@
     </dependencies>
 
     <build>
-        <finalName>VersionUploader</finalName>
+        <finalName>VersionUploader${project.build.build_id}</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

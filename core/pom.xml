@@ -39,8 +39,10 @@
     <version>${plugin.version}</version>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
         <plugin.config.version>8</plugin.config.version>
     </properties>
     
@@ -119,7 +121,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.11.0</version>
+            <version>2.12.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -183,7 +185,7 @@
     </dependencies>
 
     <build>
-        <finalName>AdvancedServerList-Core-${plugin.version}</finalName>
+        <finalName>AdvancedServerList-Core-${plugin.version}${project.build.build_id}</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

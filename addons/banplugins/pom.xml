@@ -40,8 +40,8 @@
     <version>${plugin.version}</version>
 
     <properties>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
@@ -117,7 +117,7 @@
     </dependencies>
     
     <build>
-        <finalName>AdvancedServerList-BanPlugins-Addon-${plugin.version}</finalName>
+        <finalName>AdvancedServerList-BanPlugins-Addon-${plugin.version}${project.build.build_id}</finalName>
         <resources>
             <resource>
                 <filtering>true</filtering>

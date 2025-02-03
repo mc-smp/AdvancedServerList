@@ -13,7 +13,7 @@ These Addons are made by Andre601 and available together with the plugin downloa
 
 <div class="grid cards" markdown>
 
--   [**BanPlugins**](banplugins.md)
+-   [**BanPlugins**](first-party/banplugins.md)
 
     ----
     
@@ -25,4 +25,12 @@ These Addons are made by Andre601 and available together with the plugin downloa
 
 Third-party addons made by other people not working on AdvancedServerList.
 
-*Currently no entries*
+<div class="grid cards" markdown>
+
+-   [**SayanVanish**](third-party/sayanvanish.md)
+    
+    ----
+    
+    SayanVanish adds additional placeholders to the Velocity version of AdvancedServerList to use.
+
+</div>

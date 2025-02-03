@@ -1,5 +1,5 @@
 ---
-template: api-doc.html
+api: true
 
 constructors:
   - name: 'PlaceholderProvider'
@@ -8,27 +8,27 @@ constructors:
       - name: 'identifier'
         description: 'The identifier to use for the placeholder. Cannot be empty.'
         type: String
-        attribute:
+        attributes:
           - notnull
 
 methods:
   - name: 'parsePlaceholder'
     description: |
-      Method called by AdvancedServerList's StringReplacer class to replace any appearances of <code>${&lt;identifier&gt; &lt;placeholder&gt;}</code> with whatever value a matching PlaceholderProvider may return.<br>
-      <br>
-      Returning <code>null</code> will be treated as an invalid placeholder by the plugin, making it return the placeholder as-is without any changes.
+      Method called by AdvancedServerList's StringReplacer class to replace any appearances of `${<identifier> <placeholder> with whatever value a matching PlaceholderProvider may return.
+      
+      Returning `null` will be treated as an invalid placeholder by the plugin, making it return the placeholder as-is without any changes.
     parameters:
       - name: 'placeholder'
         type: String
         description: 'The part of the Placeholder that comes after the identifier and before the closing curly bracket.'
       - name: 'player'
         type: GenericPlayer
-        description: 'The <a href="./../objects/genericplayer/"><code>GenericPlayer</code> instance</a> used.'
+        description: 'The [`GenericPlayer` instance](objects/genericplayer.md) used.'
       - name: 'server'
         type: GenericServer
-        description: 'The <a href="./../objects/genericserver/"><code>GenericServer</code> instance</a> used.'
+        description: 'The [`GenericServer` instance](objects/genericserver.md) used.'
     returns: 'Possibly-parsed or possibly-null String to replace the placeholder with.'
-    attribute:
+    attributes:
       - nullable
       - abstract
     type:
@@ -47,4 +47,4 @@ methods:
 Abstract class that is used to provide your own Placeholder patterns for AdvancedServerList to parse.
 
 In order for your class to be considered a valid PlaceholderProvider will you need to set the `identifier` to a non-null, non-empty value without having any spaces in it.  
-Once set, use [`AdvancedServerListAPI#addPlaceholderProvider(PlaceholderProvider)`](advancedserverlistapi.md#addplaceholderprovider(placeholderprovider)) to register your class for AdvancedServerList to use.
+Once set, use [`AdvancedServerListAPI#addPlaceholderProvider(PlaceholderProvider)`](advancedserverlistapi.md#addplaceholderprovider) to register your class for AdvancedServerList to use.
