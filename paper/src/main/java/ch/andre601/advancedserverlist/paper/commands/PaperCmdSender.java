@@ -52,11 +52,6 @@ public class PaperCmdSender implements CmdSender{
     }
     
     @Override
-    public boolean hasPermission(String permission){
-        return sender.hasPermission(permission) || sender.hasPermission("advancedserverlist.admin");
-    }
-    
-    @Override
     public void sendMsg(String msg, Object... args){
         sender.sendMessage(ComponentParser.text(String.format(msg, args)).toComponent());
     }

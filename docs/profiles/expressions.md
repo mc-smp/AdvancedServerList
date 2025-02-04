@@ -33,7 +33,7 @@ The following cases are considered literal values:
 Any number is considered an expression, meaning the below examples are considered valid:
 
 /// example | Examples
-```shell
+```ruby
 0
 1000
 -7
@@ -53,7 +53,7 @@ To avoid this is it very important to always surround Strings with single or dou
 ///
 
 /// example | Examples
-```shell
+```ruby
 "Hello World!"
 ""
 ```
@@ -68,7 +68,7 @@ Strings `true` and `false` are treated as boolean literals.
 Any [placeholder](placeholders.md) is a valid expression.
 
 /// example | Examples
-```shell
+```ruby
 ${player protocol}
 ${player name}
 
@@ -83,39 +83,44 @@ ${server host}
 
 The following binary operators can be used for boolean evaluation:
 
-| Operator      | True if                                                                                                     |
-|---------------|-------------------------------------------------------------------------------------------------------------|
-| `and` / `&&`  | Both expressions return true.                                                                               |
-| `or` / `\|\|` | Either expression returns true.                                                                             |
-| `==` / `=`    | Both expressions are equal (Case sensitive).                                                                |
-| `=~` / `~`    | Both expressions are equal (Not Case sensitive).                                                            |
-| `!=`          | Both expressions are not equal (Case sensitive).                                                            |
-| `!~`          | Both expressions are not equal (Not case sensitive).                                                        |
-| `\|-`         | Left expression starts with right expression.                                                               |
-| `-\|`         | Left expression ends with right expression.                                                                 |
-| `<_`          | Left expression contains right expression.                                                                  |
-| `<`           | Left expression is less than the right expression. Strings use their text length as number.                 |
-| `<=`          | Left expression is less than, or equal to, the right expression. Strings use their text length as number.   |
-| `>`           | Left expression is larger than the right expression. Strings use their text length as number.               |
-| `>=`          | Left expression is larger than, or equal to, the right expression. Strings use their text length as number. |
+| Operator      | True if                                                                       | Case Sensitive? |
+|---------------|-------------------------------------------------------------------------------|-----------------|
+| `and` / `&&`  | Both expressions return true.                                                 | No              |
+| `or` / `\|\|` | Either expression returns true.                                               | No              |
+| `==` / `=`    | Both expressions are equal (Case sensitive).                                  | Yes             |
+| `=~` / `~`    | Both expressions are equal (Not Case sensitive).                              | No              |
+| `!=`          | Both expressions are not equal (Case sensitive).                              | Yes             |
+| `!~`          | Both expressions are not equal (Not case sensitive).                          | No              |
+| `\|-`         | Left expression starts with right expression (Case sensitive).                | Yes             |
+| `\|~`         | Left expression starts with right expression (Not case sensitive).            | No              |
+| `-\|`         | Left expression ends with right expression (Case sensitive).                  | Yes             |
+| `~\|`         | Left expression ends with right expression (Not case sensitive).              | No              |
+| `<_`          | Left expression contains right expression (Case sensitive).                   | Yes             |
+| `<~`          | Left expression contains right expression (Not case sensitive).               | No              |
+| `<`           | Left expression is less than the right expression.^[1](#n1)^                  | No              |
+| `<=`          | Left expression is less than, or equal to, the right expression.^[1](#n1)^    | No              |
+| `>`           | Left expression is larger than the right expression.^[1](#n1)^                | No              |
+| `>=`          | Left expression is larger than, or equal to, the right expression.^[1](#n1)^  | No              |
 
 These additional binary operators can also be used to perform certain actions:
 
-| Operator | Semantic                                                                    |
-|----------|-----------------------------------------------------------------------------|
-| `.`      | Concatenates (merges) two Strings                                           |
-| `+`      | Adds two numbers. Strings use their text length as number.                  |
-| `-`      | Subtracts one number from another. Strings use their text length as number. |
-| `*`      | Multiplies two numbers. Strings use their text length as number.            |
-| `/`      | Divides one number by another. Strings use their text length as number.     |
+| Operator | Semantic                                     |
+|----------|----------------------------------------------|
+| `.`      | Concatenates (merges) two Strings            |
+| `+`      | Adds two numbers.^[1](#n1)^                  |
+| `-`      | Subtracts one number from another.^[1](#n1)^ |
+| `*`      | Multiplies two numbers.^[1](#n1)^            |
+| `/`      | Divides one number by another.^[1](#n1)^     |
 
 /// example | Examples
-```shell
+```ruby
 ${player name} != "Anonymous"
 763 > ${player protocol} > 758
 ${player hasPlayedBefore} and ${player isBanned} == "false"
 ```
 ///
+
+<small>^1^{ #n1 } In case of text will the text length be used to compare against.</small>
 
 ### Parenthesis
 
@@ -127,7 +132,7 @@ Parenthesis can be used to prevent ambiguities.
 `!` can be used to negate boolean expressions.
 
 /// example | Examples
-```shell
+```ruby
 !${player isWhitelisted}
 ```
 ///

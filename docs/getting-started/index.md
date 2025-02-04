@@ -106,7 +106,7 @@ The plugin also supports these additional plugins. They are all optional.
 
 </div>
 
-[addon]: ../addons/banplugins.md
+[addon]: ../addons/first-party/banplugins.md
 
 ## 2. Installation { #installation }
 

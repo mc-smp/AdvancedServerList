@@ -130,6 +130,9 @@ AdvancedServerList supports the following platforms:
     
     **Other Pages:**
     
-    - [:octicons-stop-24: BanPlugins Addon](addons/banplugins.md)
+    - First Party
+        - [:octicons-stop-24: BanPlugins Addon](addons/first-party/banplugins.md)
+    - Third Party
+        - [:octicons-eye-closed-24: SayanVanish](addons/third-party/sayanvanish.md)
 
 </div>
