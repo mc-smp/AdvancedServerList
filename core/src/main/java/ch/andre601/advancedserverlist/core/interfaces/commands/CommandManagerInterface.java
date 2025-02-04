@@ -22,38 +22,13 @@
  * SOFTWARE.
  */
 
-package ch.andre601.advancedserverlist.paper.commands;
+package ch.andre601.advancedserverlist.core.interfaces.commands;
 
-import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
-import ch.andre601.advancedserverlist.paper.PaperCore;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.PaperCommandManager;
 
-@SuppressWarnings("UnstableApiUsage")
-public class PaperCommandHandler implements CommandHandler<CommandSourceStack>{
+public interface CommandManagerInterface<S>{
+    CommandManager<CmdSender> commandHandler();
     
-    private final PaperCore plugin;
-    
-    public PaperCommandHandler(PaperCore plugin){
-        this.plugin = plugin;
-    }
-    
-    @Override
-    public CommandManager<CmdSender> commandHandler(){
-        return PaperCommandManager.builder(senderMapper())
-            .executionCoordinator(ExecutionCoordinator.asyncCoordinator())
-            .buildOnEnable(plugin);
-    }
-    
-    @Override
-    public SenderMapper<CommandSourceStack, CmdSender> senderMapper(){
-        return SenderMapper.create(
-            PaperCmdSender::new,
-            sender -> ((PaperCmdSender)sender).getCommandSourceStack()
-        );
-    }
+    SenderMapper<S, CmdSender> senderMapper();
 }

@@ -30,7 +30,7 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
-import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandHandler;
+import ch.andre601.advancedserverlist.velocity.commands.VelocityCommandManagerInterface;
 import ch.andre601.advancedserverlist.velocity.listeners.PlayerJoinEventListener;
 import ch.andre601.advancedserverlist.velocity.listeners.ProxyPingEventListener;
 import ch.andre601.advancedserverlist.velocity.logging.VelocityLogger;
@@ -77,7 +77,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     private final ProxyServer proxy;
     private final Path path;
     private final Metrics.Factory metrics;
-    private final VelocityCommandHandler commandHandler;
+    private final VelocityCommandManagerInterface commandHandler;
     
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
@@ -95,7 +95,7 @@ public class VelocityCore implements PluginCore<Favicon>{
         this.proxy = proxy;
         this.path = path;
         this.metrics = metrics;
-        this.commandHandler = new VelocityCommandHandler(pluginContainer, proxy);
+        this.commandHandler = new VelocityCommandManagerInterface(pluginContainer, proxy);
     }
     
     @Subscribe

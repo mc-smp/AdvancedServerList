@@ -25,7 +25,7 @@
 
 package ch.andre601.advancedserverlist.bungeecord;
 
-import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCommandHandler;
+import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCommandManagerInterface;
 import ch.andre601.advancedserverlist.bungeecord.listeners.PlayerJoinEventListener;
 import ch.andre601.advancedserverlist.bungeecord.listeners.ProxyPingEventListener;
 import ch.andre601.advancedserverlist.bungeecord.logging.BungeeLogger;
@@ -70,7 +70,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
     private BungeeAudiences audiences = null;
-    private BungeeCommandHandler handler;
+    private BungeeCommandManagerInterface handler;
     
     private BungeeLibraryManager libraryManager = null;
     
@@ -95,7 +95,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         }
         
         this.audiences = BungeeAudiences.create(this);
-        this.handler = new BungeeCommandHandler(this);
+        this.handler = new BungeeCommandManagerInterface(this);
         this.core = AdvancedServerList.init(this,
             BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this), BungeeProxyPlaceholders.init(this));
     }

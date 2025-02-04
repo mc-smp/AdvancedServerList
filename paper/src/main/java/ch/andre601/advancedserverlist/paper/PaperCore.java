@@ -30,7 +30,7 @@ import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
-import ch.andre601.advancedserverlist.paper.commands.PaperCommandHandler;
+import ch.andre601.advancedserverlist.paper.commands.PaperCommandManagerInterface;
 import ch.andre601.advancedserverlist.paper.listeners.ServerLoadEventListener;
 import ch.andre601.advancedserverlist.paper.logging.PaperLogger;
 import ch.andre601.advancedserverlist.paper.objects.WorldCache;
@@ -60,7 +60,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     private final PluginLogger logger = new PaperLogger(this);
     
-    private PaperCommandHandler commandHandler;
+    private PaperCommandManagerInterface commandHandler;
     private AdvancedServerList<CachedServerIcon> core;
     private FaviconHandler<CachedServerIcon> faviconHandler = null;
     private PAPIPlaceholders papiPlaceholders = null;
@@ -70,7 +70,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     @Override
     public void onEnable(){
-        this.commandHandler = new PaperCommandHandler(this);
+        this.commandHandler = new PaperCommandManagerInterface(this);
         this.core = AdvancedServerList.init(this, new PaperPlayerPlaceholders(), new PaperServerPlaceholders(this));
         
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))

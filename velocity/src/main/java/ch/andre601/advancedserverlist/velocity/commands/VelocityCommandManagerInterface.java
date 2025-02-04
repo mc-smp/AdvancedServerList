@@ -22,39 +22,43 @@
  * SOFTWARE.
  */
 
-package ch.andre601.advancedserverlist.bungeecord.commands;
+package ch.andre601.advancedserverlist.velocity.commands;
 
-import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
-import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
-import net.md_5.bungee.api.CommandSender;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandManagerInterface;
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.proxy.ProxyServer;
 import org.incendo.cloud.CommandManager;
 import org.incendo.cloud.SenderMapper;
-import org.incendo.cloud.bungee.BungeeCommandManager;
 import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.velocity.VelocityCommandManager;
 
-public class BungeeCommandHandler implements CommandHandler<CommandSender>{
+public class VelocityCommandManagerInterface implements CommandManagerInterface<CommandSource>{
     
-    private final BungeeCordCore plugin;
+    private final PluginContainer pluginContainer;
+    private final ProxyServer proxy;
     
-    public BungeeCommandHandler(BungeeCordCore plugin){
-        this.plugin = plugin;
+    public VelocityCommandManagerInterface(PluginContainer pluginContainer, ProxyServer proxy){
+        this.pluginContainer = pluginContainer;
+        this.proxy = proxy;
     }
     
     @Override
     public CommandManager<CmdSender> commandHandler(){
-        return new BungeeCommandManager<>(
-            plugin,
+        return new VelocityCommandManager<>(
+            pluginContainer,
+            proxy,
             ExecutionCoordinator.asyncCoordinator(),
             senderMapper()
         );
     }
     
     @Override
-    public SenderMapper<CommandSender, CmdSender> senderMapper(){
+    public SenderMapper<CommandSource, CmdSender> senderMapper(){
         return SenderMapper.create(
-            cmdSender -> new BungeeCmdSender(cmdSender, plugin.getAudiences()),
-            sender -> ((BungeeCmdSender)sender).sender()
+            VelocityCmdSender::new,
+            sender -> ((VelocityCmdSender)sender).sender()
         );
     }
 }
