@@ -31,11 +31,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
-public class WorldEvents implements Listener{
+public class WorldEventsListener implements Listener{
     
     private final PaperCore plugin;
     
-    public WorldEvents(PaperCore plugin){
+    public WorldEventsListener(PaperCore plugin){
         this.plugin = plugin;
     }
     

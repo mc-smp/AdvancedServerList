@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,40 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package ch.andre601.advancedserverlist.paper.listeners;
+package ch.andre601.advancedserverlist.paper.commands;
 
-import ch.andre601.advancedserverlist.api.bukkit.events.PostServerListSetEvent;
-import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
 import ch.andre601.advancedserverlist.paper.PaperCore;
-import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.SenderMapper;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.paper.PaperCommandManager;
 
-public class PingEvent implements Listener{
+@SuppressWarnings("UnstableApiUsage")
+public class PaperCommandHandler implements CommandHandler<CommandSourceStack>{
     
     private final PaperCore plugin;
     
-    public PingEvent(PaperCore plugin){
+    public PaperCommandHandler(PaperCore plugin){
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.HIGHEST) // Maintenance plugin has HIGHEST priority, so ASL needs too.
-    public void onPaperServerListPing(PaperServerListPingEvent event){
-        ProfileEntry entry = PingEventHandler.handleEvent(new PaperEventWrapper(plugin, event));
-        
-        plugin.getServer().getPluginManager().callEvent(new PostServerListSetEvent(entry));
+    @Override
+    public CommandManager<CmdSender> commandHandler(){
+        return PaperCommandManager.builder(senderMapper())
+            .executionCoordinator(ExecutionCoordinator.asyncCoordinator())
+            .buildOnEnable(plugin);
+    }
+    
+    @Override
+    public SenderMapper<CommandSourceStack, CmdSender> senderMapper(){
+        return SenderMapper.create(
+            PaperCmdSender::new,
+            sender -> ((PaperCmdSender)sender).getCommandSourceStack()
+        );
     }
 }

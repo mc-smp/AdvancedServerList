@@ -23,32 +23,30 @@
  *
  */
 
-package ch.andre601.advancedserverlist.paper.commands;
+package ch.andre601.advancedserverlist.paper.listeners;
 
+import ch.andre601.advancedserverlist.api.bukkit.events.PostServerListSetEvent;
+import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
+import ch.andre601.advancedserverlist.core.events.PingEventHandler;
 import ch.andre601.advancedserverlist.paper.PaperCore;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import com.destroystokyo.paper.event.server.PaperServerListPingEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
-import java.util.Collections;
-
-public class CmdAdvancedServerList extends Command{
+public class ServerListPingEventListener implements Listener{
     
     private final PaperCore plugin;
     
-    public CmdAdvancedServerList(PaperCore plugin){
-        super(
-            "advancedserverlist",
-            "Main command of the plugin",
-            "/asl [reload|help|clearCache]",
-            Collections.singletonList("asl")
-        );
+    public ServerListPingEventListener(PaperCore plugin){
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args){
-        plugin.getCore().getCommandHandler().handle(new PaperCmdSender(sender), args);
-        return true;
+    @EventHandler(priority = EventPriority.HIGHEST) // Maintenance plugin has HIGHEST priority, so ASL needs too.
+    public void onPaperServerListPing(PaperServerListPingEvent event){
+        ProfileEntry entry = PingEventHandler.handleEvent(new PaperEventWrapper(plugin, event));
+        
+        plugin.getServer().getPluginManager().callEvent(new PostServerListSetEvent(entry));
     }
 }

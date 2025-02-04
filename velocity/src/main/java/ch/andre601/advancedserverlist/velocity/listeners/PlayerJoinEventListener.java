@@ -23,41 +23,37 @@
  *
  */
 
-package ch.andre601.advancedserverlist.paper.listeners;
+package ch.andre601.advancedserverlist.velocity.listeners;
 
-import ch.andre601.advancedserverlist.paper.PaperCore;
-import ch.andre601.advancedserverlist.paper.commands.PaperCmdSender;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import ch.andre601.advancedserverlist.velocity.VelocityCore;
+import ch.andre601.advancedserverlist.velocity.commands.VelocityCmdSender;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.proxy.Player;
 
 import java.net.InetSocketAddress;
 
-public class JoinEvent implements Listener{
+public class PlayerJoinEventListener{
     
-    private final PaperCore plugin;
+    private final VelocityCore plugin;
     
-    public JoinEvent(PaperCore plugin){
+    public PlayerJoinEventListener(VelocityCore plugin){
         this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+        plugin.getProxy().getEventManager().register(plugin, this);
     }
     
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event){
-        InetSocketAddress address = event.getPlayer().getAddress();
-        if(address == null)
-            return;
-        
+    @Subscribe
+    public void onJoin(PostLoginEvent event){
+        InetSocketAddress address = event.getPlayer().getRemoteAddress();
         Player player = event.getPlayer();
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
         
-        if(player.hasPermission("advancedserverlist.admin")  || player.hasPermission("advancedserverlist.updatecheck")){
+        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getUsername(), player.getUniqueId());
+        
+        if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
             if(plugin.getCore().getUpdateChecker() == null)
                 return;
             
-            PaperCmdSender sender = new PaperCmdSender(player);
+            VelocityCmdSender sender = new VelocityCmdSender(player);
             
             plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
         }

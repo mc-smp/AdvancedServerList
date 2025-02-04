@@ -23,24 +23,28 @@
  *
  */
 
-package ch.andre601.advancedserverlist.bungeecord.commands;
+package ch.andre601.advancedserverlist.velocity.listeners;
 
-import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
-import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
+import ch.andre601.advancedserverlist.api.velocity.events.PostServerListSetEvent;
+import ch.andre601.advancedserverlist.core.events.PingEventHandler;
+import ch.andre601.advancedserverlist.velocity.VelocityCore;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 
-public class CmdAdvancedServerList extends Command{
+public class ProxyPingEventListener{
     
-    private final BungeeCordCore plugin;
+    private final VelocityCore plugin;
     
-    public CmdAdvancedServerList(BungeeCordCore plugin){
-        super("advancedserverlist", "advancedserverlist.command.asl", "asl");
+    public ProxyPingEventListener(VelocityCore plugin){
         this.plugin = plugin;
+        plugin.getProxy().getEventManager().register(plugin, this);
     }
     
-    @Override
-    public void execute(CommandSender sender, String[] args){
-        plugin.getCore().getCommandHandler().handle(new BungeeCmdSender(sender, plugin.getAudiences()), args);
+    @Subscribe(priority = Short.MIN_VALUE + 1) // Equivalent to PostOrder.LAST which maintenance uses.
+    public void onProxyPing(ProxyPingEvent event){
+        ProfileEntry entry = PingEventHandler.handleEvent(new VelocityEventWrapper(plugin, event));
+        
+        plugin.getProxy().getEventManager().fire(new PostServerListSetEvent(entry));
     }
 }

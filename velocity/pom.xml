@@ -120,6 +120,12 @@
             <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.incendo</groupId>
+            <artifactId>cloud-velocity</artifactId>
+            <version>${dependency.cloud-velocity}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     
     <build>
@@ -133,42 +139,49 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.alessiodp.libby</pattern>
-                            <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.libby</shadedPattern>
-                        </relocation>
-                    </relocations>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.alessiodp.libby</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.libby</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>ch.andre601.expressionparser</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.expressionparser</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.unascribed.flexver</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.flexver</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.incendo.cloud</pattern>
+                                    <shadedPattern>ch.andre601.advancedserverlist.velocity.depends.cloud</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

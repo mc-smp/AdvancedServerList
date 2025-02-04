@@ -31,20 +31,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerLoadEvent;
 
-public class LoadEvent implements Listener{
+public class ServerLoadEventListener implements Listener{
     
     private final PaperCore plugin;
     
-    public LoadEvent(PaperCore plugin){
+    public ServerLoadEventListener(PaperCore plugin){
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
     public void onLoad(ServerLoadEvent event){
-        new JoinEvent(plugin);
-        new PingEvent(plugin);
-        new WorldEvents(plugin);
+        new PlayerJoinEventListener(plugin);
+        new ServerListPingEventListener(plugin);
+        new WorldEventsListener(plugin);
         
         // Load currently loaded worlds into the WorldCache
         Bukkit.getWorlds().forEach(world -> plugin.getWorldCache().addWorld(world));

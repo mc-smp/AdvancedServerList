@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package ch.andre601.advancedserverlist.bungeecord.listeners;
+package ch.andre601.advancedserverlist.bungeecord.commands;
 
-import ch.andre601.advancedserverlist.api.bungeecord.events.PostServerListSetEvent;
-import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
 import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
-import ch.andre601.advancedserverlist.core.events.PingEventHandler;
-import net.md_5.bungee.api.event.ProxyPingEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CommandHandler;
+import net.md_5.bungee.api.CommandSender;
+import org.incendo.cloud.CommandManager;
+import org.incendo.cloud.SenderMapper;
+import org.incendo.cloud.bungee.BungeeCommandManager;
+import org.incendo.cloud.execution.ExecutionCoordinator;
 
-public class PingEvent implements Listener{
+public class BungeeCommandHandler implements CommandHandler<CommandSender>{
     
     private final BungeeCordCore plugin;
     
-    public PingEvent(BungeeCordCore plugin){
+    public BungeeCommandHandler(BungeeCordCore plugin){
         this.plugin = plugin;
-        plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
     
-    @EventHandler(priority = 90) // Maintenance has Event Priority 80, so we need to be AFTER it.
-    public void onProxyPing(ProxyPingEvent event){
-        ProfileEntry entry = PingEventHandler.handleEvent(new BungeeEventWrapper(plugin, event));
-        
-        plugin.getProxy().getPluginManager().callEvent(new PostServerListSetEvent(entry));
+    @Override
+    public CommandManager<CmdSender> commandHandler(){
+        return new BungeeCommandManager<>(
+            plugin,
+            ExecutionCoordinator.asyncCoordinator(),
+            senderMapper()
+        );
+    }
+    
+    @Override
+    public SenderMapper<CommandSender, CmdSender> senderMapper(){
+        return SenderMapper.create(
+            cmdSender -> new BungeeCmdSender(cmdSender, plugin.getAudiences()),
+            sender -> ((BungeeCmdSender)sender).sender()
+        );
     }
 }

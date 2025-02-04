@@ -23,29 +23,29 @@
  *
  */
 
-package ch.andre601.advancedserverlist.velocity.listeners;
+package ch.andre601.advancedserverlist.bungeecord.listeners;
 
+import ch.andre601.advancedserverlist.api.bungeecord.events.PostServerListSetEvent;
 import ch.andre601.advancedserverlist.api.profiles.ProfileEntry;
-import ch.andre601.advancedserverlist.api.velocity.events.PostServerListSetEvent;
+import ch.andre601.advancedserverlist.bungeecord.BungeeCordCore;
 import ch.andre601.advancedserverlist.core.events.PingEventHandler;
-import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import com.velocitypowered.api.event.PostOrder;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import net.md_5.bungee.api.event.ProxyPingEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
-public class PingEvent{
+public class ProxyPingEventListener implements Listener{
     
-    private final VelocityCore plugin;
+    private final BungeeCordCore plugin;
     
-    public PingEvent(VelocityCore plugin){
+    public ProxyPingEventListener(BungeeCordCore plugin){
         this.plugin = plugin;
-        plugin.getProxy().getEventManager().register(plugin, this);
+        plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
     
-    @Subscribe(order = PostOrder.LAST) // Maintenance has LAST priority, so ASL needs it too.
+    @EventHandler(priority = 90) // Maintenance has Event Priority 80, so we need to be AFTER it.
     public void onProxyPing(ProxyPingEvent event){
-        ProfileEntry entry = PingEventHandler.handleEvent(new VelocityEventWrapper(plugin, event));
+        ProfileEntry entry = PingEventHandler.handleEvent(new BungeeEventWrapper(plugin, event));
         
-        plugin.getProxy().getEventManager().fire(new PostServerListSetEvent(entry));
+        plugin.getProxy().getPluginManager().callEvent(new PostServerListSetEvent(entry));
     }
 }

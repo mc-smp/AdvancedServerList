@@ -27,10 +27,11 @@ package ch.andre601.advancedserverlist.paper;
 
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
-import ch.andre601.advancedserverlist.paper.commands.CmdAdvancedServerList;
-import ch.andre601.advancedserverlist.paper.listeners.LoadEvent;
+import ch.andre601.advancedserverlist.paper.commands.PaperCommandHandler;
+import ch.andre601.advancedserverlist.paper.listeners.ServerLoadEventListener;
 import ch.andre601.advancedserverlist.paper.logging.PaperLogger;
 import ch.andre601.advancedserverlist.paper.objects.WorldCache;
 import ch.andre601.advancedserverlist.paper.objects.placeholders.PAPIPlaceholders;
@@ -47,6 +48,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.CachedServerIcon;
+import org.incendo.cloud.CommandManager;
 
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
@@ -58,6 +60,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     private final PluginLogger logger = new PaperLogger(this);
     
+    private PaperCommandHandler commandHandler;
     private AdvancedServerList<CachedServerIcon> core;
     private FaviconHandler<CachedServerIcon> faviconHandler = null;
     private PAPIPlaceholders papiPlaceholders = null;
@@ -67,6 +70,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     @Override
     public void onEnable(){
+        this.commandHandler = new PaperCommandHandler(this);
         this.core = AdvancedServerList.init(this, new PaperPlayerPlaceholders(), new PaperServerPlaceholders(this));
         
         if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
@@ -87,17 +91,8 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
-    public void loadCommands(){
-        if(getServer().getCommandMap().register("asl", new CmdAdvancedServerList(this))){
-            getPluginLogger().success("Registered <white>/advancedserverlist:advancedserverlist</white>!");
-        }else{
-            getPluginLogger().success("Registered <white>/asl:advancedserverlist</white>!");
-        }
-    }
-    
-    @Override
     public void loadEvents(){
-        new LoadEvent(this);
+        new ServerLoadEventListener(this);
     }
     
     @Override
@@ -163,6 +158,11 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
             faviconHandler = new FaviconHandler<>(core);
         
         return faviconHandler;
+    }
+    
+    @Override
+    public CommandManager<CmdSender> getCommandManager(){
+        return commandHandler.commandHandler();
     }
     
     @Override

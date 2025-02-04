@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022-2023 Andre_601
+ * Copyright (c) 2022-2025 Andre_601
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package ch.andre601.advancedserverlist.velocity.commands;
+package ch.andre601.advancedserverlist.core.interfaces.commands;
 
-import ch.andre601.advancedserverlist.velocity.VelocityCore;
-import com.velocitypowered.api.command.SimpleCommand;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class CmdAdvancedServerList implements SimpleCommand{
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface CommandType{
+    Type value();
     
-    private final VelocityCore plugin;
-    
-    public CmdAdvancedServerList(VelocityCore plugin){
-        this.plugin = plugin;
-    }
-    
-    @Override
-    public void execute(Invocation invocation){
-        plugin.getCore().getCommandHandler().handle(new VelocityCmdSender(invocation.source()), invocation.arguments());
+    enum Type{
+        ALL,
+        PLAYER_ONLY
     }
 }

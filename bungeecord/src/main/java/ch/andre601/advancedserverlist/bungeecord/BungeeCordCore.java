@@ -25,15 +25,16 @@
 
 package ch.andre601.advancedserverlist.bungeecord;
 
-import ch.andre601.advancedserverlist.bungeecord.commands.CmdAdvancedServerList;
-import ch.andre601.advancedserverlist.bungeecord.listeners.JoinEvent;
-import ch.andre601.advancedserverlist.bungeecord.listeners.PingEvent;
+import ch.andre601.advancedserverlist.bungeecord.commands.BungeeCommandHandler;
+import ch.andre601.advancedserverlist.bungeecord.listeners.PlayerJoinEventListener;
+import ch.andre601.advancedserverlist.bungeecord.listeners.ProxyPingEventListener;
 import ch.andre601.advancedserverlist.bungeecord.logging.BungeeLogger;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeePlayerPlaceholders;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeProxyPlaceholders;
 import ch.andre601.advancedserverlist.bungeecord.objects.placeholders.BungeeServerPlaceholders;
 import ch.andre601.advancedserverlist.core.AdvancedServerList;
 import ch.andre601.advancedserverlist.core.interfaces.PluginLogger;
+import ch.andre601.advancedserverlist.core.interfaces.commands.CmdSender;
 import ch.andre601.advancedserverlist.core.interfaces.core.PluginCore;
 import ch.andre601.advancedserverlist.core.profiles.handlers.FaviconHandler;
 import com.alessiodp.libby.BungeeLibraryManager;
@@ -47,6 +48,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.SimplePie;
+import org.incendo.cloud.CommandManager;
 import org.sayandev.sayanvanish.bungeecord.api.SayanVanishBungeeAPI;
 
 import java.awt.image.BufferedImage;
@@ -68,6 +70,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     private AdvancedServerList<Favicon> core;
     private FaviconHandler<Favicon> faviconHandler = null;
     private BungeeAudiences audiences = null;
+    private BungeeCommandHandler handler;
     
     private BungeeLibraryManager libraryManager = null;
     
@@ -92,6 +95,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
         }
         
         this.audiences = BungeeAudiences.create(this);
+        this.handler = new BungeeCommandHandler(this);
         this.core = AdvancedServerList.init(this,
             BungeePlayerPlaceholders.init(), BungeeServerPlaceholders.init(this), BungeeProxyPlaceholders.init(this));
     }
@@ -104,15 +108,9 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
-    public void loadCommands(){
-        getProxy().getPluginManager().registerCommand(this, new CmdAdvancedServerList(this));
-        getPluginLogger().success("Registered <white>/advancedserverlist</white>!");
-    }
-    
-    @Override
     public void loadEvents(){
-        new JoinEvent(this);
-        new PingEvent(this);
+        new PlayerJoinEventListener(this);
+        new ProxyPingEventListener(this);
     }
     
     @Override
@@ -179,6 +177,11 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
             faviconHandler = new FaviconHandler<>(core);
         
         return faviconHandler;
+    }
+    
+    @Override
+    public CommandManager<CmdSender> getCommandManager(){
+        return handler.commandHandler();
     }
     
     @Override

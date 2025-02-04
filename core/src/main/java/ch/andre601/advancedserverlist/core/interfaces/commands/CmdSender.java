@@ -25,12 +25,12 @@
 
 package ch.andre601.advancedserverlist.core.interfaces.commands;
 
+import net.kyori.adventure.audience.Audience;
+
 public interface CmdSender{
     
-    String prefix = "<grey>[<gradient:aqua:white>AdvancedServerList</gradient>] ";
-    String errorPrefix = "<grey>[<gradient:dark_red:red>AdvancedServerList</gradient>] ";
-    
-    boolean hasPermission(String permission);
+    String prefix = "<grey>[<aqua>ASL</aqua>] ";
+    String errorPrefix = "<grey>[<red>ASL</red>] ";
     
     void sendMsg(String msg, Object... args);
     
@@ -45,4 +45,8 @@ public interface CmdSender{
     default void sendErrorMsg(String msg, Object... args){
         sendMsg(errorPrefix + msg, args);
     }
+    
+    Audience audience();
+    
+    boolean isPlayer();
 }
