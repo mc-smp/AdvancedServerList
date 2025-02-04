@@ -31,36 +31,11 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
 
-public class PaperPlayerImpl implements BukkitPlayer{
-    
-    private final OfflinePlayer player;
-    
-    private final String name;
-    private final int protocol;
-    private final UUID uuid;
-    
-    private boolean playedBefore = false;
-    private boolean banned = false;
-    private boolean whitelisted = false;
-    
-    public PaperPlayerImpl(OfflinePlayer player, CachedPlayer cachedPlayer, int protocol){
-        this.player = player;
-        
-        this.name = player == null ? cachedPlayer.name() : player.getName();
-        this.protocol = protocol;
-        this.uuid = player == null ? cachedPlayer.uuid() : player.getUniqueId();
-        
-        if(player == null)
-            return;
-        
-        this.playedBefore = player.hasPlayedBefore();
-        this.banned = player.isBanned();
-        this.whitelisted = player.isWhitelisted();
-    }
+public record PaperPlayerImpl(OfflinePlayer player, CachedPlayer cachedPlayer, int protocol) implements BukkitPlayer{
     
     @Override
     public String getName(){
-        return name;
+        return player == null ? cachedPlayer.name() : player.getName();
     }
     
     @Override
@@ -70,7 +45,7 @@ public class PaperPlayerImpl implements BukkitPlayer{
     
     @Override
     public UUID getUUID(){
-        return uuid;
+        return player == null ? cachedPlayer.uuid() : player.getUniqueId();
     }
     
     @Override
@@ -80,16 +55,16 @@ public class PaperPlayerImpl implements BukkitPlayer{
     
     @Override
     public boolean hasPlayedBefore(){
-        return playedBefore;
+        return player != null && player.hasPlayedBefore();
     }
     
     @Override
     public boolean isBanned(){
-        return banned;
+        return player != null && player.isBanned();
     }
     
     @Override
     public boolean isWhitelisted(){
-        return whitelisted;
+        return player != null && player.isWhitelisted();
     }
 }

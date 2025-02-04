@@ -30,21 +30,11 @@ import ch.andre601.advancedserverlist.core.objects.CachedPlayer;
 
 import java.util.UUID;
 
-public class BungeePlayerImpl implements BungeePlayer{
-    
-    private final String name;
-    private final int protocol;
-    private final UUID uuid;
-    
-    public BungeePlayerImpl(CachedPlayer player, int protocol){
-        this.name = player.name();
-        this.protocol = protocol;
-        this.uuid = player.uuid();
-    }
+public record BungeePlayerImpl(CachedPlayer player, int protocol) implements BungeePlayer{
     
     @Override
     public String getName(){
-        return name;
+        return player.name();
     }
     
     @Override
@@ -54,6 +44,6 @@ public class BungeePlayerImpl implements BungeePlayer{
     
     @Override
     public UUID getUUID(){
-        return uuid;
+        return player.uuid();
     }
 }

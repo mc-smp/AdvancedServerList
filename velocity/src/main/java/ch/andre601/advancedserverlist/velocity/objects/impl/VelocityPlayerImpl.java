@@ -31,24 +31,11 @@ import com.velocitypowered.api.network.ProtocolVersion;
 
 import java.util.UUID;
 
-public class VelocityPlayerImpl implements VelocityPlayer{
-    
-    private final String name;
-    private final int protocol;
-    private final UUID uuid;
-    
-    private final String version;
-    
-    public VelocityPlayerImpl(CachedPlayer player, int protocol){
-        this.name = player.name();
-        this.protocol = protocol;
-        this.uuid = player.uuid();
-        this.version = ProtocolVersion.getProtocolVersion(protocol).getVersionIntroducedIn();
-    }
+public record VelocityPlayerImpl(CachedPlayer player, int protocol) implements VelocityPlayer{
     
     @Override
     public String getName(){
-        return name;
+        return player.name();
     }
     
     @Override
@@ -58,11 +45,11 @@ public class VelocityPlayerImpl implements VelocityPlayer{
     
     @Override
     public UUID getUUID(){
-        return uuid;
+        return player.uuid();
     }
     
     @Override
     public String getVersion(){
-        return version;
+        return ProtocolVersion.getProtocolVersion(protocol).getVersionIntroducedIn();
     }
 }
