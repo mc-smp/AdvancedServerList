@@ -115,7 +115,7 @@
             <groupId>org.incendo</groupId>
             <artifactId>cloud-paper</artifactId>
             <version>${dependency.cloud-paper}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
