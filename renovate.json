@@ -72,6 +72,15 @@
       ]
     },
     {
+      "description": "Ignore 2.0.0-SNAPSHOT of cloud",
+      "matchPackageNames": [
+        "org.incendo:cloud-bungee",
+        "org.incendo:cloud-paper",
+        "org.incendo:cloud-velocity"
+      ],
+      "allowedVersions": "!/2\\.0\\.0-SNAPSHOT$/"
+    },
+    {
       "description": "Apply label for Bukkit platform",
       "matchFileNames": ["bukkit/pom.xml"],
       "addLabels": ["PR Target/Bukkit"]
