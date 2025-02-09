@@ -136,7 +136,13 @@ nav:
   - Getting Started:
     - getting-started/index.md
     - Tutorials: getting-started/tutorials.md
-  - Commands: commands/index.md
+  - Commands:
+    - commands/index.md
+    - commands/clearcache.md
+    - commands/help.md
+    - commands/migrate.md
+    - commands/profiles.md
+    - commands/reload.md
   - Profiles:
     - profiles/index.md
     - Expressions: profiles/expressions.md

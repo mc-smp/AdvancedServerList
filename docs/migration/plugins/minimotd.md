@@ -11,7 +11,7 @@ Version `4.10.0` added support for migrating your existing `main.conf` configura
 
 ## How to Migrate
 
-Execute the command [`/asl migrate minimotd`](../../commands/index.md#migrate) to start the migration process. Make sure the `main.conf` file is present in `/plugins/MiniMOTD/` (`minimotd-velocity` on Velocity).
+Execute the command [`/asl migrate minimotd`](../../commands/migrate.md) to start the migration process. Make sure the `main.conf` file is present in `/plugins/MiniMOTD/` (`minimotd-velocity` on Velocity).
 
 ## Example
 
