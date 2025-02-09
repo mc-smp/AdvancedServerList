@@ -252,7 +252,8 @@ public class AdvancedServerList<F>{
                     .permission(
                         Permission.anyOf(
                             Permission.permission("advancedserverlist.admin"), 
-                            Permission.permission("advancedserverlist.command.profiles")
+                            Permission.permission("advancedserverlist.command.profiles"),
+                            Permission.permission("advancedserverlist.command.profiles.set")
                         )
                     )
             );

@@ -546,7 +546,7 @@ public class CommandHandler{
     
     @Command("profiles list")
     @CommandDescription("Lists all available profiles with their priority, conditions and if they are valid.")
-    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles", "advancedserverlist.command.profiles.list"})
     @CommandType(CommandType.Type.ALL)
     public void list(CmdSender sender, AdvancedServerList<?> core){
         sender.sendMsg();
@@ -585,7 +585,7 @@ public class CommandHandler{
     
     @Command("profiles info <profile>")
     @CommandDescription("Provides info about a profile.")
-    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles", "advancedserverlist.command.profiles.info"})
     @CommandType(CommandType.Type.PLAYER_ONLY)
     public void info(
         CmdSender sender,
@@ -723,7 +723,7 @@ public class CommandHandler{
     
     @Command("profiles add <name>")
     @CommandDescription("Creates a new profile with default values applied.")
-    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles", "advancedserverlist.command.profiles.add"})
     @CommandType(CommandType.Type.ALL)
     public void add(
         CmdSender sender,
@@ -754,7 +754,7 @@ public class CommandHandler{
     
     @Command("profiles copy <profile> <name>")
     @CommandDescription("Creates a copy of an existing profile.")
-    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles"})
+    @Permission({"advancedserverlist.admin", "advancedserverlist.command.profiles", "advancedserverlist.command.profiles.copy"})
     @CommandType(CommandType.Type.ALL)
     public void copy(
         CmdSender sender,

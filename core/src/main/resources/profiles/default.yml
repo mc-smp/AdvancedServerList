@@ -10,9 +10,9 @@ priority: 0
 # Set condition(s) that should return true to display this profile.
 # This allows you to create profiles to only show for specific scenarios (i.e. player is banned).
 #
-# Multiple conditions can be chaing with the keywords 'and', 'or', or their counterparts '&&' and '||'.
+# 'AND'/'&&' and 'OR'/'||' can be used to chain together multiple conditions.
 #
-# No condition or an empty condition will be treated as true by default.
+# Removing the condition option or setting it to an empty String will be treated as a true condition being returned.
 #
 # Read more: https://asl.andre601.ch/profiles/#condition
 #
@@ -40,8 +40,11 @@ profiles:
 
 #
 # Set the "Message of the day" to display.
-# This option supports RGB colors for 1.16+ Servers and clients, including gradients using MiniMessage's <gradient>
-# option.
+# This option supports RGB colors for 1.16+ Servers and clients. More advanced MiniMessage features such as <gradient>
+# can be used for further styling the text.
+#
+# <center> can be put at the start of a line to have AdvancedServerList automatically center the text as good as
+# possible.
 #
 # Only the first two lines will be considered and any additional one is ignored.
 #
@@ -55,26 +58,29 @@ motd:
 
 #
 # Set the Favicon (image on the left of a server entry) to display.
-# This option supports three types of inputs:
+# This option supports three types of input:
 #
-#   1. Name, including .png extension, pointing to an image located in the plugin's favicons folder.
-#   2. "random" to display a random PNG from the favicons folder.
+#   1. Filename, including the .png extension, matching a filename in the favicons folder of the plugin.
+#      - 'random' can be used to have AdvancedServerList select a random image from the favicons folder every time
+#        the server is pinged.
 #   3. URL pointing to an image.
-#   4. Player name, UUID or placeholders returning one of these.
-#      https://mc-heads.net will be used to retrieve an image of the provided name/UUID.
-#
-# Note on favicons not showing:
-#   AdvancedServerList has to create a Favicon object for the Proxy/Server to use which takes time to do so.
-#   To not delay the Proxy/Server from being displayed (increase the loading time on the player end) is this creation
-#   done asynchronously for URL/Player name/UUID. This has the downside that the Proxy/Server may be done handling the
-#   ping before the Favicon is created, causing none to be displayed.
-#   Note that this won't happen with local favicons, as those are created during the plugin's startup.
+#   4. Player name, UUID or a placeholder that returns either.
+#      - https://mc-heads.net will be used to retrieve an image of the provided name/UUID.
 #
 # Any images above or below 64x64 pixels will be automatically resized to these dimensions.
 #
 # If not present or empty (favicon: ''), defaults to not modifying the favicon.
 #
 # Read more: https://asl.andre601.ch/profiles/#favicon
+#
+# "The favicon isn't showing!"
+#   This is a side effect of using either URLs or player names/UUIDs for the favicon.
+#   These types require AdvancedServerList to create a new favicon object from scratch. This action takes a significant
+#   amount of time, which can cause the server to show with a huge ping.
+#   To avoid this is this action performed asynchronously. This means that the plugin doesn't wait for the favicon to
+#   be created before continuing, which can result in no favicon being available when it is done handling the ping.
+#   This should only happen for the first ping of a player and subsequent pings should display the favicon, if the
+#   pings are done within the configured cache time (See 'faviconCacheTime' in the config.yml).
 #
 favicon: ''
 
@@ -106,7 +112,7 @@ playerCount:
   #
   # Set the lines shown when the player hovers over the player count.
   # Unlike the MOTD option does this one only support basic color and formatting codes. Any RGB colors will be
-  # downsampled to the nearest matching color.
+  # down-sampled to the nearest matching color.
   #
   # If not present or empty (hover: []), defaults to not modifying the hover.
   #
