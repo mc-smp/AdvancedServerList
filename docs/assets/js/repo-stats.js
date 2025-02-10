@@ -1,7 +1,4 @@
 document$.subscribe(async () => {
-    const url = 'https://api.allorigins.win/raw?url='
-    const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')}`
-
     const repo_stats = document.querySelector('[data-md-component="source"] .md-source__repository');
     
     async function loadCodebergInfo(data) {
@@ -61,7 +58,7 @@ document$.subscribe(async () => {
     }
     
     async function fetchApiInfo() {
-        const tag = await fetch(`${apiUrl}`)
+        const tag = await fetch('https://codeberg.org/api/v1/repos/Andre601/asl-api/releases/latest')
             .then(_ => _.json());
         
         const data = {
@@ -74,8 +71,8 @@ document$.subscribe(async () => {
     
     async function fetchInfo() {
         const [release, repo] = await Promise.all([
-            fetch(`${url}${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/releases/latest')}`).then(_ => _.json()),
-            fetch(`${url}${encodeURIComponent('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList')}`).then(_ => _.json()),
+            fetch('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList/releases/latest').then(_ => _.json()),
+            fetch('https://codeberg.org/api/v1/repos/Andre601/AdvancedServerList').then(_ => _.json()),
         ]);
         
         const data = {
