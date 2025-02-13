@@ -18,6 +18,8 @@ The plugin [SayanVanish]{ target="_blank" rel="nofollow" } is hooking into Advan
 | `${sayanvanish online_here}`     | Returns the number of online players on the same server that aren't vanished.              |
 | `${sayanvanish online_total}`    | Returns the number of online players on the entire network that aren't vanished.^[1](#n1)^ |
 | `${sayanvanish online_<server>}` | Returns the number of online players on `<server>` that aren't vanished.^[1](#n1)^         |
+| `${sayanvanish vanish_prefix}`   | Returns the prefix for the player while they are vanished or an empty String.              |
+| `${sayanvanish vanish_suffix}`   | Returns the suffix for the player while they are vanished or an empty String.              |
 
 <small>^1^{ #n1 } Only works when Proxy mode is enabled and will otherwise return `PROXY_MODE IS NOT ENABLED!`</small>
 ///
@@ -32,8 +34,10 @@ The plugin [SayanVanish]{ target="_blank" rel="nofollow" } is hooking into Advan
 | `${sayanvanish count}`           | Returns the number of online players that are vanished.                          |
 | `${sayanvanish online_total}`    | Returns the number of online players on the entire network that aren't vanished. |
 | `${sayanvanish online_<server>}` | Returns the number of online players on `<server>` that aren't vanished.         |
+| `${sayanvanish vanish_prefix}`   | Returns the prefix for the player while they are vanished or an empty String.    |
+| `${sayanvanish vanish_suffix}`   | Returns the suffix for the player while they are vanished or an empty String.    |
 ///
 
 [SayanVanish]: https://modrinth.com/plugin/sayanvanish
-[source-paper]: https://github.com/Syrent/SayanVanish/blob/ffd740832fd914c6462c41917a91f575f43ee778/sayanvanish-bukkit/src/main/kotlin/org/sayandev/sayanvanish/bukkit/feature/features/hook/FeatureHookAdvancedServerList.kt
-[source-velocity]: https://github.com/Syrent/SayanVanish/blob/585279bf5480542858a9d3d91cfc4d844982aa0f/sayanvanish-proxy/sayanvanish-proxy-velocity/src/main/kotlin/org/sayandev/sayanvanish/velocity/feature/features/hook/FeatureHookAdvancedServerList.kt
+[source-paper]: https://github.com/Syrent/SayanVanish/blob/6e03b874464a7f07c0baba233c94cdfefab5d3e2/sayanvanish-bukkit/src/main/kotlin/org/sayandev/sayanvanish/bukkit/feature/features/hook/FeatureHookAdvancedServerList.kt
+[source-velocity]: https://github.com/Syrent/SayanVanish/blob/6e03b874464a7f07c0baba233c94cdfefab5d3e2/sayanvanish-proxy/sayanvanish-proxy-velocity/src/main/kotlin/org/sayandev/sayanvanish/velocity/feature/features/hook/FeatureHookAdvancedServerList.kt
