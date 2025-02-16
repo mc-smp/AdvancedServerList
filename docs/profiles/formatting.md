@@ -80,8 +80,8 @@ Below is a list of all features that cannot be used by AdvancedServerList, or ca
 
 | Feature       | Tag                          | Supported?                                                                                                                                  |
 |---------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| RGB Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
-| RGB Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| Hex Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| Hex Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
 | Click Actions | `<click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                              |
 | Hover Actions | `<hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                            |
 | Insertions    | `<insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                              |
