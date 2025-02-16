@@ -35,7 +35,7 @@ The reason to only support MiniMessage and not the so-called legacy color and fo
     Below is a comparison of the same text made in MiniMessage and Color codes.
     
     //// tab | MiniMessage
-    ```
+    ```mm
     <aqua>Hello <green><bold>World! <red>How</bold> are</red> you?
     ```
     ////
@@ -59,7 +59,7 @@ The reason to only support MiniMessage and not the so-called legacy color and fo
     Below is an example of a Gradient starting at `#084CFB` (:octicons-dot-fill-24:{ style="color: #084CFB;" }) and ending at `#ADF3FD` (:octicons-dot-fill-24:{ style="color: #ADF3FD;" }).
     
     //// tab | MiniMessage
-    ```
+    ```mm
     <gradient:#084CFB:#ADF3FD>Hello World!</gradient>
     ```
     ////
@@ -78,17 +78,17 @@ In general is MiniMessage a lot easier to manage and read as legacy color codes,
 Due to the situation MiniMessage is used in are not all of its features available to use.  
 Below is a list of all features that cannot be used by AdvancedServerList, or can only be used by it under specific conditions.
 
-| Feature       | Tag                          | Supported?                                                                                                                         |
-|---------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| RGB Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                            |
-| RGB Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                            |
-| Click Actions | `<click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                     |
-| Hover Actions | `<hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                   |
-| Insertions    | `<insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                     |
-| Font          | `<font:_font_>`              | May work with the default fonts (`default`, `alt` and `uniform`) and with custom ones should the client already have it.           |
-| Selector      | `<selector:_sel_>`           | Tag will be rendered, but clicking the text won't do anything.                                                                     |
-| Score         | `<score:_name_:_objective_>` | Will not render due to requiring the player to be on the server.                                                                   |
-| Pride         | `<pride[:_flag_]>`           | Only works if the server (Paper) or Proxy (Velocity) use `v4.18.0` of MiniMessage. BungeeCord is unaffected due to downloading it. |
+| Feature       | Tag                          | Supported?                                                                                                                                  |
+|---------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| RGB Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| RGB Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| Click Actions | `<click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Hover Actions | `<hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                            |
+| Insertions    | `<insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Font          | `<font:_font_>`              | May work with the default fonts (`default`, `alt` and `uniform`) and with custom ones should the client already have it.                    |
+| Selector      | `<selector:_sel_>`           | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Score         | `<score:_name_:_objective_>` | Will not render due to requiring the player to be on the server.                                                                            |
+| Pride         | `<pride[:_flag_]>`           | Only works if the server (Paper) or Proxy (Velocity) use `v4.18.0` of MiniMessage. BungeeCord is unaffected due to downloading the library. |
 
 ## Yaml Formatting
 
