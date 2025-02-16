@@ -80,15 +80,15 @@ Below is a list of all features that cannot be used by AdvancedServerList, or ca
 
 | Feature       | Tag                          | Supported?                                                                                                                                  |
 |---------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| Hex Colors    | `<#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
-| Hex Gradients | `<gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
-| Click Actions | `<click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                              |
-| Hover Actions | `<hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                            |
-| Insertions    | `<insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                              |
-| Font          | `<font:_font_>`              | May work with the default fonts (`default`, `alt` and `uniform`) and with custom ones should the client already have it.                    |
-| Selector      | `<selector:_sel_>`           | Tag will be rendered, but clicking the text won't do anything.                                                                              |
-| Score         | `<score:_name_:_objective_>` | Will not render due to requiring the player to be on the server.                                                                            |
-| Pride         | `<pride[:_flag_]>`           | Only works if the server (Paper) or Proxy (Velocity) use `v4.18.0` of MiniMessage. BungeeCord is unaffected due to downloading the library. |
+| Hex Colors    | `#!mm <#rrggbb>`                  | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| Hex Gradients | `#!mm <gradient:#rrggbb:#rrggbb>` | Only works properly on `motd` and will be downsampled to the closest named color for the other options.                                     |
+| Click Actions | `#!mm <click:_type_:_value_>`     | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Hover Actions | `#!mm <hover:_type_:_value_>`     | Tag will be rendered, but hovering the text won't show anything.                                                                            |
+| Insertions    | `#!mm <insertion:_value_>`        | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Font          | `#!mm <font:_font_>`              | May work with the default fonts (`default`, `alt` and `uniform`) and with custom ones should the client already have it.                    |
+| Selector      | `#!mm <selector:_sel_>`           | Tag will be rendered, but clicking the text won't do anything.                                                                              |
+| Score         | `#!mm <score:_name_:_objective_>` | Will not render due to requiring the player to be on the server.                                                                            |
+| Pride         | `#!mm <pride[:_flag_]>`           | Only works if the server (Paper) or Proxy (Velocity) use `v4.18.0` of MiniMessage. BungeeCord is unaffected due to downloading the library. |
 
 ## Yaml Formatting
 
