@@ -70,6 +70,14 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     @Override
     public void onEnable(){
+    	try{
+            // Required for the Cloud command Framework to function.
+    		Class.forName("io.papermc.paper.command.brigadier.CommandSourceStack");
+    	}catch(ClassNotFoundException ex){
+    		printOutdatedPaper();
+    		return;
+    	}
+        
         this.commandHandler = new PaperCommandManagerInterface(this);
         this.core = AdvancedServerList.init(this, new PaperPlayerPlaceholders(), new PaperServerPlaceholders(this));
         
@@ -229,5 +237,18 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     
     private String getOldVersion(){
         return getServer().getName() + " " + getServer().getVersion();
+    }
+    
+    private void printOutdatedPaper(){
+    	getPluginLogger().warn("================================================================");
+    	getPluginLogger().warn("OUTDATED PAPER VERSION DETECTED!");
+    	getPluginLogger().warn("");
+    	getPluginLogger().warn("AdvancedServerList detected an outdated Paper version.");
+    	getPluginLogger().warn("The plugin requires at least 1.20.6 of Paper due to required");
+    	getPluginLogger().warn("classes only existing within this version onwards.");
+    	getPluginLogger().warn("");
+    	getPluginLogger().warn("Please use at least Paper 1.20.6 or downgrade AdvancedServerList");
+    	getPluginLogger().warn("to v5.4.1.");
+    	getPluginLogger().warn("================================================================");
     }
 }

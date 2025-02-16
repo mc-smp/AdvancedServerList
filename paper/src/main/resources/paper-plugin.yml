@@ -5,7 +5,7 @@ description: '${plugin.description}'
 
 main: 'ch.andre601.advancedserverlist.paper.PaperCore'
 
-api-version: '1.20'
+api-version: '1.20.6'
 
 folia-supported: true
 
@@ -23,32 +23,3 @@ dependencies:
     ServerListPlus:
       load: BEFORE
       required: false
-
-# This is actually supported(?)
-permissions:
-  advancedserverlist.*:
-    description: 'Grants access to all permissions'
-    default: op
-    children:
-      - 'advancedserverlist.admin'
-  advancedserverlist.admin:
-    description: 'Grants access to all permissions'
-    default: op
-    children:
-      - 'advancedserverlist.command.*'
-      - 'advancedserverlist.updatecheck'
-  advancedserverlist.command.*:
-    description: 'Grants access to all commands'
-    default: op
-    children:
-      - 'advancedserverlist.command.help'
-      - 'advancedserverlist.command.reload'
-  advancedserverlist.command.help:
-    description: 'Grants access to /asl help'
-    default: op
-  advancedserverlist.command.reload:
-    description: 'Grants access to /asl reload'
-    default: op
-  advancedserverlist.updatecheck:
-    description: 'Notifies you of new updates when joining the server'
-    default: op

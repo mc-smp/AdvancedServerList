@@ -424,14 +424,20 @@ public class CommandHandler{
     }
     
     private static String getOptionValue(Object obj){
-        return switch(obj){
-            case null -> "";
-            case Boolean bool -> Boolean.toString(bool);
-            case Integer integer -> Integer.toString(integer);
-            case String str -> str;
-            default -> obj.toString();
-        };
-        
+        if(obj == null){
+            return "";
+        }else
+        if(obj instanceof Boolean bool){
+            return Boolean.toString(bool);
+        }else
+        if(obj instanceof Integer integer){
+            return Integer.toString(integer);
+        }else
+        if(obj instanceof String str){
+            return str;
+        }else{
+            return obj.toString();
+        }
     }
     
     private final CommandManager<CmdSender> commandManager;
@@ -912,12 +918,12 @@ public class CommandHandler{
             <grey>Max Players: %s<reset>
             <grey>Online Players: %s""".formatted(
                 entry.motd() == null || entry.motd().isEmpty() ?
-                    "<i><white>None</white></i>" : String.join("\n", entry.motd()),
+                    "<i><white>None</white></i>" : String.join("<reset>\n", entry.motd()),
                 entry.favicon() == null || entry.favicon().isEmpty() ?
                     "<i><white>None</white></i>" : entry.favicon(),
                 entry.hidePlayersEnabled().getOrDefault(false) ? "<green>Enabled</green>" : "<red>Disabled</red>",
                 entry.hidePlayersHoverEnabled().getOrDefault(false) ? "<green>Enabled</green>" : "<red>Disabled</red>",
-                entry.players().isEmpty() ? "<i><white>None</white></i>" : String.join("\n", entry.players()),
+                entry.players().isEmpty() ? "<i><white>None</white></i>" : String.join("<reset>\n", entry.players()),
                 entry.playerCountText() == null || entry.playerCountText().isEmpty() ?
                     "<i><white>None</white></i>" : entry.playerCountText(),
                 entry.extraPlayersEnabled().getOrDefault(false) ? entry.extraPlayersCount() : "<red>Disabled</red>",
