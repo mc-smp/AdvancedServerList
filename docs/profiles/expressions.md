@@ -2,105 +2,107 @@
 icon: octicons/file-code-24
 ---
 
-Expressions are part of a Server List Profile's condition system and allows you to define when a profile should and should not be displayed.
+The condition of a Server List Profile consists of one or multiple expressions.  
+The complete expression should return a boolean. If not, will the returned value be converted based on the following rules:
 
-This page covers what the Expression system of AdvancedServerList offers and can do.
+- Numbers will be converted to true, if not `0`
+- Strings will be converted to true, if equal to `"true"`
 
-## Content
+The content below lists all supported forms of expressions that can be used to form a condition:
 
-- [Types](#types)
-    - [Literals](#literals)
-        - [Numbers](#numbers)
-        - [Strings](#strings)
-        - [Booleans](#booleans)
-    - [Placeholders](#placeholders)
-    - [Binary Operators](#binary-operators)
-    - [Parenthesis](#parenthesis)
-    - [Negation](#negation)
-- [Credits](#credits)
+## Literals
 
-## Types
+The following values are treated as literal and can form a valid expression.
 
-An expression contains different types of components that are evaluated to return a boolean output of either `true` or `false`.  
-Depending on the type(s) will the output be differently understood and handled.
+### Numbers
 
-### Literals
-
-The following cases are considered literal values:
-
-#### Numbers
-
-Any number is considered an expression, meaning the below examples are considered valid:
+Any postive or negative number with or without decimal points can form a valid expression.
 
 /// example | Examples
 ```ruby
 0
-1000
--7
-47.2
+100
+-1.0
+10.2
 ```
 ///
 
-#### Strings
+### Strings
 
-A String in single or double quotes is a valid expression.
+Any quoted String can form a valid expression.
 
-/// warning | Important
-Specific keywords will be treated as [Binary Operators](#binary-operators) even if they are part of a word.  
-As an example, `Sand` would cause the expression engine to see `S AND` due to parts of the word matching `and`.
-
-To avoid this is it very important to always surround Strings with single or double quotes, as that tells the expression engine to treat as a String.
+/// note
+Always surround Strings with single or double quotes to avoid ambiguities.  
+The parser may understand specific characters as [binary operands](#binary-operators) should they match an existing text causing issues. Wrapping a String in single or double quotes forces it to treat the value as a String literal.
 ///
 
 /// example | Examples
 ```ruby
 "Hello World!"
-""
+''
 ```
 ///
 
-#### Booleans
+### Booleans
 
-Strings `true` and `false` are treated as boolean literals.
-
-### Placeholders
-
-Any [placeholder](placeholders.md) is a valid expression.
+Words `true` and `false` (case insensitive) are treated as literal boolean values - unless quoted - and can form valid expressions.
 
 /// example | Examples
 ```ruby
-${player protocol}
-${player name}
+true
+false
+```
+///
 
-${server playersOnline}
+## Placeholders
+
+[Placeholders](placeholders.md) are resolved into corresponding [Literals](#literals) and can therefore be valid expressions.
+
+/// example | Examples
+```ruby
+${player name}
+${player protocol}
+
 ${server host}
 ```
 ///
 
-### Binary Operators
+## Binary Operators
 
-`<expression> <binary operator> <expression>` is a valid expression.
+Binary operators can be used to combine multiple expressions to form a new one.
+
+### Boolean Binary Operators
 
 The following binary operators can be used for boolean evaluation:
 
-| Operator      | True if                                                                       | Case Sensitive? |
-|---------------|-------------------------------------------------------------------------------|-----------------|
-| `and` / `&&`  | Both expressions return true.                                                 | No              |
-| `or` / `\|\|` | Either expression returns true.                                               | No              |
-| `==` / `=`    | Both expressions are equal (Case sensitive).                                  | Yes             |
-| `=~` / `~`    | Both expressions are equal (Not Case sensitive).                              | No              |
-| `!=`          | Both expressions are not equal (Case sensitive).                              | Yes             |
-| `!~`          | Both expressions are not equal (Not case sensitive).                          | No              |
-| `\|-`         | Left expression starts with right expression (Case sensitive).                | Yes             |
-| `\|~`         | Left expression starts with right expression (Not case sensitive).            | No              |
-| `-\|`         | Left expression ends with right expression (Case sensitive).                  | Yes             |
-| `~\|`         | Left expression ends with right expression (Not case sensitive).              | No              |
-| `<_`          | Left expression contains right expression (Case sensitive).                   | Yes             |
-| `<~`          | Left expression contains right expression (Not case sensitive).               | No              |
-| `<`           | Left expression is less than the right expression.^[1](#n1)^                  | No              |
-| `<=`          | Left expression is less than, or equal to, the right expression.^[1](#n1)^    | No              |
-| `>`           | Left expression is larger than the right expression.^[1](#n1)^                | No              |
-| `>=`          | Left expression is larger than, or equal to, the right expression.^[1](#n1)^  | No              |
+| Operator      | True if                                                                      | Case Sensitive? |
+|---------------|------------------------------------------------------------------------------|-----------------|
+| `and` / `&&`  | Both expressions return true.                                                | No              |
+| `or` / `\|\|` | Either expression returns true.                                              | No              |
+| `==` / `=`    | Both expressions are equal.                                                  | Yes             |
+| `=~` / `~`    | Both expressions are equal.                                                  | No              |
+| `!=`          | Both expressions are not equal.                                              | Yes             |
+| `!~`          | Both expressions are not equal.                                              | No              |
+| `\|-`         | Left expression starts with right expression.                                | Yes             |
+| `\|~`         | Left expression starts with right expression.                                | No              |
+| `-\|`         | Left expression ends with right expression.                                  | Yes             |
+| `~\|`         | Left expression ends with right expression.                                  | No              |
+| `<_`          | Left expression contains right expression.                                   | Yes             |
+| `<~`          | Left expression contains right expression.                                   | No              |
+| `<`           | Left expression is less than the right expression.^[1](#n1)^                 | No              |
+| `<=`          | Left expression is less than, or equal to, the right expression.^[1](#n1)^   | No              |
+| `>`           | Left expression is larger than the right expression.^[1](#n1)^               | No              |
+| `>=`          | Left expression is larger than, or equal to, the right expression.^[1](#n1)^ | No              |
+
+/// example | Examples
+```ruby
+${player name} != "Anonymous"
+763 > ${player protocol} > 758
+${player hasPlayedBefore} and ${player isBanned} == "false"
+```
+///
+
+### Other Binary Operators
 
 These additional binary operators can also be used to perform certain actions:
 
@@ -112,22 +114,26 @@ These additional binary operators can also be used to perform certain actions:
 | `*`      | Multiplies two numbers.^[1](#n1)^            |
 | `/`      | Divides one number by another.^[1](#n1)^     |
 
+<small>^1^{ #n1 } In case of text will the text length be used to compare against.</small>
+
 /// example | Examples
 ```ruby
-${player name} != "Anonymous"
-763 > ${player protocol} > 758
-${player hasPlayedBefore} and ${player isBanned} == "false"
+${player protocol} + 10
+"<green>" . ${player name}
 ```
 ///
 
-<small>^1^{ #n1 } In case of text will the text length be used to compare against.</small>
+## Parenthesis
 
-### Parenthesis
+Parenthesis can be used to enclose one or multiple expressions to create a new expression and avoid ambiguities.
 
-`( <expression> )` is a valid expression.
-Parenthesis can be used to prevent ambiguities.
+/// example | Example
+```ruby
+(${player protocol} + 10) / 100
+```
+///
 
-### Negation
+## Negation
 
 `!` can be used to negate boolean expressions.
 
