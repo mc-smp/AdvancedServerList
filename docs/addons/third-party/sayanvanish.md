@@ -24,7 +24,7 @@ The plugin [SayanVanish]{ target="_blank" rel="nofollow" } is hooking into Advan
 <small>^1^{ #n1 } Only works when Proxy mode is enabled and will otherwise return `PROXY_MODE IS NOT ENABLED!`</small>
 ///
 
-/// tab | :fontawesome-solid-paper-plane: Velocity
+/// tab | :simple-velocity: Velocity
 [:octicons-file-code-24: Source][source-velocity]
 
 | Placeholder                      | Description                                                                      |

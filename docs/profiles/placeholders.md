@@ -15,15 +15,15 @@ The following placeholders are available in AdvancedServerList itself. Please no
 
 These placeholders use the player who pinged the server, to return values. They may require the player to be cached in order to work.
 
-| Placeholder                 | Description                                                     | Platforms    | Cached Player required?^[1](#player-n1)^ |
-|-----------------------------|-----------------------------------------------------------------|--------------|------------------------------------------|
-| `${player name}`            | The name of the player.                                         | All          | Yes^[2](#player-n2)^                     |
-| `${player protocol}`        | The protocol version of the player.                             | All          | No                                       |
-| `${player uuid}`            | The UUID of the player.                                         | All          | Yes^[3](#player-n3)^                     |
-| `${player version}`         | The protocol version of the player as readable MC version.      | Velocity     | No                                       |
-| `${player hasPlayedBefore}` | Boolean for whether the player has played on the server before. | Paper        | Yes                                      |
-| `${player isBanned}`        | Boolean for whether the player has been banned from the server. | Paper        | Yes                                      |
-| `${player isWhitelisted}`   | Boolean for whether the player is whitelisted on the server.    | Paper        | Yes                                      |
+| Placeholder                 | Description                                                     | Platforms              | Cached Player required?^[1](#player-n1)^ |
+|-----------------------------|-----------------------------------------------------------------|------------------------|------------------------------------------|
+| `${player name}`            | The name of the player.                                         | <!-- icon:all -->      | Yes^[2](#player-n2)^                     |
+| `${player protocol}`        | The protocol version of the player.                             | <!-- icon:all -->      | No                                       |
+| `${player uuid}`            | The UUID of the player.                                         | <!-- icon:all -->      | Yes^[3](#player-n3)^                     |
+| `${player version}`         | The protocol version of the player as readable MC version.      | <!-- icon:velocity --> | No                                       |
+| `${player hasPlayedBefore}` | Boolean for whether the player has played on the server before. | <!-- icon:paper -->    | Yes                                      |
+| `${player isBanned}`        | Boolean for whether the player has been banned from the server. | <!-- icon:paper -->    | Yes                                      |
+| `${player isWhitelisted}`   | Boolean for whether the player is whitelisted on the server.    | <!-- icon:paper -->    | Yes                                      |
 
 <small>^1^{ #player-n1 } When `Yes` is set, requires the player to have joined before while AdvancedServerList was running. Placeholder will not work when `disableCache` is true.</small>
 
@@ -35,12 +35,12 @@ These placeholders use the player who pinged the server, to return values. They 
 
 These placeholders use values given by the server/proxy AdvancedServerList runs on.
 
-| Placeholder                  | Description                                                             | Platforms |
-|------------------------------|-------------------------------------------------------------------------|-----------|
-| `${server playersOnline}`    | The number of players online on this proxy/server.^[1](#server-n1)^     | All       |
-| `${server playersMax}`       | The total number of players that can join this server.^[2](#server-n2)^ | All       |
-| `${server host}`             | The domain/IP the player pinged.^[3](#server-n3)^                       | All       |
-| `${server whitelistEnabled}` | Whether the whitelist is enabled or not.                                | Paper     |
+| Placeholder                  | Description                                                             | Platforms           |
+|------------------------------|-------------------------------------------------------------------------|---------------------|
+| `${server playersOnline}`    | The number of players online on this proxy/server.^[1](#server-n1)^     | <!-- icon:all -->   |
+| `${server playersMax}`       | The total number of players that can join this server.^[2](#server-n2)^ | <!-- icon:all -->   |
+| `${server host}`             | The domain/IP the player pinged.^[3](#server-n3)^                       | <!-- icon:all -->   |
+| `${server whitelistEnabled}` | Whether the whitelist is enabled or not.                                | <!-- icon:paper --> |
 
 <small>^1^{ #server-n1 } You can provide a comma-separated list of world or server names (based on platform) to return the collective count of players on these worlds/servers.  
 Additionally, when using [`playerCount -> onlinePlayers`](index.md#onlineplayers) will this placeholder return the modified online players count, except when used within the [`condition`](index.md#condition) option.</small>

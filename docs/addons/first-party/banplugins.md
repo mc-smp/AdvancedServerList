@@ -16,8 +16,7 @@ The BanPlugins Addon is available in downloads of AdvancedServerList on [:simple
 
 **Supported Platforms:**
 
-- :fontawesome-solid-paper-plane: Paper
-- :simple-spigotmc: BungeeCord
+<!-- icon:paper --> <!-- icon:bungee -->
 
 | Placeholder                     | Description                                                                              |
 |---------------------------------|------------------------------------------------------------------------------------------|
@@ -57,9 +56,7 @@ motd:
 
 **Supported Platforms:**
 
-- :fontawesome-solid-paper-plane: Paper
-- :simple-spigotmc: BungeeCord
-- :fontawesome-solid-paper-plane: Velocity
+<!-- icon:all -->
 
 | Placeholder                     | Description                                                                              |
 |---------------------------------|------------------------------------------------------------------------------------------|
@@ -95,9 +92,7 @@ motd:
 
 **Supported Platforms:**
 
-- :fontawesome-solid-paper-plane: Paper
-- :simple-spigotmc: BungeeCord
-- :fontawesome-solid-paper-plane: Velocity
+<!-- icon:all -->
 
 | Placeholder                  | Description                                                                              |
 |------------------------------|------------------------------------------------------------------------------------------|

@@ -101,6 +101,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - docs/.overrides/.icons
   - pymdownx.highlight:
   - pymdownx.inlinehilite:
   - pymdownx.magiclink:
@@ -131,6 +134,7 @@ markdown_extensions:
 hooks:
   - docs/.hooks/badges.py
   - docs/.hooks/replacer.py
+  - docs/.hooks/platforms.py
 
 nav:
   - Home: index.md

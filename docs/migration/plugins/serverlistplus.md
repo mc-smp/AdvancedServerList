@@ -28,13 +28,15 @@ The following placeholders get converted:
 
 ### Colors/Formatting
 
-The following color and formatting codes get converted[^1]:
+The following color and formatting codes get converted[^1^](#n1):
 
 | Color/Formatting code                      | Conversion                                                                    |
 |--------------------------------------------|-------------------------------------------------------------------------------|
 | `&<color/format>`                          | Corresponding color/formatting code in MiniMessage (i.e. `&1 -> <dark_blue>`) |
-| `&#<hexcode>`                              | `<#<hexcode>>`                                                                |
-| `%gradient#<start>#<end>%<text>%gradient%` | `<gradient:#<start>:#<end>><text></gradient>`                                 |
+| `&#<hexcode>`                              | `#!mm <#<hexcode>>`                                                           |
+| `%gradient#<start>#<end>%<text>%gradient%` | `#!mm <gradient:#<start>:#<end>><text></gradient>`                            |
+
+<small>^1^{ #n1 }Conversion is done lazily and without context, which means that a text such as `&aHello &l%player%&a!` will be converted to `#!mm <green>Hello <bold>${player name}<green>!` when it should be `#!mm <green>Hello <bold>${player name}</bold>!`</small>
 
 ### Favicon options
 
@@ -276,7 +278,3 @@ playerCount:
 favicon: ''
 ```
 ///
-
-[^1]:
-    Converting of color and formatting codes is done lazely and without context.  
-    This means that a text such as `&aHello &l%player%&a!` gets converted into `<aqua>Hello <bold>${player name}<aqua>!` when it actually should be `<aqua>Hello <bold>${player name}</bold>!`

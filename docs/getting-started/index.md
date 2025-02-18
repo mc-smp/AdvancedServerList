@@ -58,7 +58,7 @@ The plugin also supports these additional plugins. They are all optional.
     ----
     
     **Supported on:**  
-    :fontawesome-solid-paper-plane: Paper
+    <!-- icon:paper -->
 
 -   [**ViaVersion**][viaversion]{ target="_blank" rel="nofollow" }
     
@@ -69,7 +69,7 @@ The plugin also supports these additional plugins. They are all optional.
     ----
 
     **Supported on:**  
-    :fontawesome-solid-paper-plane: Paper
+    <!-- icon:paper -->
 
 -   [**PAPIProxyBridge**][papiproxybridge]{ target="_blank" rel="nofollow" }
     
@@ -80,7 +80,7 @@ The plugin also supports these additional plugins. They are all optional.
     ----
 
     **Supported on:**  
-    :simple-spigotmc: BungeeCord, :fontawesome-solid-paper-plane: Velocity
+    <!-- icon:proxies -->
 
 -   [**Maintenance**][maintenance]{ target="_blank" rel="nofollow" }
     
@@ -91,7 +91,7 @@ The plugin also supports these additional plugins. They are all optional.
     ----
 
     **Supported on:**  
-    :fontawesome-solid-paper-plane: Paper, :simple-spigotmc: BungeeCord, :fontawesome-solid-paper-plane: Velocity
+    <!-- icon:all -->
 
 -   [**BanPlugins Addon**][addon]
     
@@ -102,7 +102,7 @@ The plugin also supports these additional plugins. They are all optional.
     ----
 
     **Supported on:**  
-    :fontawesome-solid-paper-plane: Paper, :simple-spigotmc: BungeeCord, :fontawesome-solid-paper-plane: Velocity
+    <!-- icon:all -->
 
 </div>
 

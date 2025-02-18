@@ -56,3 +56,9 @@
 .md-banner__inner.md-grid.md-typeset {
     text-align: center;
 }
+
+.md-typeset .md-button.md-button--icon {
+    padding: .5em;
+    line-height: 0;
+    color: var(--md-default-fg-color);
+}
