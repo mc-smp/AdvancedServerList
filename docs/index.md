@@ -62,6 +62,16 @@ AdvancedServerList supports the following platforms:
     ----
     
     A list of all available commands in AdvancedServerList.
+    
+    ----
+    
+    **Other Pages:**
+    
+    - [/asl clearcache](commands/clearcache.md)
+    - [/asl help](commands/help.md)
+    - [/asl migrate](commands/migrate.md)
+    - [/asl profiles](commands/profiles.md)
+    - [/asl reload](commands/reload.md)
 
 -   [:octicons-note-24: **Profiles**](profiles/index.md)
     

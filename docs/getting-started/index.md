@@ -555,7 +555,7 @@ motd:
 
 ### Additional profiles
 
-Additional profiles can be created to display different content under specific situations. To create a new file, either manually create a YAML file in the `profiles` folder, or use [`/asl profiles add <name>`](../commands/profiles.md#add) to have one created for you. In either case is it recommended to only use alphanummeric (`a-z` abd `0-9`) characters, dashes and underscores for the file name. You should also choose a name that fits the purpose of the file (i.e. for a profile that displays stuff when someone is banned, name it `banned.yml`).
+Additional profiles can be created to display different content under specific situations. To create a new file, either manually create a YAML file in the `profiles` folder, or use [`/asl profiles add {name}`](../commands/profiles.md#add) to have one created for you. In either case is it recommended to only use alphanummeric (`a-z` abd `0-9`) characters, dashes and underscores for the file name. You should also choose a name that fits the purpose of the file (i.e. for a profile that displays stuff when someone is banned, name it `banned.yml`).
 
 In case you manually created a YAML file, make sure it contains the [`priority`](../profiles/index.md#priority) setting and one of the other settings, to have a valid profile.  
 You should also add a [`condition`](../profiles/index.md#condition) to ensure that the profile is only loaded when needed. The [Expressions page](../profiles/expressions.md) covers what counts as valid expressions and conditions.  
@@ -582,7 +582,7 @@ The [Examples page](../examples/index.md) contains more examples of different se
 ## 4. Loading profiles { #loading-profiles }
 
 Once you've set up your server list profile(s) is it time to load it/them.  
-To do this, simply run `/asl reload` as player (Requires permission `advancedserverlist.admin` or `advancedserverlist.command.reload`) or `asl reload` through the Server/Proxy console.
+To do this, simply run [`/asl reload`](../commands/reload.md).
 
 The plugin should then load any valid YAML file inside the `profiles` folder to then use.
 

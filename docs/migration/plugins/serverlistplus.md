@@ -32,9 +32,9 @@ The following color and formatting codes get converted[^1^](#n1):
 
 | Color/Formatting code                      | Conversion                                                                    |
 |--------------------------------------------|-------------------------------------------------------------------------------|
-| `&<color/format>`                          | Corresponding color/formatting code in MiniMessage (i.e. `&1 -> <dark_blue>`) |
-| `&#<hexcode>`                              | `#!mm <#<hexcode>>`                                                           |
-| `%gradient#<start>#<end>%<text>%gradient%` | `#!mm <gradient:#<start>:#<end>><text></gradient>`                            |
+| `&{color/format}`                          | Corresponding color/formatting code in MiniMessage (i.e. `&1 -> <dark_blue>`) |
+| `&#{hexcode}`                              | `#!mm <#{hexcode}>`                                                           |
+| `%gradient#{start}#{end}%{text}%gradient%` | `#!mm <gradient:#{start}:#{end}>{text}</gradient>`                            |
 
 <small>^1^{ #n1 }Conversion is done lazily and without context, which means that a text such as `&aHello &l%player%&a!` will be converted to `#!mm <green>Hello <bold>${player name}<green>!` when it should be `#!mm <green>Hello <bold>${player name}</bold>!`</small>
 
@@ -44,7 +44,7 @@ The following Favicon options get converted into an equivalent one:
 
 | Option  | Conversion                                                                      |
 |---------|---------------------------------------------------------------------------------|
-| `Heads` | `https://mc-heads.net/avatar/<entry>/64/nohelm`                                 |
+| `Heads` | `https://mc-heads.net/avatar/{entry}/64/nohelm`                                 |
 | `Helms` | Returned as-is with [placeholders replaced](#placeholders).                     |
 | `Files` | Only `.png` files will be included with [placeholders replaced](#placeholders). |
 
