@@ -101,7 +101,7 @@ public class MyPlugin extends Plugin {
 ```
 ///
 
-/// tab | :fontawesome-solid-paper-plane: Velocity Example
+/// tab | :simple-velocity: Velocity Example
 ```java title="MyPlugin.java"
 @Plugin(
     id = "myplugin",

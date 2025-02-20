@@ -22,12 +22,16 @@ This event is executed before AdvancedServerList tries to modify the player list
 
 The following methods are available to use:
 
-| Method                   | Description                                                                    |
-|--------------------------|--------------------------------------------------------------------------------|
-| `getEntry()`             | Returns the [`ProfileEntry`][profileentry] that AdvancedServerList should use. |
-| `setEntry(ProfileEntry)` | Sets the [`ProfileEntry`][profileentry] that should be used.                   |
-| `isCancelled()`          | Returns wether this event was cancelled or not.                                |
-| `setCancelled(boolean)`  | Sets the event's cancelled state.                                              |
+| Method                                  | Description                                                                    |
+|-----------------------------------------|--------------------------------------------------------------------------------|
+| [`getEntry()`][getentry]                | Returns the [`ProfileEntry`][profileentry] that AdvancedServerList should use. |
+| [`setEntry(ProfileEntry)`][setentry]    | Sets the [`ProfileEntry`][profileentry] that should be used.                   |
+| [`isCancelled()`][iscancelled]          | Returns wether this event was cancelled or not.                                |
+| [`setCancelled(boolean)`][setcancelled] | Sets the event's cancelled state.                                              |
+
+[setentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setentry
+[iscancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#iscancelled
+[setcancelled]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#setcancelled
 
 ### Notes { #preserverlistsetevent-notes }
 
@@ -41,7 +45,9 @@ This event is executed after AdvancedServerList completed the server list modifi
 
 | Method                   | Description                                                              |
 |--------------------------|--------------------------------------------------------------------------|
-| `getEntry()`             | Returns the [`ProfileEntry`][profileentry] that AdvancedServerList used. |
+| [`getEntry()`][getentry] | Returns the [`ProfileEntry`][profileentry] that AdvancedServerList used. |
+
+[getentry]: reference/api/ch.andre601.advancedserverlist.api/events/genericserverlistevent.md#getentry
 
 ### Notes { #postserverlistsetevent-notes }
 
@@ -60,6 +66,7 @@ The `ProfileEntry` is a record, representing the values of a [Server List Profil
 It is important to note, that the `ProfileEntry` can be a representation of the [`profiles` option](../profiles/index.md#profiles), the global options or a mixture of both.  
 If you want to create your own instance, you'll need to use the [`ProfileEntry.Builder` class](reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/builder.md) as the `ProfileEntry` is unmodifiable.
 
-A convenience method in the form of `builder()` exists to create a Builder instance of the ProfileEntry with its values already pre-set.
+A convenience method in the form of [`builder()`][builder] exists to create a Builder instance of the ProfileEntry with its values already pre-set.
 
 [profileentry]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/index.md
+[builder]: reference/api/ch.andre601.advancedserverlist.api/profiles/profileentry/index.md#builder
