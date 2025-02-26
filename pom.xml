@@ -52,7 +52,7 @@
         <dependency.adventure-text-serializer-legacy>4.19.0</dependency.adventure-text-serializer-legacy>
         <dependency.adventure-platform-bungeecord>4.3.4</dependency.adventure-platform-bungeecord>
         <!-- Configurate version -->
-        <dependency.configurate-yaml>4.1.2</dependency.configurate-yaml>
+        <dependency.configurate-yaml>4.2.0</dependency.configurate-yaml>
         <!-- Cloud versions -->
         <dependency.cloud-annotations>2.0.0</dependency.cloud-annotations>
         <dependency.cloud-bungee>2.0.0-SNAPSHOT</dependency.cloud-bungee>
