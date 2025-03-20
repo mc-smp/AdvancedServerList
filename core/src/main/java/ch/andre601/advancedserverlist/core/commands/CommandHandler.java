@@ -46,13 +46,13 @@ import org.incendo.cloud.context.CommandInput;
 import org.incendo.cloud.help.result.CommandEntry;
 import org.incendo.cloud.key.CloudKey;
 import org.incendo.cloud.minecraft.extras.MinecraftHelp;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -513,7 +513,7 @@ public class CommandHandler{
     public void migrate(
         CmdSender sender,
         AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "The plugin to migrate from.") Plugin plugin
+        @NonNull @Argument(description = "The plugin to migrate from.") Plugin plugin
     ){
         if(plugin == Plugin.SERVERLISTPLUS){
             if(!core.getPlugin().isPluginEnabled("ServerListPlus")){
@@ -596,7 +596,7 @@ public class CommandHandler{
     public void info(
         CmdSender sender,
         AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "Name of the profile to view.", suggestions = "profiles") String profile
+        @NonNull @Argument(description = "Name of the profile to view.", suggestions = "profiles") String profile
     ){
         if(!sender.isPlayer()){
             sender.sendErrorMsg("<red>This command can only be executed by Players!");
@@ -734,7 +734,7 @@ public class CommandHandler{
     public void add(
         CmdSender sender,
         AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "Name of the profile to create.") String name
+        @NonNull @Argument(description = "Name of the profile to create.") String name
     ){
         if(name.isEmpty()){
             sender.sendErrorMsg("<red>Insufficient arguments.");
@@ -765,8 +765,8 @@ public class CommandHandler{
     public void copy(
         CmdSender sender,
         AdvancedServerList<?> core,
-        @Nonnull @Argument(description = "Name of the profile to copy.", suggestions = "profiles") String profile,
-        @Nonnull @Argument(description = "Name of the copy.") String name
+        @NonNull @Argument(description = "Name of the profile to copy.", suggestions = "profiles") String profile,
+        @NonNull @Argument(description = "Name of the copy.") String name
     ){
         if(profile.isEmpty() || name.isEmpty()){
             sender.sendErrorMsg("<red>Insufficient arguments.");

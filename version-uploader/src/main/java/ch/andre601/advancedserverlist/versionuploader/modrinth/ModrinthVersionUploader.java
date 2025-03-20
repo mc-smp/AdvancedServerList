@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
 public class ModrinthVersionUploader{
@@ -54,8 +53,12 @@ public class ModrinthVersionUploader{
         PlatformInfo.BUNGEECORD,
         PlatformInfo.VELOCITY
     );
-    private final List<String> versions = List.of(
+    private final List<String> paperVersions = List.of(
         "1.20.6",
+        "1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4"
+    );
+    private final List<String> versions = List.of(
+        "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6",
         "1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4"
     );
     
@@ -100,28 +103,29 @@ public class ModrinthVersionUploader{
         );
         
         for(int i = 0; i < platforms.size(); i++){
-            logger.info("Creating release for platform {}...", platforms.get(i).getPlatform());
+            PlatformInfo platformInfo = platforms.get(i);
+            logger.info("Creating release for platform {}...", platformInfo.getPlatform());
             
-            List<File> files = platforms.get(i).getFilePaths().stream()
+            List<File> files = platformInfo.getFilePaths().stream()
                 .map(path -> new File(path.replace("{{version}}", pluginVersion)))
                 .filter(File::exists)
                 .toList();
             
             CreateVersion.CreateVersionRequest.CreateVersionRequestBuilder builder = CreateVersion.CreateVersionRequest.builder()
                 .projectId("xss83sOY")
-                .name(String.format("v%s (%s)", releaseVersion, String.join(", ", platforms.get(i).getLoaders())))
+                .name(String.format("v%s (%s)", releaseVersion, String.join(", ", platformInfo.getLoaders())))
                 .versionNumber(releaseVersion)
                 .changelog(changelog.replaceAll("\r\n", "\n"))
                 .featured(false)
                 .files(files)
-                .gameVersions(versions)
-                .loaders(platforms.get(i).getLoaders())
+                .gameVersions(platformInfo == PlatformInfo.PAPER ? paperVersions : versions)
+                .loaders(platformInfo.getLoaders())
                 .versionType(prerelease ? ProjectVersion.VersionType.BETA : ProjectVersion.VersionType.RELEASE);
             
-            switch(platforms.get(i).getPlatform().toLowerCase(Locale.ROOT)){
-                case "paper" -> builder.dependencies(paperDependencies);
-                case "bungeecord" -> builder.dependencies(bungeeDependencies);
-                case "velocity" -> builder.dependencies(velocityDependencies);
+            switch(platformInfo){
+                case PAPER -> builder.dependencies(paperDependencies);
+                case BUNGEECORD -> builder.dependencies(bungeeDependencies);
+                case VELOCITY -> builder.dependencies(velocityDependencies);
             }
             
             if(dryrun){
@@ -134,7 +138,6 @@ public class ModrinthVersionUploader{
                 continue;
             }
             
-            final int index = i;
             futures[i] = api.versions().createProjectVersion(builder.build()).whenComplete(((projectVersion, throwable) -> {
                 if(throwable != null){
                     logger.warn("Encountered an exception while uploading a new release to Modrinth!", throwable);
@@ -145,11 +148,11 @@ public class ModrinthVersionUploader{
                 
                 logger.info("Created new release!");
                 logger.info("Link:     {}", url);
-                logger.info("Platform: {}", platforms.get(index).getPlatform());
+                logger.info("Platform: {}", platformInfo.getPlatform());
                 
                 releaseHolder.addRelease(
                     "modrinth",
-                    String.join(", ", platforms.get(index).getPlatformNames()),
+                    String.join(", ", platformInfo.getPlatformNames()),
                     url
                 );
             }));

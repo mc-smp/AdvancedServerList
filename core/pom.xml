@@ -136,6 +136,8 @@
             <version>33.4.5-jre</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Command Framework -->
         <dependency>
             <groupId>org.incendo</groupId>
             <artifactId>cloud-annotations</artifactId>
@@ -153,6 +155,13 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        
+        <!-- Annotations -->
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>1.0.0</version>
         </dependency>
         
         <!-- Plugins -->
