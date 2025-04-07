@@ -19,11 +19,11 @@
 {% endif %}
 
 {% if enum.description %}
-<p class="api-detail__description">
+<div class="api-detail__description" markdown>
 
 {{ enum.description }}
 
-</p>
+</div>
 {% endif %}
 
 </div>

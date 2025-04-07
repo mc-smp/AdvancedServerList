@@ -48,4 +48,4 @@ methods:
 
 # <api__enum></api__enum> NullBool
 
-Enum used to return a `Boolean` value with a default one should no value be set.
+Enum used to return a [`Boolean`](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html){ target="_blank" rel="noopener" } Value with a fallback, should the boolean be `null`.

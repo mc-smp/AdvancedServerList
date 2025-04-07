@@ -24,4 +24,11 @@ methods:
 
 # <api__interface></api__interface> GenericServer
 
-Simple class used to wrap around some generic server data such as online player count, number of total players that can join and the host (IP/Domain) that got pinged by the player.
+Interface used to share common information across all platforms.
+
+Platform-specific interfaces extending this interface are available and may offer additional features in addition to what this interface is offering.  
+This interface always offers data for the following:
+
+- [Players currently online on the Proxy/Server](#getplayersonline)
+- [Max Players allowed to join the Proxy/Server](#getplayersmax)
+- [IP/Domain pinged by the Player](#gethost)

@@ -5,17 +5,15 @@ methods:
   - name: 'getName'
     description: |
       Returns the name of the player.  
-      Note that on Spigot, Paper and other forks can the name differ from the one cached by AdvancedServerList, if the plugin was able to retrieve an OfflinePlayer instance from the server. On BungeeCord and Velocity will the returned String always be the name from the cache.
+      On BungeeCord and Velocity is the returned value always what AdvancedServerList has cached, while on paper the value may differ, should the plugin be able to obtain a OfflinePlayer instance from the Server.
       
-      Name may be whatever has been defined in AdvancedServerList's config.yml, should the player not be cached yet by the plugin.
+      Name may also be whatever has been defined in AdvancedServerList's `unknownPlayer -> name` config.yml Option.
     returns: 'String representing the player''s name'
     type:
       name: String
       type: object
   - name: 'getProtocol'
-    description: |
-      Returns the protocol ID the player is using.  
-      The protocol ID is an integer used by Minecraft to determine what version a server or client is running.
+    description: Returns the protocol ID the player is using. The protocol ID is a unique positive integer that is used in Minecraft to determine the Version used by the Client and Server.
     returns: 'Integer representing the protocol version of this player.'
     type:
       name: int
@@ -23,7 +21,7 @@ methods:
     description: |
       Returns the unique ID associated with this player.
       
-      UUID may be whatever has been defined in AdvancedServerList's config.yml, should the player not be cached yet by AdvancedServerList.
+      UUID may also be whatever has been defined in AdvancedServerList's `unknownPlayer -> uuid` config.yml Option.
     returns: 'UUID of the player'
     type:
       name: UUID
@@ -32,10 +30,10 @@ methods:
 
 # <api__interface></api__interface> GenericPlayer
 
-A basic interface used to store generic player data to use in placeholder resolving.  
-The different variants of AdvancedServerList implement this into their own class and may provide additional data not available through this interface.
+Interface used by the API to share common information across all platforms.
 
-The following values will always be present, no matter the platform this interface is used on:
+Platform-specific interfaces extending this interface are available and may offer additional features in addition to what this interface is offering.  
+This interface always offers data for the following:
 
 - [Name of the Player](#getname)
 - [Protocol version of the Player](#getprotocol)

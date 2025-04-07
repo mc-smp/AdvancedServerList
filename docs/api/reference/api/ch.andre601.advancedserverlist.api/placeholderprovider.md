@@ -14,7 +14,7 @@ constructors:
 methods:
   - name: 'parsePlaceholder'
     description: |
-      Method called by AdvancedServerList's StringReplacer class to replace any appearances of `${<identifier> <placeholder> with whatever value a matching PlaceholderProvider may return.
+      Method called by AdvancedServerList's StringReplacer class to replace any appearances of `${<identifier> <placeholder>}` with whatever value a matching PlaceholderProvider may return.
       
       Returning `null` will be treated as an invalid placeholder by the plugin, making it return the placeholder as-is without any changes.
     parameters:
