@@ -9,7 +9,7 @@ If you have questions, don't hesitate to join the [M.O.S.S. Discord][discord] an
 
 ## Text Formatting
 
-AdvancedServerList uses the [MiniMessage Text Formatting][minimessage] for all formatting of text options ([`motd`](index.md#motd), [`playerCount -> hover`](index.md#hover) and [`playerCount -> text`](index.md#text)).  
+AdvancedServerList uses the [MiniMessage Text Formatting][minimessage] for all formatting of text options ([`motd`](options/motd.md), [`playerCount -> hover`](options/playercount/hover.md) and [`playerCount -> text`](options/playercount/text.md)).  
 It supports all available [formatting tags][tags] with a [few exceptions and limitations](#exceptions-and-limitations).
 
 /// note

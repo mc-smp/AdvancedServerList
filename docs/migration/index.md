@@ -9,8 +9,7 @@ icon: octicons/file-directory-symlink-24
 The below pages show guides on how to migrate from another plugin to AdvancedServerList.  
 These pages may include important information about the migration process and what you may have to do before, during or after the process.
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 -   [**MiniMOTD**](plugins/minimotd.md)
     
     ----
@@ -22,16 +21,14 @@ These pages may include important information about the migration process and wh
     ----
     
     Migrate from the Plugin [ServerListPlus](https://github.com/Minecrell/ServerListPlus){ target="_blank" rel="nofollow" }.
-
-</div>
+///
 
 ## AdvancedServerList
 
 The below pages show guides on how to migrate from one version to another of AdvancedServerList.  
 These guides are only for the Server List Profile files, as the config.yml gets automatically migrated (Feature since v3.1.0).
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 -   [**v3.8.0 to v3.9.0**](versions/v3.8.0-to-v3.9.0.md)
     
     ----
@@ -61,5 +58,4 @@ These guides are only for the Server List Profile files, as the config.yml gets 
     ----
     
     Migrate from version 1.5.3 to 1.6.0.
-
-</div>
+///

@@ -12,8 +12,7 @@ The guide is designed to be as easy to understand as possible. If you still have
 The first step would be to download the plugin from a download page of your choice.  
 AdvancedServerList is available on the following places (Please note the current status!):
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 -   [:simple-modrinth: **Modrinth**][modrinth]{ target="_blank" rel="nofollow" }
     
     ----
@@ -38,8 +37,7 @@ AdvancedServerList is available on the following places (Please note the current
     ----
     
     :octicons-alert-24:{ style="color: var(--md-badge-fg--warning);" } **Discontinued!**
-
-</div>
+///
 
 [spigot]: https://www.spigotmc.org/resources/102910/
 
@@ -47,8 +45,7 @@ The plugin is available for Paper, BungeeCord, Waterfall and Velocity, and has b
 
 The plugin also supports these additional plugins. They are all optional.
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 -   [**PlaceholderAPI**][placeholderapi]{ target="_blank" rel="nofollow" }
     
     ----
@@ -103,8 +100,7 @@ The plugin also supports these additional plugins. They are all optional.
 
     **Supported on:**  
     <!-- icon:all -->
-
-</div>
+///
 
 [addon]: ../addons/first-party/banplugins.md
 
@@ -136,7 +132,7 @@ Let's cover the files and folders...
 
 #### Favicons folder
 
-This folder allows you to store PNG images that should be used as favicons by the plugin. A favicon from this folder can be used by referencing the name (Including the `.png` file extension) in the [`favicon` option of the server list profile](../profiles/index.md#favicon).
+This folder allows you to store PNG images that should be used as favicons by the plugin. A favicon from this folder can be used by referencing the name (Including the `.png` file extension) in the [`favicon` option of the server list profile](../profiles/options/favicon.md).
 
 #### Profiles folder and default.yml { #profiles-folder-and-default-yml }
 
@@ -535,14 +531,14 @@ There are certain files and folders that get created when certain events happen:
 
 Creating your first profile is relatively simple.
 
-It's best to open the `default.yml` file located inside `profiles` with the file editor of your choice ([:simple-vscodium: VSCodeium](https://vscodium.com/) or [:simple-notepadplusplus: Notepad++](https://notepad-plus-plus.org/) are recommended).  
+It's best to open the `default.yml` file located inside `profiles` with the file editor of your choice ([:simple-vscodium: VSCodeium](https://vscodium.com/){ target="_blank" rel="nofollow" } or [:simple-notepadplusplus: Notepad++](https://notepad-plus-plus.org/){ target="_blank" rel="nofollow" } are recommended).  
 This file should contain all available options that you can set and alter.
 
-Edit the options to whatever you like. All text-based options, except [`condition`](../profiles/index.md#condition), support [MiniMessage formatting](../profiles/formatting.md).  
-Hexadecimal (RGB) colors are supported, however, only the [`motd` option](../profiles/index.md#motd) may display them and only for MC 1.16+ clients. Any other option will have the color down-sampled to the nearest supported color code.
+Edit the options to whatever you like. All text-based options, except [`condition`](../profiles/options/condition.md), support [MiniMessage formatting](../profiles/formatting.md).  
+Hexadecimal (RGB) colors are supported, however, only the [`motd` option](../profiles/options/motd.md) may display them and only for MC 1.16+ clients. Any other option will have the color down-sampled to the nearest supported color code.
 
 If you're unsure how a specific option should look like, head over to the [Profiles page](../profiles/index.md) for more information about the general structure.  
-All you need to know is, that a bare-bones server list profile requires a valid [priority](../profiles/index.md#priority) and at least one of the settings to be present.
+All you need to know is, that a bare-bones server list profile requires a valid [priority](../profiles/options/priority.md) and at least one of the other options (except condition) to be present.
 
 To give an example is here a basic profile that only modifies the MOTD and nothing else:
 ```yaml title="default.yml"
@@ -557,8 +553,8 @@ motd:
 
 Additional profiles can be created to display different content under specific situations. To create a new file, either manually create a YAML file in the `profiles` folder, or use [`/asl profiles add {name}`](../commands/profiles.md#add) to have one created for you. In either case is it recommended to only use alphanummeric (`a-z` abd `0-9`) characters, dashes and underscores for the file name. You should also choose a name that fits the purpose of the file (i.e. for a profile that displays stuff when someone is banned, name it `banned.yml`).
 
-In case you manually created a YAML file, make sure it contains the [`priority`](../profiles/index.md#priority) setting and one of the other settings, to have a valid profile.  
-You should also add a [`condition`](../profiles/index.md#condition) to ensure that the profile is only loaded when needed. The [Expressions page](../profiles/expressions.md) covers what counts as valid expressions and conditions.  
+In case you manually created a YAML file, make sure it contains the [`priority`](../profiles/options/priority.md) setting and one of the other settings, to have a valid profile.  
+You should also add a [`condition`](../profiles/options/condition.md) to ensure that the profile is only loaded when needed. The [Expressions page](../profiles/expressions.md) covers what counts as valid expressions and conditions.  
 Do note that the plugin goes through the profiles in order of priority, starting with the highest number first, picking the first one that returns a `condition` returning true.
 
 /// info | Note about Condition

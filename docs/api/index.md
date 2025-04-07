@@ -88,12 +88,10 @@ dependencies {
 
 Dedicated pages to explain aspects of the API are available:
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 - [:octicons-plus-circle-24: Adding Placeholders](adding-placeholders.md)
 - [:octicons-broadcast-24: Listening for Events](listening-for-events.md)
-
-</div>
+///
 
 ## Declare AdvancedServerList as (soft)depend
 

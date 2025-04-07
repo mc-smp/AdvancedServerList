@@ -3,7 +3,7 @@ icon: octicons/plus-circle-24
 ---
 
 AdvancedServerList allows you to add your own Placeholders to be useable through its `${identifier value}` format.  
-The benefit of this method over alternatives such as using PlaceholderAPI placeholders is availability and the fact that these placeholders can be used within the [`condition` option](../profiles/index.md#condition) of the plugin.
+The benefit of this method over alternatives such as using PlaceholderAPI placeholders is availability and the fact that these placeholders can be used within the [`condition` option](../profiles/options/condition.md) of the plugin.
 
 Adding your own placeholder is relatively easy and only requires the main API module to be used in your dependencies, unless you need platform-specific values (Explained later on).
 

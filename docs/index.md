@@ -43,8 +43,7 @@ AdvancedServerList supports the following platforms:
 
 ## Pages
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 -   [:octicons-milestone-24: **Getting Started**](getting-started/index.md)
     
     ----
@@ -144,5 +143,4 @@ AdvancedServerList supports the following platforms:
         - [:octicons-stop-24: BanPlugins Addon](addons/first-party/banplugins.md)
     - Third Party
         - [:octicons-eye-closed-24: SayanVanish](addons/third-party/sayanvanish.md)
-
-</div>
+///

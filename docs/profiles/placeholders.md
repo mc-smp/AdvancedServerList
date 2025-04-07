@@ -43,9 +43,9 @@ These placeholders use values given by the server/proxy AdvancedServerList runs 
 | `${server whitelistEnabled}` | Whether the whitelist is enabled or not.                                | <!-- icon:paper --> |
 
 <small>^1^{ #server-n1 } You can provide a comma-separated list of world or server names (based on platform) to return the collective count of players on these worlds/servers.  
-Additionally, when using [`playerCount -> onlinePlayers`](index.md#onlineplayers) will this placeholder return the modified online players count, except when used within the [`condition`](index.md#condition) option.</small>
+Additionally, when using [`playerCount -> onlinePlayers`](options/playercount/onlineplayers.md) will this placeholder return the modified online players count, except when used within the [`condition`](options/condition.md) option.</small>
 
-<small>^2^{ #server-n2 } When using either [`playerCount -> extraPlayers`](index.md#extraplayers) or [`playerCount -> maxPlayers`](index.md#maxplayers) will this placeholder return the modified max players count, except when used within the [`condition`](index.md#condition) option.</small>
+<small>^2^{ #server-n2 } When using either [`playerCount -> extraPlayers`](options/playercount/extraplayers.md) or [`playerCount -> maxPlayers`](options/playercount/maxplayers.md) will this placeholder return the modified max players count, except when used within the [`condition`](options/condition.md) option.</small>
 
 <small>^3^{ #server-n3 } An optional server name may be provided to display the IP/Domain associated with said server. This only works for the BungeeCord and Velocity version of the plugin.</small>
 
@@ -68,7 +68,7 @@ Servers are pinged every 10 seconds by the plugin and cached for that time perio
 
 ### Maintenance
 
-These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/Maintenance) plugin to work.
+These placeholders require the [Maintenance](https://hangar.papermc.io/kennytv/Maintenance){ target="_blank" rel="nofollow" } plugin to work.
 
 | Placeholder                         | Description                                                    |
 |-------------------------------------|----------------------------------------------------------------|
@@ -112,4 +112,4 @@ Placeholders from PlaceholderAPI Expansions can be used in AdvancedServerList us
 PlaceholderAPI placeholders can be used both on the Server (Paper) and on the proxy (BungeeCord, Velocity) version of AdvancedServerList.  
 However, the Proxy version requires the usage of [PAPIProxyBridge] to function properly.
 
-Placeholders can also not be used within the [`condition`](index.md#condition) option of a Server List Profile.
+Placeholders can also not be used within the [`condition`](options/condition.md) option of a Server List Profile.

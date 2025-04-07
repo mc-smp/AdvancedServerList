@@ -126,6 +126,7 @@ markdown_extensions:
   - pymdownx.blocks.tab:
       alternate_style: true
   - pymdownx.blocks.details:
+  - pymdownx.blocks.html:
   - pymdownx.caret:
 
 hooks:
@@ -147,6 +148,22 @@ nav:
     - commands/reload.md
   - Profiles:
     - profiles/index.md
+    - Options:
+      - profiles/options/index.md
+      - Priority: profiles/options/priority.md
+      - Condition: profiles/options/condition.md
+      - Profiles: profiles/options/profiles.md
+      - Motd: profiles/options/motd.md
+      - Favicon: profiles/options/favicon.md
+      - PlayerCount:
+        - profiles/options/playercount/index.md
+        - HidePlayers: profiles/options/playercount/hideplayers.md
+        - HidePlayersHover: profiles/options/playercount/hideplayershover.md
+        - Hover: profiles/options/playercount/hover.md
+        - Text: profiles/options/playercount/text.md
+        - ExtraPlayers: profiles/options/playercount/extraplayers.md
+        - MaxPlayers: profiles/options/playercount/maxplayers.md
+        - OnlinePlayers: profiles/options/playercount/onlineplayers.md
     - Expressions: profiles/expressions.md
     - Formatting: profiles/formatting.md
     - Placeholders: profiles/placeholders.md

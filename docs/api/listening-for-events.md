@@ -7,12 +7,10 @@ These events are structurally the same across all platforms, yet still require t
 
 The plugin currently offers the following events:
 
-<div class="grid cards" markdown>
-
+/// html | div.grid.cards
 - [PreServerListSetEvent](#preserverlistsetevent)
 - [PostServerListSetEvent](#postserverlistsetevent)
-
-</div>
+///
 
 ## PreServerListSetEvent
 
@@ -56,7 +54,107 @@ This event is executed after AdvancedServerList completed the server list modifi
 
 ## Registering the Events
 
-To register an event, please refer to our platforms documentation on how to do this.
+/// tab | :fontawesome-solid-paper-plane: Paper
+```java { title="MyPlugin.java" .annotate }
+public class MyPlugin extends JavaPlugin {
+    
+    @Override
+    public void onEnable() {
+        // (1)
+        Bukkit.getPluginManager().registerEvents(new ASLEventListener(), this);
+    }
+}
+```
+
+1. `getServer()` from the `JavaPlugin` class can be used here too instead of the `Bukkit` singleton.
+
+```java { title="ASLEventListener.java" }
+public class ASLEventListener implements Listener {
+    
+    @EventHandler
+    public void onPreServerListSet(PreServerListSetEvent event) {
+        System.out.println("PreServerListSetEvent fired!");
+    }
+    
+    @EventHandler
+    public void onPostServerListSetEvent(PostServerListSetEvent event) {
+        System.out.println("PostServerListSetEvent fired!");
+    }
+}
+```
+///
+
+/// tab | :simple-spigotmc: BungeeCord
+```java { title="MyPlugin.java" }
+public class MyPlugin extends Plugin {
+    
+    @Override
+    public void onEnable() {
+        getProxy().getPluginManager().registerListener(this, new ASLEventListener());
+    }
+}
+```
+
+```java { title="ASLEventListener.java" }
+public class ASLEventListener implements Listener {
+    
+    @EventHandler
+    public void onPreServerListSet(PreServerListSetEvent event) {
+        System.out.println("PreServerListSetEvent fired!");
+    }
+    
+    @EventHandler
+    public void onPostServerListSetEvent(PostServerListSetEvent event) {
+        System.out.println("PostServerListSetEvent fired!");
+    }
+}
+```
+///
+
+/// tab | :simple-velocity: Velocity
+```java { title="MyPlugin.java" }
+@Plugin(
+    id = "myplugin",
+    name = "MyPlugin",
+    version = "1.0.0",
+    authors = {"author"},
+    dependencies = {
+        @Dependency(
+            id = "advancedserverlist",
+        )
+    }
+)
+public class MyPlugin {
+    
+    private final ProxyServer proxy;
+    
+    @Inject
+    public MyPlugin(ProxyServer server) {
+        this.proxy = proxy;
+    }
+    
+    @Subscribe
+    public void init(ProxyInitializeEvent event) {
+        proxy.getEventManager().register(this, new ASLEventListener());
+    }
+}
+```
+
+```java { title="ASLEventListener.java" }
+public class ASLEventListener {
+    
+    @Subscribe
+    public void onPreServerListSet(PreServerListSetEvent event) {
+        System.out.println("PreServerListSetEvent fired!");
+    }
+    
+    @Subscribe
+    public void onPostServerListSetEvent(PostServerListSetEvent event) {
+        System.out.println("PostServerListSetEvent fired!");
+    }
+}
+```
+///
 
 ## What is a ProfileEntry?
 
