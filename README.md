@@ -40,7 +40,7 @@ A Server List Profile is a single YAML file located in the plugin's `profiles` f
 Each file has a priority and optional condition. The priority is used to determine what file AdvancedServerList should use first - starting from highest number to lowest - with conditions being used to set when the profile should be used.  
 Once a profile has been found with a condition returning true - which is the default should there be no condition - will AdvancedServerList use said profile.
 
-> *Read more about [Priority](https://asl.andre601.ch/profiles/#priority) and [Conditions](https://asl.andre601.ch/profiles/#condition)*
+> *Read more about [Priority](https://asl.andre601.ch/profiles/options/priority) and [Conditions](https://asl.andre601.ch/profiles/options/condition)*
 
 ### Placeholders
 
