@@ -149,7 +149,6 @@ nav:
   - Profiles:
     - profiles/index.md
     - Options:
-      - profiles/options/index.md
       - Priority: profiles/options/priority.md
       - Condition: profiles/options/condition.md
       - Profiles: profiles/options/profiles.md

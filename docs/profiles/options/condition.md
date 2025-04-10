@@ -4,9 +4,15 @@ The `condition` option is a String that allows you to set a single or multiple r
 
 The String can contain [any valid expression](../expressions.md) that returns a boolean. Non-boolean values will be converted to one based on their value.
 
+/// note
+An empty condition String or no condition will always be treated as a true condition.
+///
+
 ## Example
 
 ```yaml
+priority: 1
+
 #
 # This condition returns true if the player's protocol version is
 # less than 735.
