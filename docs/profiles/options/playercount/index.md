@@ -4,11 +4,11 @@ The `playerCount` option contains various options all related to the player coun
 See below for available options:
 
 /// html | div.grid.cards
-- [HidePlayers](hideplayers.md)
-- [HidePlayersHover](hideplayershover.md)
-- [Hover](hover.md)
-- [Text](text.md)
-- [ExtraPlayers](extraplayers.md)
-- [MaxPlayers](maxplayers.md)
-- [OnlinePlayers](onlineplayers.md)
+- [`hidePlayers`](hideplayers.md)
+- [`hidePlayersHover`](hideplayershover.md)
+- [`hover`](hover.md)
+- [`text`](text.md)
+- [`extraPlayers`](extraplayers.md)
+- [`maxPlayers`](maxplayers.md)
+- [`onlinePlayers`](onlineplayers.md)
 ///
