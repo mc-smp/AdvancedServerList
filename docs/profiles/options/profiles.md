@@ -1,23 +1,23 @@
 # Profiles
 
-The `profiles` option is a List option that allows you to configure individual profiles to use.  
-Each entry can use the following options:
+The `profiles` option is a List option that allows you to define multiple entries for a single file to use, providing a way of randomly displaying an MOTD, Favicon, etc.
 
-- [`Motd`](motd.md)
-- [`Favicon`](favicon.md)
-- PlayerCount
-    - [`HidePlayers`](playercount/hideplayers.md)
-    - [`HidePlayersHover`](playercount/hideplayershover.md)
-    - [`Hover`](playercount/hover.md)
-    - [`Text`](playercount/text.md)
-    - [`ExtraPlayers`](playercount/extraplayers.md)
-    - [`MaxPlayers`](playercount/maxplayers.md)
-    - [`OnlinePlayers`](playercount/onlineplayers.md)
+Each list entry can contain any combination of the following options:
 
-The plugin will select an entry in the list at random. Should an option not be set will it check if it was set in the file itself to use that as a fallback.  
-This allows you setups where you randomize only a specific option while keeping the other ones the same without having to copy-pasting it.
+- [`motd`](motd.md)
+- [`favicon`](favicon.md)
+- `playerCount`
+    - [`hidePlayers`](playercount/hideplayers.md)
+    - [`hidePlayersHover`](playercount/hideplayershover.md)
+    - [`hover`](playercount/hover.md)
+    - [`text`](playercount/text.md)
+    - [`extraPlayers`](playercount/extraplayers.md)
+    - [`maxPlayers`](playercount/maxplayers.md)
+    - [`onlinePlayers`](playercount/onlineplayers.md)
 
-One downside is, that you cannot randomly pick a single option from the list. This means that if you have motd and favicon set for one entry will it always use said favicon and motd together.
+When present with at least one entry will the plugin select an entry at random, using the provided option values to display.  
+Should an entry not have an option present will the plugin check the file itself for the option to use. As an example, not setting `favicon` in the list will have AdvancedServerList check the file itself for a `favicon` option to use.  
+This allows you to only randomize a specific option of a profile while keeping the other ones static (i.e. have a randomized MOTD while the Favicon remains the same).
 
 ## Example
 
