@@ -52,9 +52,9 @@ public class FaviconHandler<F>{
     private final AdvancedServerList<F> core;
     private final PluginLogger logger;
     private final ThreadPoolExecutor faviconThreadPool;
-    private final Cache<String, CompletableFuture<F>> faviconCache;
+    private final Cache<String, CompletableFuture<FaviconHolder<F>>> faviconCache;
     
-    private final Map<String, F> localFavicons = new HashMap<>();
+    private final Map<String, FaviconHolder<F>> localFavicons = new HashMap<>();
     private final HttpClient client = HttpClient.newHttpClient();
     private final Random random = new Random();
     
@@ -70,26 +70,60 @@ public class FaviconHandler<F>{
     }
     
     public F getFavicon(String input){
-        if(localFavicons.size() > 0){
+        if(!localFavicons.isEmpty()){
             logger.debug(FaviconHandler.class, "Current Local Favicons:");
             for(String key : localFavicons.keySet()){
                 logger.debug(FaviconHandler.class, "  - %s", key);
             }
         }
         
+        String[] parts = input.split(";");
+        if(parts.length > 1){
+            try{
+                FaviconHolder<F> holder = faviconCache.get(input, () -> CompletableFuture.supplyAsync(() -> {
+                    List<CompletableFuture<FaviconHolder<F>>> futures = new ArrayList<>();
+                    for(String part : parts){
+                        futures.add(getFuture(part, true));
+                    }
+                    
+                    CompletableFuture<?>[] futuresArray = futures.toArray(new CompletableFuture<?>[0]);
+                    List<FaviconHolder<F>> list = CompletableFuture.allOf(futuresArray)
+                        .thenApply(v -> futures.stream().map(CompletableFuture::join).toList())
+                        .getNow(null);
+                    
+                    if(list == null || list.isEmpty())
+                        return null;
+                    
+                    return composeImage(list);
+                })).getNow(null);
+                
+                if(holder == null)
+                    return null;
+                
+                return holder.favicon();
+            }catch(ExecutionException ex){
+                logger.warn("Encountered an ExecutionException while composing Favicon!", ex);
+                return null;
+            }
+        }
+        
         if(input.equalsIgnoreCase("random")){
             logger.debug(FaviconHandler.class, "Input matches 'random'. Returning random Favicon...");
-            return getRandomized();
+            return faviconOrNull(getRandomized());
         }
         
         if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
             logger.debug(FaviconHandler.class, "Input matches local favicon Image. Returning it...");
-            return localFavicons.get(input.toLowerCase(Locale.ROOT));
+            return faviconOrNull(localFavicons.get(input.toLowerCase(Locale.ROOT)));
         }
         
         try{
             logger.debug(FaviconHandler.class, "Getting Favicon image from cache...");
-            return faviconCache.get(input, () -> getFuture(input)).getNow(null);
+            FaviconHolder<F> holder = faviconCache.get(input, () -> getFuture(input, false)).getNow(null);
+            if(holder == null)
+                return null;
+            
+            return holder.favicon();
         }catch(ExecutionException ex){
             logger.warn("Received ExecutionException while retrieving Favicon for '<white>%s</white>'.", ex, input);
             return null;
@@ -101,10 +135,10 @@ public class FaviconHandler<F>{
         loadLocalFavicons();
     }
     
-    private CompletableFuture<F> getFuture(String input){
+    private CompletableFuture<FaviconHolder<F>> getFuture(String input, boolean skipFaviconCreation){
         if(input.toLowerCase(Locale.ROOT).startsWith("https://")){
             logger.debug(FaviconHandler.class, "Resolving URL '%s'...", input);
-            return CompletableFuture.supplyAsync(() -> fromURL(core, input), this.faviconThreadPool);
+            return CompletableFuture.supplyAsync(() -> fromURL(core, input, skipFaviconCreation), this.faviconThreadPool);
         }else
         if(input.equalsIgnoreCase("random")){
             return CompletableFuture.completedFuture(getRandomized());
@@ -114,20 +148,20 @@ public class FaviconHandler<F>{
             return CompletableFuture.completedFuture(localFavicons.get(input.toLowerCase(Locale.ROOT)));
         }else{
             logger.debug(FaviconHandler.class, "Resolving Name/UUID as https://mc-heads.net/avatar/%s/64...", input);
-            return CompletableFuture.supplyAsync(() -> fromURL(core, "https://mc-heads.net/avatar/" + input + "/64"), this.faviconThreadPool);
+            return CompletableFuture.supplyAsync(() -> fromURL(core, "https://mc-heads.net/avatar/" + input + "/64", skipFaviconCreation), this.faviconThreadPool);
         }
     }
     
-    private F getRandomized(){
+    private FaviconHolder<F> getRandomized(){
         logger.debug(FaviconHandler.class, "Obtaining random Favicon...");
         if(localFavicons.isEmpty())
             return null;
         
-        List<F> faviconList = List.copyOf(localFavicons.values());
+        List<FaviconHolder<F>> faviconList = List.copyOf(localFavicons.values());
         
         // Don't use Random for just one entry.
         if(faviconList.size() == 1)
-            return faviconList.get(0);
+            return faviconList.getFirst();
         
         synchronized(random){
             return faviconList.get(random.nextInt(faviconList.size()));
@@ -163,7 +197,7 @@ public class FaviconHandler<F>{
     
     private void loadFile(Path path){
         try(InputStream stream = Files.newInputStream(path)){
-            F favicon = createFavicon(stream);
+            FaviconHolder<F> favicon = createFavicon(stream, false);
             if(favicon == null){
                 logger.failure("Cannot create Favicon from file '<white>%s</white>'. Received Favicon was null.", path.getFileName().toString());
                 return;
@@ -176,7 +210,7 @@ public class FaviconHandler<F>{
         }
     }
     
-    private F fromURL(AdvancedServerList<F> core, String url){
+    private FaviconHolder<F> fromURL(AdvancedServerList<F> core, String url, boolean skipFaviconCreation){
         try{
             logger.debug(FaviconHandler.class, "Creating Request for URL '%s'...", url);
             HttpRequest request = HttpRequest.newBuilder()
@@ -185,7 +219,7 @@ public class FaviconHandler<F>{
                 .build();
             
             try(InputStream stream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body()){
-                return createFavicon(stream);
+                return createFavicon(stream, skipFaviconCreation);
             }catch(InterruptedException | IOException ex){
                 logger.warn("Cannot create Favicon from URL '<white>%s</white>'. Encountered an Exception.", ex, url);
                 return null;
@@ -196,7 +230,7 @@ public class FaviconHandler<F>{
         }
     }
     
-    private F createFavicon(InputStream stream){
+    private FaviconHolder<F> createFavicon(InputStream stream, boolean skipFaviconCreation){
         try{
             logger.debug(FaviconHandler.class, "Creating BufferedImage from InputStream...");
             BufferedImage original = ImageIO.read(stream);
@@ -208,7 +242,7 @@ public class FaviconHandler<F>{
             // Don't waste resources resizing images already having right size.
             if(original.getWidth() == 64 && original.getHeight() == 64){
                 logger.debug(FaviconHandler.class, "BufferedImage is 64x64 pixels. No resizing needed.");
-                return core.getPlugin().createFavicon(original);
+                return new FaviconHolder<>(original, skipFaviconCreation ? null : core.getPlugin().createFavicon(original));
             }
             
             logger.debug(FaviconHandler.class, "Resizing image to 64x64 pixels...");
@@ -219,9 +253,27 @@ public class FaviconHandler<F>{
             graphics2D.dispose();
             
             logger.debug(FaviconHandler.class, "Image resized! Returning Favicon...");
-            return core.getPlugin().createFavicon(image);
+            return new FaviconHolder<>(image, skipFaviconCreation ? null : core.getPlugin().createFavicon(image));
         }catch(Exception ex){
-            logger.warn("Unable to create Favicon. Received Exception.", ex);
+            logger.warn("Unable to create Favicon. Received an Exception.", ex);
+            return null;
+        }
+    }
+    
+    private FaviconHolder<F> composeImage(List<FaviconHolder<F>> holders){
+        try{
+            logger.debug(FaviconHandler.class, "Composing favicon from %d parts...", holders.size());
+            BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics = image.createGraphics();
+            
+            for(FaviconHolder<F> holder : holders)
+                graphics.drawImage(holder.image(), 0, 0, 64, 64, null);
+            
+            graphics.dispose();
+            
+            return new FaviconHolder<>(image, core.getPlugin().createFavicon(image));
+        }catch(Exception ex){
+            logger.warn("Unable to compose Favicon. Received an Exception.", ex);
             return null;
         }
     }
@@ -233,4 +285,13 @@ public class FaviconHandler<F>{
             return t;
         });
     }
+    
+    private F faviconOrNull(FaviconHolder<F> holder){
+        if(holder == null)
+            return null;
+        
+        return holder.favicon();
+    }
+    
+    public record FaviconHolder<F>(BufferedImage image, F favicon){}
 }
