@@ -195,7 +195,7 @@ public class PingEventHandler{
                 .modify(text -> event.parsePAPIPlaceholders(text, player))
                 .asString();
             
-            F favicon = plugin.getFaviconHandler().getFavicon(faviconString);
+            F favicon = plugin.getFaviconHandler().favicon(faviconString);
             
             if(favicon == null){
                 logger.debugWarn(PingEventHandler.class, "Favicon was invalid or not yet resolved! Using default favicon of Server/Proxy...");
