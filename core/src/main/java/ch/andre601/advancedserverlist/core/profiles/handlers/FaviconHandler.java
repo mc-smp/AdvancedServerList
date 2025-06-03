@@ -48,6 +48,24 @@ public class FaviconHandler<F>{
     }
     
     public F favicon(String input){
+        if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
+            logger.debug(FaviconHandler.class, "Returning local Favicon '%s'.", input);
+            
+            return localFavicons.get(input.toLowerCase(Locale.ROOT)).favicon();
+        }
+        
+        if(input.equalsIgnoreCase("random")){
+            logger.debug(FaviconHandler.class, "Returning random local Favicon.");
+            
+            FaviconPair<F> pair = randomFavicon();
+            if(pair == null){
+                logger.warn("Cannot return random Favicon. Make sure PNGs are available in the Favicons folder!");
+                return null;
+            }
+            
+            return pair.favicon();
+        }
+        
         CompletableFuture<F> favicon = faviconCache.getIfPresent(input);
         if(favicon != null)
             return favicon.getNow(null);
@@ -72,30 +90,18 @@ public class FaviconHandler<F>{
             }, faviconThreadPool);
         }else{
             logger.debug(FaviconHandler.class, "Handling Favicon input '%s'...", input);
-            if(input.equalsIgnoreCase("random")){
-                logger.debug(FaviconHandler.class, "Returning random local Favicon...");
-                
-                FaviconPair<F> pair = randomFavicon();
-                return pair == null ? null : pair.favicon();
-            }
-            
-            if(localFavicons.containsKey(input.toLowerCase(Locale.ROOT))){
-                logger.debug(FaviconHandler.class, "Returning local Favicon '%s'...", input);
-                
-                return localFavicons.get(input.toLowerCase(Locale.ROOT)).favicon();
-            }
             
             favicon = CompletableFuture.supplyAsync(() -> {
                 logger.debug(FaviconHandler.class, "Creating BufferedImage for '%s'...", input);
                 
                 BufferedImage image = create(input);
                 if(image == null){
-                    logger.debugWarn(FaviconHandler.class, "Cannot create Favicon for '%s'. BufferedImage was null!", input);
+                    logger.warn("Cannot create Favicon for '%s'. BufferedImage was null!", input);
                     return null;
                 }
                 
                 return createFavicon(image);
-            });
+            }, faviconThreadPool);
         }
         
         faviconCache.put(input, favicon);

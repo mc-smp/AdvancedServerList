@@ -1,13 +1,11 @@
 # Motd
 
-The `motd` option is a List of Strings that sets the "Message of the day", which refers to the 2 lines displayed in the server list.  
-It is the only option in the profile that supports custom RGB colors (if server is using at least 1.16) as it is the only part of the server list that supports text components. Please see the [Formatting page](../formatting.md) for a list of known and supported formatting options.
+The `motd` option is a List of Strings that sets the "Message of the day", referring to the two lines of text shown in the Multiplayer Server List.  
+This is the only option that supports RGB colors, if the server and client use at least version 1.16 of Minecraft.
 
 /// tip | Centering the MOTD
-Since version 5.2.0 can you center the MOTD lines. To do this, prefix each line with `<center>`.  
-It is important that this placeholder is at the very start, even before any color or formatting tags!
-
-Versions before 5.2.0 do not have this feature and need to manually center the text by prefixing the lines with spaces.
+Centering the MOTD can be done automatically by prefixing the lines with `<center>` (Even before color and formatting text), but only since version 5.2.0.  
+Before this version, you would need to manually center the text by adding spaces yourself.
 ///
 
 ## Example
