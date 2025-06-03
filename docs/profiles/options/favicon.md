@@ -1,5 +1,10 @@
 # Favicon
 
+/// info | Favicon Merging (New since 5.6.0)
+You can define multiple entries to be merged into a single Favicon by separating them with a semicolon.  
+Example: `background.png;${player uuid};foreground.png`
+///
+
 The `favicon` option is a String that sets the image that should be displayed in the server list.  
 The final image itself is 64x64 pixels and any images used with a differing size will be automatically resized to fit.
 

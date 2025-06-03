@@ -190,9 +190,12 @@ public class PingEventHandler{
         if(ProfileManager.checkOption(entry.favicon()) && ignoreMaintenance(event, "favicon")){
             logger.debug(PingEventHandler.class, "'favicon' option set. Resolving '%s'...", entry.favicon());
             
-            String faviconString = StringReplacer.replace(entry.favicon(), player, server);
+            String faviconString = StringReplacer.modifier(entry.favicon())
+                .modify(text -> StringReplacer.replace(text, player, server))
+                .modify(text -> event.parsePAPIPlaceholders(text, player))
+                .asString();
             
-            F favicon = plugin.getFaviconHandler().getFavicon(faviconString);
+            F favicon = plugin.getFaviconHandler().favicon(faviconString);
             
             if(favicon == null){
                 logger.debugWarn(PingEventHandler.class, "Favicon was invalid or not yet resolved! Using default favicon of Server/Proxy...");

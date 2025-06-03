@@ -34,8 +34,13 @@ import ch.andre601.advancedserverlist.core.profiles.conditions.placeholders.toke
 import ch.andre601.expressionparser.ParseWarnCollector;
 
 import java.text.ParsePosition;
+import java.util.function.Function;
 
 public class StringReplacer{
+    
+    public static StringModifier modifier(String text){
+        return new StringModifier(text);
+    }
     
     public static String replace(String input, GenericPlayer player, GenericServer server){
         if(input == null)
@@ -147,5 +152,23 @@ public class StringReplacer{
         }
         
         return replacement;
+    }
+    
+    public static class StringModifier{
+        private String value;
+        
+        public StringModifier(String value){
+            this.value = value;
+        }
+        
+        public StringModifier modify(Function<String, String> function){
+            this.value = function.apply(value);
+            
+            return this;
+        }
+        
+        public String asString(){
+            return value;
+        }
     }
 }

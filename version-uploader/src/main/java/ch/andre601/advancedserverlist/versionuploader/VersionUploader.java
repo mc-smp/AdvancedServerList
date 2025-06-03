@@ -53,7 +53,7 @@ public class VersionUploader{
         
         if(args.length == 0){
             LOGGER.warn("MISSING ARGUMENT!");
-            LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar --all | --modrinth | --hangar [--dryrun]");
+            LOGGER.warn("Usage: java -jar VersionUploader.jar <--help | --all | --modrinth | --hangar> [--dryrun]");
             System.exit(1);
             return;
         }
@@ -76,15 +76,28 @@ public class VersionUploader{
         switch(args[0].toLowerCase(Locale.ROOT)){
             case "--modrinth" -> future = new ModrinthVersionUploader().performUpload(release, releaseHolder, dryrun);
             case "--hangar" -> future = new HangarVersionUploader().performUpload(release, releaseHolder, dryrun);
-            case "--all" -> {
-                future = CompletableFuture.allOf(
-                    new ModrinthVersionUploader().performUpload(release, releaseHolder, dryrun),
-                    new HangarVersionUploader().performUpload(release, releaseHolder, dryrun)
-                );
+            case "--all" -> future = CompletableFuture.allOf(
+                new ModrinthVersionUploader().performUpload(release, releaseHolder, dryrun),
+                new HangarVersionUploader().performUpload(release, releaseHolder, dryrun)
+            );
+            case "--help" -> {
+                LOGGER.info("Usage: java -jar VersionUploader.jar <command> [args]");
+                LOGGER.info("");
+                LOGGER.info("Commands:");
+                LOGGER.info("  --help      Prints this help page and exits.");
+                LOGGER.info("  --all       Performs an upload to all sites.");
+                LOGGER.info("  --modrinth  Performs an upload to Modrinth.");
+                LOGGER.info("  --hangar    Performs an upload to Hangar.");
+                LOGGER.info("");
+                LOGGER.info("Arguments:");
+                LOGGER.info("  --dryrun  Prints the JSON in console while not uploading to any platform.");
+                LOGGER.info("");
+                System.exit(0);
+                return;
             }
             default -> {
                 LOGGER.warn("Unknown argument '{}' provided.", args[0]);
-                LOGGER.warn("COMMAND USAGE: java -jar VersionUploader.jar --all | --modrinth | --hangar [--dryrun]");
+                LOGGER.warn("Usage: java -jar VersionUploader.jar <--help | --all | --modrinth | --hangar> [--dryrun]");
                 System.exit(1);
                 return;
             }
@@ -125,7 +138,12 @@ public class VersionUploader{
                 "Version `%s` of AdvancedServerList is now available for download on Modrinth and Hangar!",
                 release.tagName()
             ))
-            .setColor(0x1BD96A);
+            .setColor(0x1BD96A)
+            .addField(new WebhookEmbed.EmbedField(
+                false,
+                "Changelog",
+                getDescription(release.body())
+            ));
         
         StringJoiner modrinthText = new StringJoiner("\n");
         String hangarText = null;
@@ -183,5 +201,14 @@ public class VersionUploader{
         }catch(IOException ex){
             return null;
         }
+    }
+    
+    private static String getDescription(String description){
+        if(description.length() < 1024)
+            return description;
+        
+        String temp = description.substring(0, 1014); // Cut it 10 characters shorter than supported.
+        
+        return temp.substring(0, temp.lastIndexOf(' ')) + "...";
     }
 }
