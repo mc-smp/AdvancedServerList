@@ -22,19 +22,25 @@ you can click the image to be sent to the actual video.
 
 **Video Language:** :flag_gb: English
 
-[![thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg)](https://youtube.com/watch?v=9cU0uUWHOO0){ target="_blank" rel="nofollow" }
+[![thumbnail](https://img.youtube.com/vi/9cU0uUWHOO0/0.jpg){ loading="lazy" }](https://youtube.com/watch?v=9cU0uUWHOO0){ target="_blank" rel="nofollow" }
 
 ### Ajneb97
 
 **Video Language:** :flag_es: Spanish
 
-[![thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
+[![thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg){ loading="lazy" }](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
 
 ### faajrikha
 
 **Video Language:** :flag_id: Indonesian
 
-[![thumbnail](https://img.youtube.com/vi/-p938rOmqy4/0.jpg)](https://www.youtube.com/watch?v=-p938rOmqy4){ target="_blank" rel="nofollow" }
+[![thumbnail](https://img.youtube.com/vi/-p938rOmqy4/0.jpg){ loading="lazy" }](https://www.youtube.com/watch?v=-p938rOmqy4){ target="_blank" rel="nofollow" }
+
+### FINNI GAMER
+
+**Video Language:** :flag_de: German
+
+[![thumbnail](https://img.youtube.com/vi/1Kh3cPMDd0c/0.jpg){ loading="lazy" }](https://www.youtube.com/watch?v=1Kh3cPMDd0c){ target="_blank" rel="nofollow" }
 
 ## Text Tutorials
 
