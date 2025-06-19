@@ -52,6 +52,7 @@ import org.incendo.cloud.suggestion.SuggestionProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -196,6 +197,8 @@ public class AdvancedServerList<F>{
         getPlugin().getPluginLogger().info("<#3b90ff> / ____ \\ \\ ____) | | |_|____");
         getPlugin().getPluginLogger().info("<#3b90ff>/_/_/  \\_\\_\\_____/_/|______|_|");
         getPlugin().getPluginLogger().info("");
+        
+        seasonalText();
     }
     
     private void resolveVersion(){
@@ -283,5 +286,45 @@ public class AdvancedServerList<F>{
             );
             default -> Description.of("The Value to use for this option. Leave empty to reset.");
         };
+    }
+    
+    // Adding some seasonal messages
+    private void seasonalText(){
+        LocalDate date = LocalDate.now();
+        
+        switch(date.getMonth()){
+            case JANUARY -> {
+                if(date.getDayOfMonth() == 1){
+                    getPlugin().getPluginLogger().info("Happy new Year!");
+                    getPlugin().getPluginLogger().info("");
+                }
+            }
+            case JUNE -> {
+                getPlugin().getPluginLogger().info("Happy Pride Month!");
+                getPlugin().getPluginLogger().info("");
+            }
+            case AUGUST -> {
+                if(date.getDayOfMonth() == 1){
+                    getPlugin().getPluginLogger().info("Happy Birthday Switzerland!");
+                    getPlugin().getPluginLogger().info("");
+                }
+            }
+            case OCTOBER -> {
+                if(date.getDayOfMonth() == 31){
+                    getPlugin().getPluginLogger().info("Happy Halloween!");
+                    getPlugin().getPluginLogger().info("");
+                }
+            }
+            case DECEMBER -> {
+                if(date.getDayOfMonth() == 13){
+                    getPlugin().getPluginLogger().info("Happy Birthday Andre_601!");
+                    getPlugin().getPluginLogger().info("");
+                }else
+                if(date.getDayOfMonth() > 23 && date.getDayOfMonth() < 27){
+                    getPlugin().getPluginLogger().info("Merry Christmas!");
+                    getPlugin().getPluginLogger().info("");
+                }
+            }
+        }
     }
 }

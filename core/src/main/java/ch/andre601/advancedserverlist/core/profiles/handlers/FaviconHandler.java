@@ -118,6 +118,7 @@ public class FaviconHandler<F>{
         BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = image.createGraphics();
         
+        String strategy = core.getFileHandler().getString("resize", "faviconStrategy");
         int layer = 0;
         for(BufferedImage img : images){
             layer++;
@@ -127,7 +128,29 @@ public class FaviconHandler<F>{
                 continue;
             }
             
-            graphics.drawImage(img, 0, 0, 64, 64, null);
+            switch(strategy.toLowerCase(Locale.ROOT)){
+                case "center" -> {
+                    int height = img.getHeight();
+                    int width = img.getWidth();
+                    
+                    int posHeight = 0;
+                    int posWidth = 0;
+                    if(height != 64){
+                        posHeight = (64 - height) / 2;
+                    }
+                    
+                    // 64 - 128 = -64
+                    
+                    if(width != 64){
+                        posWidth = (64 - width) / 2;
+                    }
+                    
+                    graphics.drawImage(img, posWidth, posHeight, img.getWidth(), img.getHeight(), null);
+                }
+                case "none" -> graphics.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
+                default -> graphics.drawImage(img, 0, 0, 64, 64, null);
+            }
+            
             logger.debug(FaviconHandler.class, "Applied layer %d!", layer);
         }
         
@@ -255,11 +278,32 @@ public class FaviconHandler<F>{
                 return original;
             }
             
-            logger.debug(FaviconHandler.class, "Resizing BufferedImage to 64x64 pixels...");
+            logger.debug(FaviconHandler.class, "Applying Favicon resize strategy...");
             BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = image.createGraphics();
             
-            graphics.drawImage(original, 0, 0, 64, 64, null);
+            String resizeMode = core.getFileHandler().getString("resize", "faviconStrategy");
+            switch(resizeMode.toLowerCase(Locale.ROOT)){
+                case "center" -> {
+                    int height = original.getHeight();
+                    int width = original.getWidth();
+                    
+                    int posHeight = 0;
+                    int posWidth = 0;
+                    if(height != 64){
+                        posHeight = (64 - height) / 2;
+                    }
+                    
+                    if(width != 64){
+                        posWidth = (64 - width) / 2;
+                    }
+                    
+                    graphics.drawImage(original, posWidth, posHeight, original.getWidth(), original.getHeight(), null);
+                }
+                case "none" -> graphics.drawImage(original, 0, 0, original.getWidth(), original.getHeight(), null);
+                default -> graphics.drawImage(original, 0, 0, 64, 64, null);
+            }
+            
             graphics.dispose();
             
             logger.debug(FaviconHandler.class, "Image resized. Returning it...");

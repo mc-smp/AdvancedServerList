@@ -67,7 +67,7 @@ motd:
 #   4. Player name, UUID or a placeholder that returns either.
 #      - https://mc-heads.net will be used to retrieve an image of the provided name/UUID.
 #
-# Any images above or below 64x64 pixels will be automatically resized to these dimensions.
+# Any image below or above 64x64 pixels will be resized according to the faviconResizeMode option in the config.yml.
 #
 # If not present or empty (favicon: ''), defaults to not modifying the favicon.
 #

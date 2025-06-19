@@ -67,6 +67,19 @@ printBanner: true
 faviconCacheTime: 1
 
 #
+# Sets how AdvancedServerList should handle the size and positioning of images for favicons.
+#
+# Available options:
+#
+#   - resize: Resizes the image to 64x64 pixels if it isn't these dimensions already.
+#   - center: Doesn't resize the image, but instead tries to center it as good as possible in a 64x64 area.
+#   - none:   Doesn't resize the image and leaves it positioned at x 0 and y 0 (top-left) of the 64x64 area.
+#
+# Setting any not listed option or leaving this blank/removing it sets the option to resize.
+#
+faviconStrategy: 'resize'
+
+#
 # Options to disable while the Maintenance Plugin is present and Maintenance Mode is active.
 #
 # Should an option be removed from this section will AdvancedServerList continue to set it, as if

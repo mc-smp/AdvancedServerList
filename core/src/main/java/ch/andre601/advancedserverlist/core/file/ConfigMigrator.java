@@ -46,13 +46,24 @@ public class ConfigMigrator{
     public static ConfigurationTransformation.Versioned create(){
         return ConfigurationTransformation.versionedBuilder()
             .versionKey("configVersion")
-            .addVersion(LATEST, sevenToEight())
+            .addVersion(LATEST, eightToNine())
+            .addVersion(8, sevenToEight())
             .addVersion(7, sixToSeven())
             .addVersion(6, fiveToSix())
             .addVersion(5, fourToFive())
             .addVersion(4, threeToFour())
             .addVersion(3, twoToThree())
             .addVersion(2, oneToTwo())
+            .build();
+    }
+    
+    public static ConfigurationTransformation eightToNine(){
+        return ConfigurationTransformation.builder()
+            .addAction(NodePath.path(), (path, value) -> {
+                value.node("faviconStrategy").set("resize");
+                
+                return null;
+            })
             .build();
     }
     

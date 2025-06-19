@@ -120,20 +120,13 @@ public class ProfileManager{
     }
     
     public static boolean checkOption(Object obj){
-        if(obj == null)
-            return false;
+        return switch(obj){
+            case List<?> list -> !list.isEmpty(); // Check if list isn't empty
+            case String str -> !str.isEmpty(); // Check if String is not empty
+            case NullBool nb -> nb.getOrDefault(false); // Return NullBool's value
+            case null, default -> false;
+        };
         
-        if(obj instanceof List<?> list){
-            return !list.isEmpty(); // Check if list isn't empty
-        }else
-        if(obj instanceof String str){
-            return !str.isEmpty(); // Check if String is not empty
-        }else
-        if(obj instanceof NullBool nb){
-            return nb.getOrDefault(false); // Return NullBool's value
-        }
-        
-        return false;
     }
     
     private static <T> T resolve(ProfileEntry defProfile, ProfileEntry profile, Function<ProfileEntry, T> function){
