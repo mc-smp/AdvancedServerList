@@ -92,6 +92,12 @@ English Video by KasaiSora
 Spanish Video by Ajneb97  
 [![video thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI)
 
+Indonesian Video by faajrikha  
+[![video thumbnail](https://img.youtube.com/vi/-p938rOmqy4/0.jpg)](https://www.youtube.com/watch?v=-p938rOmqy4)
+
+German Video by Finni Gamer  
+[![video thumbnail](https://img.youtube.com/vi/1Kh3cPMDd0c/0.jpg)](https://www.youtube.com/watch?v=1Kh3cPMDd0c)
+
 </p>
 </details>
 
