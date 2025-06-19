@@ -30,6 +30,12 @@ you can click the image to be sent to the actual video.
 
 [![thumbnail](https://img.youtube.com/vi/rIbljm_4HVI/0.jpg)](https://youtube.com/watch?v=rIbljm_4HVI){ target="_blank" rel="nofollow" }
 
+### faajrikha
+
+**Video Language:** :flag_id: Indonesian
+
+[![thumbnail](https://img.youtube.com/vi/-p938rOmqy4/0.jpg)](https://www.youtube.com/watch?v=-p938rOmqy4){ target="_blank" rel="nofollow" }
+
 ## Text Tutorials
 
 Text-based tutorials (Forum Posts, Blog Posts, etc).
