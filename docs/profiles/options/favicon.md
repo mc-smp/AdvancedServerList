@@ -28,6 +28,20 @@ The created favicon is being cached and *should* display on the next ping, if do
 This issue only exists for Favicons created from a URL, player name/uuid or Placeholder and doesn't exist for local favicons located in the `favicons` folder as they are converted into Favicon instances during the plugin's startup.
 ///
 
+## Favicon Resizing
+
+Any image used that is not 64x64 pixels will by default be resized to be 64x64 pixels.  
+To allow more customization - especially with favicon merging - different modes can be used for images that do not have the right dimensions.  
+The mode used is set in the `faviconStrategy` option in the `config.yml` and can be one of the following options:
+
+| Mode     | Description                                                                                                   |
+|----------|---------------------------------------------------------------------------------------------------------------|
+| `resize` | Default mode used. Resizes the image to 64x64 pixels.                                                         |
+| `center` | Doesn't resize the image, but centers it as good as possible.                                                 |
+| `none`   | Won't resize nor move the image. The image itself will be placed at `0,0` which is the top-left of the image. |
+
+Please note that the actual favicon displayed will always be 64x64 pixels, even if the image(s) depicted in it aren't.
+
 ## Example
 
 ```yaml
