@@ -120,7 +120,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public void loadMetrics(){
         metrics.make(this, 15587).addCustomChart(new SimplePie("profiles",
-            () -> String.valueOf(core.getFileHandler().getProfiles().size())
+            () -> String.valueOf(core.fileHandler().getProfiles().size())
         ));
     }
     
@@ -140,7 +140,7 @@ public class VelocityCore implements PluginCore<Favicon>{
     @Override
     public void downloadLibrary(String groupId, String artifactId, String version){
         if(libraryManager == null){
-            libraryManager = new VelocityLibraryManager<>(this, this.logger, getFolderPath(), getProxy().getPluginManager());
+            libraryManager = new VelocityLibraryManager<>(this, this.logger, folderPath(), getProxy().getPluginManager());
             libraryManager.addRepository("https://repo.papermc.io/repository/maven-public");
         }
         
@@ -162,22 +162,22 @@ public class VelocityCore implements PluginCore<Favicon>{
     }
     
     @Override
-    public AdvancedServerList<Favicon> getCore(){
+    public AdvancedServerList<Favicon> core(){
         return core;
     }
     
     @Override
-    public Path getFolderPath(){
+    public Path folderPath(){
         return path;
     }
     
     @Override
-    public PluginLogger getPluginLogger(){
+    public PluginLogger pluginLogger(){
         return pluginLogger;
     }
     
     @Override
-    public FaviconHandler<Favicon> getFaviconHandler(){
+    public FaviconHandler<Favicon> faviconHandler(){
         if(faviconHandler == null)
             faviconHandler = new FaviconHandler<>(core);
         
@@ -185,17 +185,17 @@ public class VelocityCore implements PluginCore<Favicon>{
     }
     
     @Override
-    public CommandManager<CmdSender> getCommandManager(){
+    public CommandManager<CmdSender> commandManager(){
         return commandHandler.commandHandler();
     }
     
     @Override
-    public String getPlatformInfo(){
+    public String platformInfo(){
         return getProxy().getVersion().getName() + " " + getProxy().getVersion().getVersion();
     }
     
     @Override
-    public String getLoader(){
+    public String loader(){
         return "velocity";
     }
     

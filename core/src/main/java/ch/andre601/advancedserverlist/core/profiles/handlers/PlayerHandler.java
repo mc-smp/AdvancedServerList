@@ -61,8 +61,8 @@ public class PlayerHandler{
     
     public PlayerHandler(AdvancedServerList<?> core){
         this.core = core;
-        this.logger = core.getPlugin().getPluginLogger();
-        this.cache = core.getPlugin().getFolderPath().resolve("playercache.json");
+        this.logger = core.plugin().pluginLogger();
+        this.cache = core.plugin().folderPath().resolve("playercache.json");
     }
     
     public void load(){
@@ -71,7 +71,7 @@ public class PlayerHandler{
             return;
         }
         
-        if(core.getFileHandler().getBoolean("disableCache")){
+        if(core.fileHandler().getBoolean("disableCache")){
             logger.info("'disableCache' is set to true. Skipping playercache.json loading...");
             return;
         }
@@ -103,7 +103,7 @@ public class PlayerHandler{
             return;
         }
         
-        if(core.getFileHandler().getBoolean("disableCache")){
+        if(core.fileHandler().getBoolean("disableCache")){
             logger.debug(PlayerHandler.class, "[-] 'disable_cache' is set to true. Not saving cached players.");
             return;
         }
@@ -117,14 +117,14 @@ public class PlayerHandler{
     }
     
     public void addPlayer(String ip, String name, UUID uuid){
-        if(contains(ip) || core.getFileHandler().getBoolean("disableCache"))
+        if(contains(ip) || core.fileHandler().getBoolean("disableCache"))
             return;
         
         cachedPlayers.add(new CachedPlayer(ip, name, uuid));
     }
     
     public CachedPlayer getCachedPlayer(String key){
-        if(!contains(key) || core.getFileHandler().getBoolean("disableCache"))
+        if(!contains(key) || core.fileHandler().getBoolean("disableCache"))
             return getDefaultPlayer();
         
         for(CachedPlayer player : cachedPlayers){
@@ -164,8 +164,8 @@ public class PlayerHandler{
         
         return (defaultPlayer = new CachedPlayer(
             "0.0.0.0",
-            core.getFileHandler().getString("Anonymous", "unknownPlayer", "name"),
-            convertToUUID(core.getFileHandler().getString(defaultUUID.toString(), "unknownPlayer", "uuid"))
+            core.fileHandler().getString("Anonymous", "unknownPlayer", "name"),
+            convertToUUID(core.fileHandler().getString(defaultUUID.toString(), "unknownPlayer", "uuid"))
         ));
     }
     

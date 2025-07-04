@@ -49,12 +49,12 @@ import java.util.List;
 public class MiniMOTDConfigMigrator{
     
     public static boolean migrate(AdvancedServerList<?> core, CmdSender sender){
-        core.getPlugin().downloadLibrary("org.spongepowered", "configurate-hocon", "4.1.2");
+        core.plugin().downloadLibrary("org.spongepowered", "configurate-hocon", "4.1.2");
         
-        PluginLogger logger = core.getPlugin().getPluginLogger();
-        String folder = core.getPlugin().getLoader().equals("velocity") ? "minimotd-velocity" : "MiniMOTD";
+        PluginLogger logger = core.plugin().pluginLogger();
+        String folder = core.plugin().loader().equals("velocity") ? "minimotd-velocity" : "MiniMOTD";
         
-        Path mainConf = core.getPlugin().getFolderPath().getParent().resolve(folder).resolve("main.conf");
+        Path mainConf = core.plugin().folderPath().getParent().resolve(folder).resolve("main.conf");
         if(!Files.exists(mainConf)){
             logger.warn("[<white>Migrator - MiniMOTD</white>] Cannot find a main.conf file in <white>/plugins/%s/</white> folder.", folder);
             sender.sendErrorMsg(" -> <red>No main.conf file found.");
@@ -152,7 +152,7 @@ public class MiniMOTDConfigMigrator{
             return false;
         }
         
-        Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve("minimotd_migrated.yml");
+        Path profile = core.plugin().folderPath().resolve("profiles").resolve("minimotd_migrated.yml");
         if(Files.exists(profile)){
             logger.warn("[<white>Migrator - MiniMOTD</white>] Cannot create new file minimotd_migrated.yml. One with the same name is already present.");
             sender.sendErrorMsg(" -> <red>File</red> minimotd_migrated.yml <red>already present.");

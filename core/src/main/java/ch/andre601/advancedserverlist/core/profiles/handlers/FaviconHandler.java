@@ -38,10 +38,10 @@ public class FaviconHandler<F>{
     
     public FaviconHandler(AdvancedServerList<F> core){
         this.core = core;
-        this.logger = core.getPlugin().getPluginLogger();
+        this.logger = core.plugin().pluginLogger();
         this.faviconThreadPool = createThreadPool();
         this.faviconCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(core.getFileHandler().getLong(1, 1, "faviconCacheTime"), TimeUnit.MINUTES)
+                .expireAfterWrite(core.fileHandler().getLong(1, 1, "faviconCacheTime"), TimeUnit.MINUTES)
                 .build();
         
         loadLocalFavicons();
@@ -118,7 +118,7 @@ public class FaviconHandler<F>{
         BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = image.createGraphics();
         
-        String strategy = core.getFileHandler().getString("resize", "faviconStrategy");
+        String strategy = core.fileHandler().getString("resize", "faviconStrategy");
         int layer = 0;
         for(BufferedImage img : images){
             layer++;
@@ -200,7 +200,7 @@ public class FaviconHandler<F>{
         
         logger.info("[-] Loading local images as Favicons...");
         
-        Path folder = core.getPlugin().getFolderPath().resolve("favicons");
+        Path folder = core.plugin().folderPath().resolve("favicons");
         if(!Files.exists(folder)){
             try{
                 Files.createDirectories(folder);
@@ -228,7 +228,7 @@ public class FaviconHandler<F>{
             if(image == null)
                 return;
             
-            F favicon = core.getPlugin().createFavicon(image);
+            F favicon = core.plugin().createFavicon(image);
             if(favicon == null)
                 return;
             
@@ -245,7 +245,7 @@ public class FaviconHandler<F>{
             logger.debug(FaviconHandler.class, "Creating request for URL '%s'...", url);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(url))
-                    .header("User-Agent", "AdvancedServerList-" + core.getPlugin().getLoader() + "/" + core.getVersion())
+                    .header("User-Agent", "AdvancedServerList-" + core.plugin().loader() + "/" + core.version())
                     .build();
             
             try(InputStream stream = client.send(request, HttpResponse.BodyHandlers.ofInputStream()).body()){
@@ -282,7 +282,7 @@ public class FaviconHandler<F>{
             BufferedImage image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
             Graphics2D graphics = image.createGraphics();
             
-            String resizeMode = core.getFileHandler().getString("resize", "faviconStrategy");
+            String resizeMode = core.fileHandler().getString("resize", "faviconStrategy");
             switch(resizeMode.toLowerCase(Locale.ROOT)){
                 case "center" -> {
                     int height = original.getHeight();
@@ -316,7 +316,7 @@ public class FaviconHandler<F>{
     
     private F createFavicon(BufferedImage image){
         try{
-            return core.getPlugin().createFavicon(image);
+            return core.plugin().createFavicon(image);
         }catch(Exception ex){
             logger.warn("Encountered an Exception while trying to create a Favicon instance.", ex);
             return null;

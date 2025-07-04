@@ -47,15 +47,15 @@ public class PlayerJoinEventListener{
         InetSocketAddress address = event.getPlayer().getRemoteAddress();
         Player player = event.getPlayer();
         
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getUsername(), player.getUniqueId());
+        plugin.core().playerHandler().addPlayer(address.getHostString(), player.getUsername(), player.getUniqueId());
         
         if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getCore().getUpdateChecker() == null)
+            if(plugin.core().updateChecker() == null)
                 return;
             
             VelocityCmdSender sender = new VelocityCmdSender(player);
             
-            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
+            plugin.core().updateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

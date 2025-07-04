@@ -145,7 +145,7 @@ public class ProfileOptionsSender{
             
             builder.append(displayName);
             
-            if(option != null && !option.isEmpty())
+            if(option != null && !option.isEmpty() && file != null && !file.isEmpty())
                 builder.append("</click>");
             
             if(hover != null && !hover.isEmpty())

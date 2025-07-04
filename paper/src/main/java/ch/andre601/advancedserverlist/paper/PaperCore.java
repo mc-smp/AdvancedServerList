@@ -95,7 +95,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         if(worldCache != null)
             worldCache = null;
         
-        getCore().disable();
+        core().disable();
     }
     
     @Override
@@ -106,7 +106,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     @Override
     public void loadMetrics(){
         new Metrics(this, 15584).addCustomChart(new SimplePie("profiles",
-            () -> String.valueOf(core.getFileHandler().getProfiles().size())
+            () -> String.valueOf(core.fileHandler().getProfiles().size())
         ));
     }
     
@@ -146,22 +146,22 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
-    public AdvancedServerList<CachedServerIcon> getCore(){
+    public AdvancedServerList<CachedServerIcon> core(){
         return core;
     }
     
     @Override
-    public Path getFolderPath(){
+    public Path folderPath(){
         return getDataFolder().toPath();
     }
     
     @Override
-    public PluginLogger getPluginLogger(){
+    public PluginLogger pluginLogger(){
         return logger;
     }
     
     @Override
-    public FaviconHandler<CachedServerIcon> getFaviconHandler(){
+    public FaviconHandler<CachedServerIcon> faviconHandler(){
         if(faviconHandler == null)
             faviconHandler = new FaviconHandler<>(core);
         
@@ -169,23 +169,23 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
     }
     
     @Override
-    public CommandManager<CmdSender> getCommandManager(){
+    public CommandManager<CmdSender> commandManager(){
         return commandHandler.commandHandler();
     }
     
     @Override
-    public String getPlatformInfo(){
+    public String platformInfo(){
         try{
             Class.forName("io.papermc.paper.ServerBuildInfo");
-            return getNewVersion();
+            return buildInfo();
         }catch(ClassNotFoundException ignored){
             // Old Paper versions (Before 16th of May 2024)
-            return getOldVersion();
+            return version();
         }
     }
     
     @Override
-    public String getLoader(){
+    public String loader(){
         return "paper";
     }
     
@@ -199,14 +199,14 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         return Bukkit.loadServerIcon(image);
     }
     
-    public WorldCache getWorldCache(){
+    public WorldCache worldCache(){
         if(worldCache != null)
             return worldCache;
         
         return (worldCache = new WorldCache());
     }
     
-    public int getPlayersOnline(World world){
+    public int playersOnline(World world){
         List<? extends Player> players = new ArrayList<>(world == null ? getServer().getOnlinePlayers() : world.getPlayers());
         
         players.removeIf(player -> {
@@ -221,7 +221,7 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         return players.size();
     }
     
-    private String getNewVersion(){
+    private String buildInfo(){
         ServerBuildInfo info = ServerBuildInfo.buildInfo();
         
         String name = info.brandName();
@@ -235,20 +235,20 @@ public class PaperCore extends JavaPlugin implements PluginCore<CachedServerIcon
         return String.format("%s (ID: %s, Version: %s, Build: %d)", name, id, version, build.getAsInt());
     }
     
-    private String getOldVersion(){
+    private String version(){
         return getServer().getName() + " " + getServer().getVersion();
     }
     
     private void printOutdatedPaper(){
-    	getPluginLogger().warn("================================================================");
-    	getPluginLogger().warn("OUTDATED PAPER VERSION DETECTED!");
-    	getPluginLogger().warn("");
-    	getPluginLogger().warn("AdvancedServerList detected an outdated Paper version.");
-    	getPluginLogger().warn("The plugin requires at least 1.20.6 of Paper due to required");
-    	getPluginLogger().warn("classes only existing within this version onwards.");
-    	getPluginLogger().warn("");
-    	getPluginLogger().warn("Please use at least Paper 1.20.6 or downgrade AdvancedServerList");
-    	getPluginLogger().warn("to v5.4.1.");
-    	getPluginLogger().warn("================================================================");
+    	pluginLogger().warn("================================================================");
+    	pluginLogger().warn("OUTDATED PAPER VERSION DETECTED!");
+    	pluginLogger().warn("");
+    	pluginLogger().warn("AdvancedServerList detected an outdated Paper version.");
+    	pluginLogger().warn("The plugin requires at least 1.20.6 of Paper due to required");
+    	pluginLogger().warn("classes only existing within this version onwards.");
+    	pluginLogger().warn("");
+    	pluginLogger().warn("Please use at least Paper 1.20.6 or downgrade AdvancedServerList");
+    	pluginLogger().warn("to v5.4.1.");
+    	pluginLogger().warn("================================================================");
     }
 }

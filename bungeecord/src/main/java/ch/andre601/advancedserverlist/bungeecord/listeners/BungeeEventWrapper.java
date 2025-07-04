@@ -75,17 +75,17 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public void setMaxPlayers(int maxPlayers){
+    public void maxPlayers(int maxPlayers){
         ping.getPlayers().setMax(maxPlayers);
     }
     
     @Override
-    public void setOnlinePlayers(int onlinePlayers){
+    public void onlinePlayers(int onlinePlayers){
         ping.getPlayers().setOnline(onlinePlayers);
     }
     
     @Override
-    public void setMotd(Component component){
+    public void motd(Component component){
         ping.setDescriptionComponent(new TextComponent(BungeeComponentSerializer.get().serialize(component)));
     }
     
@@ -95,13 +95,13 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public void setPlayerCount(String name){
+    public void playerCount(String name){
         protocol.setName(name);
         protocol.setProtocol(-1);
     }
     
     @Override
-    public void setPlayers(List<String> lines, BungeePlayerImpl player, GenericServer server){
+    public void players(List<String> lines, BungeePlayerImpl player, GenericServer server){
         ServerPing.PlayerInfo[] players = new ServerPing.PlayerInfo[lines.size()];
         
         for(int i = 0; i < players.length; i++){
@@ -119,17 +119,17 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public void setPlayersHidden(){
+    public void playersHidden(){
         ping.getPlayers().setSample(new ServerPing.PlayerInfo[0]);
     }
     
     @Override
-    public void setFavicon(Favicon favicon){
+    public void favicon(Favicon favicon){
         ping.setFavicon(favicon);
     }
     
     @Override
-    public void setDefaultFavicon(){
+    public void defaultFavicon(){
         ping.setFavicon(ping.getFaviconObject());
     }
     
@@ -153,22 +153,22 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public int getProtocolVersion(){
+    public int protocolVersion(){
         return event.getConnection().getVersion();
     }
     
     @Override
-    public int getOnlinePlayers(){
+    public int onlinePlayers(){
         return plugin.getOnlinePlayers(null);
     }
     
     @Override
-    public int getMaxPlayers(){
+    public int maxPlayers(){
         return ping.getPlayers().getMax();
     }
     
     @Override
-    public String getPlayerIP(){
+    public String playerIP(){
         return ((InetSocketAddress)event.getConnection().getSocketAddress()).getHostString();
     }
     
@@ -196,12 +196,12 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public String getVirtualHost(){
+    public String virtualHost(){
         return this.resolveHost(event.getConnection().getVirtualHost());
     }
     
     @Override
-    public PluginCore<Favicon> getPlugin(){
+    public PluginCore<Favicon> plugin(){
         return plugin;
     }
     
@@ -211,7 +211,7 @@ public class BungeeEventWrapper implements GenericEventWrapper<Favicon, BungeePl
     }
     
     @Override
-    public GenericServer createGenericServer(int playersOnline, int playersMax, String host){
+    public GenericServer createServer(int playersOnline, int playersMax, String host){
         Map<String, ServerInfo> servers = plugin.getProxy().getServers();
         
         return new BungeeProxyImpl(servers, playersOnline, playersMax, host);

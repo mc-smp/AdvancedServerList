@@ -99,7 +99,7 @@ public class SLPConfigMigrator{
     
     public static int migrate(AdvancedServerList<?> core, CmdSender sender){
         ServerListPlusCore slpCore = ServerListPlusCore.getInstance();
-        PluginLogger logger = core.getPlugin().getPluginLogger();
+        PluginLogger logger = core.plugin().pluginLogger();
         if(slpCore == null){
             logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot migrate ServerListPlus config. ServerListPlus is not active!");
             return 0;
@@ -128,7 +128,7 @@ public class SLPConfigMigrator{
     }
     
     private static int parseConf(AdvancedServerList<?> core, CmdSender sender, PersonalizedStatusConf.StatusConf conf, Type type){
-        PluginLogger logger = core.getPlugin().getPluginLogger();
+        PluginLogger logger = core.plugin().pluginLogger();
         if(conf == null){
             logger.info("[<white>Migrator - ServerListPlus</white>] No StatusConf found for type <white>%s</white>. Skipping...", type.getName());
             sender.sendPrefixedMsg(" -> Not found! Skipping...");
@@ -176,7 +176,7 @@ public class SLPConfigMigrator{
             return 0;
         }
         
-        Path profile = core.getPlugin().getFolderPath().resolve("profiles").resolve(type.getFile());
+        Path profile = core.plugin().folderPath().resolve("profiles").resolve(type.getFile());
         if(Files.exists(profile)){
             logger.warn("[<white>Migrator - ServerListPlus</white>] Cannot create new file <white>%s</white>. One with the same name is already present", type.getFile());
             sender.sendErrorMsg(" -> <red>File</red> %s <red>already present.", type.getFile());
@@ -223,7 +223,7 @@ public class SLPConfigMigrator{
             
             if(type == Type.PERSONALIZED){
                 node.node("condition")
-                    .set("${player name} != \"" + core.getFileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
+                    .set("${player name} != \"" + core.fileHandler().getString("Anonymous", "unknownPlayer", "name") + "\"");
             }else
             if(type == Type.BANNED){
                 node.node("condition")

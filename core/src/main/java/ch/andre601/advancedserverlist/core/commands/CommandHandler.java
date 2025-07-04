@@ -315,7 +315,7 @@ public class CommandHandler{
             }
         }
         
-        Path path = core.getPlugin().getFolderPath().resolve("profiles").resolve(profileName(profile));
+        Path path = core.plugin().folderPath().resolve("profiles").resolve(profileName(profile));
         if(!Files.exists(path)){
             sender.sendErrorMsg("<red>No file with name</red> %s <red>found!", profile);
             return;
@@ -335,7 +335,7 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>Encountered an IOException while trying to load file</red> %s<red>.", profile);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s.yml</white>", profile);
+            core.plugin().pluginLogger().warn("Encountered IOException while loading file <white>%s.yml</white>", profile);
             return;
         }
         
@@ -353,7 +353,7 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>Encountered a SerializationException while updating</red> %s<red>!", profile);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered SerializationException while updating <white>%s</white>", profile);
+            core.plugin().pluginLogger().warn("Encountered SerializationException while updating <white>%s</white>", profile);
             return;
         }
         
@@ -393,12 +393,12 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>Encountered an IOException while trying to save file</red> %s<red>.", profile);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while saving file <white>%s.yml</white>", profile);
+            core.plugin().pluginLogger().warn("Encountered IOException while saving file <white>%s.yml</white>", profile);
         }
     }
     
     private static ServerListProfile profile(AdvancedServerList<?> core, String name){
-        return core.getFileHandler().getProfiles().stream()
+        return core.fileHandler().getProfiles().stream()
             .filter(p -> p.file().equalsIgnoreCase(profileName(name)))
             .findFirst()
             .orElse(null);
@@ -424,20 +424,13 @@ public class CommandHandler{
     }
     
     private static String getOptionValue(Object obj){
-        if(obj == null){
-            return "";
-        }else
-        if(obj instanceof Boolean bool){
-            return Boolean.toString(bool);
-        }else
-        if(obj instanceof Integer integer){
-            return Integer.toString(integer);
-        }else
-        if(obj instanceof String str){
-            return str;
-        }else{
-            return obj.toString();
-        }
+        return switch(obj){
+            case null -> "";
+            case Boolean bool -> Boolean.toString(bool);
+            case Integer integer -> Integer.toString(integer);
+            case String str -> str;
+            default -> obj.toString();
+        };
     }
     
     private final CommandManager<CmdSender> commandManager;
@@ -473,15 +466,15 @@ public class CommandHandler{
     public void reload(CmdSender sender, AdvancedServerList<?> core){
         sender.sendPrefixedMsg("Reloading plugin...");
         
-        if(core.getFileHandler().reloadConfig()){
+        if(core.fileHandler().reloadConfig()){
             sender.sendPrefixedMsg("<green>Reloaded </green>config.yml<green>!");
         }else{
             sender.sendErrorMsg("<red>Error while reloading </red>config.yml<red>.");
             sender.sendErrorMsg("<red>Check console for details.");
         }
         
-        if(core.getFileHandler().reloadProfiles()){
-            sender.sendPrefixedMsg("<green>(Re)loaded </green>%d<green> Profile(s)!", core.getFileHandler().getProfiles().size());
+        if(core.fileHandler().reloadProfiles()){
+            sender.sendPrefixedMsg("<green>(Re)loaded </green>%d<green> Profile(s)!", core.fileHandler().getProfiles().size());
         }else{
             sender.sendErrorMsg("<red>Error while (re)loading profiles.");
             sender.sendErrorMsg("<red>Check console for details.");
@@ -516,7 +509,7 @@ public class CommandHandler{
         @NonNull @Argument(description = "The plugin to migrate from.") Plugin plugin
     ){
         if(plugin == Plugin.SERVERLISTPLUS){
-            if(!core.getPlugin().isPluginEnabled("ServerListPlus")){
+            if(!core.plugin().isPluginEnabled("ServerListPlus")){
                 sender.sendErrorMsg("<red>ServerListPlus is not enabled.");
                 sender.sendErrorMsg("<red>The plugin is required for the migration to work.");
                 return;
@@ -559,7 +552,7 @@ public class CommandHandler{
         sender.sendPrefixedMsg("Available Profiles");
         sender.sendMsg("<dark_grey>│");
         
-        List<ServerListProfile> profiles = core.getFileHandler().getProfiles().stream()
+        List<ServerListProfile> profiles = core.fileHandler().getProfiles().stream()
                 .sorted(Comparator.comparingInt(ServerListProfile::priority).reversed())
                 .toList();
         
@@ -749,7 +742,7 @@ public class CommandHandler{
         
         String fileName = profileName(name);
         
-        if(core.getFileHandler().createFile(fileName)){
+        if(core.fileHandler().createFile(fileName)){
             sender.sendPrefixedMsg("<green>Successfully created </green>%s<green>!", fileName);
             sender.sendPrefixedMsg("<green>Use <white><click:suggest_command:/asl reload>/asl reload</click></white> to load the file.");
         }else{
@@ -790,7 +783,7 @@ public class CommandHandler{
             return;
         }
         
-        Path profilePath = core.getPlugin().getFolderPath().resolve("profiles").resolve(copyName);
+        Path profilePath = core.plugin().folderPath().resolve("profiles").resolve(copyName);
         if(!Files.exists(profilePath)){
             try{
                 Files.createFile(profilePath);
@@ -798,7 +791,7 @@ public class CommandHandler{
                 sender.sendErrorMsg("<red>Encountered IOException while creating file </red>%s<red>.", copyName);
                 sender.sendErrorMsg("<red>Check console for details.");
                 
-                core.getPlugin().getPluginLogger().warn("Encountered IOException while creating file <white>%s</white>", ex, copyName);
+                core.plugin().pluginLogger().warn("Encountered IOException while creating file <white>%s</white>", ex, copyName);
                 return;
             }
         }
@@ -817,7 +810,7 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>There was an IOException while loading file </red>%s<red>!", copyName);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s</white>", ex, copyName);
+            core.plugin().pluginLogger().warn("Encountered IOException while loading file <white>%s</white>", ex, copyName);
             return;
         }
         
@@ -837,7 +830,7 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>There was a SerializationException while copying values from </red>%s<red>.", profile);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while copying data from <white>%s</white> to <white>%s</white>.", ex, profileName, copyName);
+            core.plugin().pluginLogger().warn("Encountered IOException while copying data from <white>%s</white> to <white>%s</white>.", ex, profileName, copyName);
             return;
         }
         
@@ -849,7 +842,7 @@ public class CommandHandler{
             sender.sendErrorMsg("<red>There was an IOException while loading file </red>%s<red>!", copyName);
             sender.sendErrorMsg("<red>Check console for details.");
             
-            core.getPlugin().getPluginLogger().warn("Encountered IOException while loading file <white>%s</white>", ex, copyName);
+            core.plugin().pluginLogger().warn("Encountered IOException while loading file <white>%s</white>", ex, copyName);
         }
     }
     
@@ -872,7 +865,7 @@ public class CommandHandler{
     @Suggestions("profiles")
     public List<String> profilesSuggestions(CommandInput input, AdvancedServerList<?> core){
         String name = input.readString();
-        List<String> profiles = core.getFileHandler().getProfiles().stream()
+        List<String> profiles = core.fileHandler().getProfiles().stream()
             .map(profile -> profile.file().substring(0, profile.file().lastIndexOf('.')))
             .toList();
         if(name.isEmpty())

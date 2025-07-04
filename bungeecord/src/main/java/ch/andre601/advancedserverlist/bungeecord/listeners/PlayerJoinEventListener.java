@@ -47,15 +47,15 @@ public class PlayerJoinEventListener implements Listener{
         InetSocketAddress address = (InetSocketAddress)event.getPlayer().getPendingConnection().getSocketAddress();
         ProxiedPlayer player = event.getPlayer();
         
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
+        plugin.core().playerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
         
         if(player.hasPermission("advancedserverlist.admin") || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getAudiences() == null || plugin.getCore().getUpdateChecker() == null)
+            if(plugin.getAudiences() == null || plugin.core().updateChecker() == null)
                 return;
             
             BungeeCmdSender sender = new BungeeCmdSender(player, plugin.getAudiences());
             
-            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
+            plugin.core().updateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

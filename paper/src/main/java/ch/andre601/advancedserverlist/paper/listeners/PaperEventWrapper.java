@@ -70,17 +70,17 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public void setMaxPlayers(int maxPlayers){
+    public void maxPlayers(int maxPlayers){
         event.setMaxPlayers(maxPlayers);
     }
     
     @Override
-    public void setOnlinePlayers(int onlinePlayers){
+    public void onlinePlayers(int onlinePlayers){
         event.setNumPlayers(onlinePlayers);
     }
     
     @Override
-    public void setMotd(Component component){
+    public void motd(Component component){
         event.motd(component);
     }
     
@@ -90,13 +90,13 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public void setPlayerCount(String name){
+    public void playerCount(String name){
         event.setVersion(name);
         event.setProtocolVersion(-1);
     }
     
     @Override
-    public void setPlayers(List<String> lines, PaperPlayerImpl player, GenericServer server){
+    public void players(List<String> lines, PaperPlayerImpl player, GenericServer server){
         try{
             Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent$ListedPlayerInfo");
             setListedPlayers(lines, player, server);
@@ -107,7 +107,7 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public void setPlayersHidden(){
+    public void playersHidden(){
         try{
             Class.forName("com.destroystokyo.paper.event.server.PaperServerListPingEvent$ListedPlayerInfo");
             clearListedPlayers();
@@ -117,12 +117,12 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public void setFavicon(CachedServerIcon favicon){
+    public void favicon(CachedServerIcon favicon){
         event.setServerIcon(favicon);
     }
     
     @Override
-    public void setDefaultFavicon(){
+    public void defaultFavicon(){
         event.setServerIcon(event.getServerIcon());
     }
     
@@ -145,22 +145,22 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public int getProtocolVersion(){
+    public int protocolVersion(){
         return event.getClient().getProtocolVersion();
     }
     
     @Override
-    public int getOnlinePlayers(){
-        return plugin.getPlayersOnline(null);
+    public int onlinePlayers(){
+        return plugin.playersOnline(null);
     }
     
     @Override
-    public int getMaxPlayers(){
+    public int maxPlayers(){
         return event.getMaxPlayers();
     }
     
     @Override
-    public String getPlayerIP(){
+    public String playerIP(){
         return event.getClient().getAddress().getHostString();
     }
     
@@ -173,12 +173,12 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public String getVirtualHost(){
+    public String virtualHost(){
         return this.resolveHost(event.getClient().getVirtualHost());
     }
     
     @Override
-    public PluginCore<CachedServerIcon> getPlugin(){
+    public PluginCore<CachedServerIcon> plugin(){
         return plugin;
     }
     
@@ -190,8 +190,8 @@ public class PaperEventWrapper implements GenericEventWrapper<CachedServerIcon, 
     }
     
     @Override
-    public GenericServer createGenericServer(int playersOnline, int playersMax, String host){
-        return new PaperServerImpl(plugin.getWorldCache().worlds(), playersOnline, playersMax, host);
+    public GenericServer createServer(int playersOnline, int playersMax, String host){
+        return new PaperServerImpl(plugin.worldCache().worlds(), playersOnline, playersMax, host);
     }
     
     private void clearListedPlayers(){

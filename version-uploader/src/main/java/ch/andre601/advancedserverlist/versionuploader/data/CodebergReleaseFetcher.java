@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class CodebergReleaseFetcher{
     
@@ -43,9 +43,9 @@ public class CodebergReleaseFetcher{
     private static final Gson GSON = new Gson();
     
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
-        .callTimeout(30, TimeUnit.SECONDS)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
+        .callTimeout(Duration.ofSeconds(30))
+        .connectTimeout(Duration.ofSeconds(30))
+        .readTimeout(Duration.ofSeconds(30))
         .build();
     
     public static CodebergRelease fetch(){

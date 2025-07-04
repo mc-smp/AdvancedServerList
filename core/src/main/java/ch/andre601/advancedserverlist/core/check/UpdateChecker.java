@@ -68,8 +68,8 @@ public class UpdateChecker{
     
     public UpdateChecker(AdvancedServerList<?> core){
         this.core = core;
-        this.logger = core.getPlugin().getPluginLogger();
-        this.loader = core.getPlugin().getLoader();
+        this.logger = core.plugin().pluginLogger();
+        this.loader = core.plugin().loader();
         this.client = HttpClient.newBuilder().executor(Executors.newSingleThreadExecutor(new UpdateCheckThread())).build();
         
         startUpdateChecker();
@@ -88,10 +88,10 @@ public class UpdateChecker{
             if(version == null)
                 return;
             
-            int result = version.compare(core.getVersion());
+            int result = version.compare(core.version());
             if(result == -1){
                 sender.sendPrefixedMsg("<green>A new Version of AdvancedServerList is available!");
-                sender.sendPrefixedMsg("<green>Your version: <white>%s", core.getVersion());
+                sender.sendPrefixedMsg("<green>Your version: <white>%s", core.version());
                 sender.sendPrefixedMsg("<green>Version on Modrinth: <white>%s", version.versionNumber());
                 sender.sendPrefixedMsg(
                     "<click:open_url:'https://modrinth.com/plugin/advancedserverlist/version/%s'>" +
@@ -103,7 +103,7 @@ public class UpdateChecker{
             if(result == 1){
                 sender.sendPrefixedMsg(
                     "Your version (<white>%</white>) is newer than what is available on Modrinth (<white>%s</white>).",
-                    core.getVersion(),
+                    core.version(),
                     version.versionNumber()
                 );
                 sender.sendPrefixedMsg("Are you using a Development Version?");
@@ -137,14 +137,14 @@ public class UpdateChecker{
                 
                 logger.debug(UpdateChecker.class, "Comparing versions...");
                 
-                int result = version.compare(core.getVersion());
+                int result = version.compare(core.version());
                 switch(result){
                     case -1 -> printUpdateBanner(version);
                     case 0 -> logger.success("You are running the latest version!");
                     case 1 -> {
                         logger.info(
                             "[?] Your version (<white>%s</white>) is newer than what is available on Modrint (<white>%s</white>).",
-                            core.getVersion(),
+                            core.version(),
                             version.versionNumber()
                         );
                         logger.info("    Are you using a Development Version?");
@@ -163,7 +163,7 @@ public class UpdateChecker{
         
         logger.debug(UpdateChecker.class, "Checking '%s' for updates...", finalUrl);
         
-        if(core.getVersion().equals("UNKNOWN")){
+        if(core.version().equals("UNKNOWN")){
             logger.warn("Cannot perform update check. Plugin version is 'UNKNOWN'!");
             return CompletableFuture.completedFuture(null);
         }
@@ -173,7 +173,7 @@ public class UpdateChecker{
             request = HttpRequest.newBuilder()
                 .uri(new URI(finalUrl))
                 .timeout(Duration.ofSeconds(5))
-                .header("User-Agent", "AdvancedServerList-" + loader + "/" + core.getVersion())
+                .header("User-Agent", "AdvancedServerList-" + loader + "/" + core.version())
                 .build();
         }catch(URISyntaxException ex){
             logger.warn("Cannot perform update check. URL '%s' is not a valid URI.", ex, finalUrl);
@@ -193,7 +193,7 @@ public class UpdateChecker{
         logger.warn("=======================================================================");
         logger.warn("You are running an outdated version of AdvancedServerList!");
         logger.warn("");
-        logger.warn("Your version: <white>%s</white>", core.getVersion());
+        logger.warn("Your version: <white>%s</white>", core.version());
         logger.warn("Modrinth:     <white>%s</white>", version.versionNumber());
         logger.warn("");
         

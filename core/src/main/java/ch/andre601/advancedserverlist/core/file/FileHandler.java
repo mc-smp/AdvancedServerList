@@ -61,10 +61,10 @@ public class FileHandler{
     
     public FileHandler(AdvancedServerList<?> core){
         this.plugin = core;
-        this.logger = core.getPlugin().getPluginLogger();
+        this.logger = core.plugin().pluginLogger();
         
-        this.config = core.getPlugin().getFolderPath().resolve("config.yml");
-        this.profilesFolder = core.getPlugin().getFolderPath().resolve("profiles");
+        this.config = core.plugin().folderPath().resolve("config.yml");
+        this.profilesFolder = core.plugin().folderPath().resolve("profiles");
     }
     
     public List<ServerListProfile> getProfiles(){
@@ -72,7 +72,7 @@ public class FileHandler{
     }
     
     public boolean loadConfig(){
-        File folder = plugin.getPlugin().getFolderPath().toFile();
+        File folder = plugin.plugin().folderPath().toFile();
         if(!folder.exists() && !folder.mkdirs()){
             logger.warn("Couldn't create folder for plugin. Is it missing Write permissions?");
             return false;
@@ -219,7 +219,7 @@ public class FileHandler{
     private boolean makeBackup(){
         logger.info("[-] Making backup of old config.yml...");
         
-        File backups = plugin.getPlugin().getFolderPath().resolve("backups").toFile();
+        File backups = plugin.plugin().folderPath().resolve("backups").toFile();
         if(!backups.exists() && !backups.mkdirs()){
             logger.failure("Cannot create backups folder for migration!");
             return false;

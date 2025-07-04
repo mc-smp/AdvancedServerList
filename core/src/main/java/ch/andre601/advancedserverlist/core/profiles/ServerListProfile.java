@@ -46,9 +46,9 @@ public record ServerListProfile(int priority, String condition, ProfileEntry def
             return true;
         
         ParseWarnCollector collector = new ParseWarnCollector(condition);
-        PluginLogger logger = core.getPlugin().getPluginLogger();
+        PluginLogger logger = core.plugin().pluginLogger();
         
-        boolean result = core.getParser().evaluate(condition, player, server, collector);
+        boolean result = core.parser().evaluate(condition, player, server, collector);
         
         if(collector.hasWarnings()){
             logger.warn("Encountered <white>%d</white> Error(s) while parsing condition for file '<white>%s</white>':", collector.getWarnings().size(), file);

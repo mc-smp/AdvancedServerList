@@ -81,7 +81,7 @@ public class AdvancedServerList<F>{
         this.playerHandler = new PlayerHandler(this);
         this.textCenterUtil = new TextCenterUtil(this);
         
-        plugin.getPluginLogger().info("Registering internal Placeholders...");
+        plugin.pluginLogger().info("Registering internal Placeholders...");
         
         placeholders.forEach(this::addPlaceholder);
         
@@ -90,52 +90,52 @@ public class AdvancedServerList<F>{
         }
         
         resolveVersion();
-        getPlugin().getPluginLogger().info("Starting <white>AdvancedServerList v%s</white>...", version);
+        plugin().pluginLogger().info("Starting <white>AdvancedServerList v%s</white>...", version);
         load();
     }
     
-    public static AdvancedServerListAPI getApi(){
+    public static AdvancedServerListAPI api(){
         return api;
     }
     
-    public PluginCore<F> getPlugin(){
+    public PluginCore<F> plugin(){
         return plugin;
     }
     
-    public FileHandler getFileHandler(){
+    public FileHandler fileHandler(){
         return fileHandler;
     }
     
-    public PlayerHandler getPlayerHandler(){
+    public PlayerHandler playerHandler(){
         return playerHandler;
     }
     
-    public String getVersion(){
+    public String version(){
         return version;
     }
     
-    public ProfileConditionParser getParser(){
+    public ProfileConditionParser parser(){
         return parser;
     }
     
-    public UpdateChecker getUpdateChecker(){
+    public UpdateChecker updateChecker(){
         return updateChecker;
     }
     
-    public TextCenterUtil getTextCenterUtil(){
+    public TextCenterUtil textCenterUtil(){
         return textCenterUtil;
     }
     
     public void disable(){
-        getPlugin().getPluginLogger().info("[-] Saving <white>playercache.json</white> file...");
-        getPlayerHandler().save();
+        plugin().pluginLogger().info("[-] Saving <white>playercache.json</white> file...");
+        playerHandler().save();
         
         if(updateChecker != null){
-            getPlugin().getPluginLogger().info("[-] Disabling Update Checker...");
+            plugin().pluginLogger().info("[-] Disabling Update Checker...");
             updateChecker.disable();
         }
         
-        getPlugin().getPluginLogger().success("AdvancedServerList disabled!");
+        plugin().pluginLogger().success("AdvancedServerList disabled!");
     }
     
     public void clearFaviconCache(){
@@ -143,69 +143,69 @@ public class AdvancedServerList<F>{
     }
     
     public void clearPlayerCache(){
-        getPlayerHandler().clearCache();
+        playerHandler().clearCache();
     }
     
     private void load(){
-        if(!getFileHandler().loadConfig()){
-            getPlugin().getPluginLogger().failure("Unable to load <white>config.yml</white>! Check previous lines for errors.");
+        if(!fileHandler().loadConfig()){
+            plugin().pluginLogger().failure("Unable to load <white>config.yml</white>! Check previous lines for errors.");
             return;
         }
         
-        if(getFileHandler().isOldConfig()){
-            getPlugin().getPluginLogger().info("[-] Detected old <white>config.yml</white>. Attempting to migrate...");
-            if(getFileHandler().migrateConfig()){
-                getPlugin().getPluginLogger().success("Migration completed successfully!");
+        if(fileHandler().isOldConfig()){
+            plugin().pluginLogger().info("[-] Detected old <white>config.yml</white>. Attempting to migrate...");
+            if(fileHandler().migrateConfig()){
+                plugin().pluginLogger().success("Migration completed successfully!");
             }else{
-                getPlugin().getPluginLogger().failure("Couldn't migrate <white>config.yml</white>! Check previous lines for errors.");
+                plugin().pluginLogger().failure("Couldn't migrate <white>config.yml</white>! Check previous lines for errors.");
                 return;
             }
         }
         
-        if(getFileHandler().getBool(true, "printBanner")){
+        if(fileHandler().getBool(true, "printBanner")){
             printBanner();
         }
         
-        getPlugin().getPluginLogger().info("Platform: <white>%s</white>", plugin.getPlatformInfo());
-        getPlugin().getPluginLogger().info("");
+        plugin().pluginLogger().info("Platform: <white>%s</white>", plugin.platformInfo());
+        plugin().pluginLogger().info("");
         
-        if(getFileHandler().loadProfiles()){
-            getPlugin().getPluginLogger().success("Successfully loaded <white>%d</white> profile(s)!", getFileHandler().getProfiles().size());
+        if(fileHandler().loadProfiles()){
+            plugin().pluginLogger().success("Successfully loaded <white>%d</white> profile(s)!", fileHandler().getProfiles().size());
         }else{
-            getPlugin().getPluginLogger().failure("Unable to load profiles! Check previous lines for errors.");
+            plugin().pluginLogger().failure("Unable to load profiles! Check previous lines for errors.");
             return;
         }
         
         loadCommands();
         
         plugin.loadEvents();
-        getPlayerHandler().load();
+        playerHandler().load();
         plugin.loadMetrics();
         plugin.startScheduler();
     
-        getPlugin().getPluginLogger().success("<green>AdvancedServerList is ready!");
+        plugin().pluginLogger().success("<green>AdvancedServerList is ready!");
         
-        if(getFileHandler().getBoolean("checkUpdates"))
+        if(fileHandler().getBoolean("checkUpdates"))
             this.updateChecker = new UpdateChecker(this);
     }
     
     private void printBanner(){
-        getPlugin().getPluginLogger().info("<#3b90ff>     __      _______ ___");
-        getPlugin().getPluginLogger().info("<#3b90ff>    /\\ \\    / ____|_| | |");
-        getPlugin().getPluginLogger().info("<#3b90ff>   /  \\ \\  | (_(___ | | |");
-        getPlugin().getPluginLogger().info("<#3b90ff>  / /\\ \\ \\  \\___ \\ \\| | |");
-        getPlugin().getPluginLogger().info("<#3b90ff> / ____ \\ \\ ____) | | |_|____");
-        getPlugin().getPluginLogger().info("<#3b90ff>/_/_/  \\_\\_\\_____/_/|______|_|");
-        getPlugin().getPluginLogger().info("");
+        plugin().pluginLogger().info("<#3b90ff>     __      _______ ___");
+        plugin().pluginLogger().info("<#3b90ff>    /\\ \\    / ____|_| | |");
+        plugin().pluginLogger().info("<#3b90ff>   /  \\ \\  | (_(___ | | |");
+        plugin().pluginLogger().info("<#3b90ff>  / /\\ \\ \\  \\___ \\ \\| | |");
+        plugin().pluginLogger().info("<#3b90ff> / ____ \\ \\ ____) | | |_|____");
+        plugin().pluginLogger().info("<#3b90ff>/_/_/  \\_\\_\\_____/_/|______|_|");
+        plugin().pluginLogger().info("");
         
         seasonalText();
     }
     
     private void resolveVersion(){
-        try(InputStream is = getClass().getResourceAsStream("/version.properties")){
+        try(InputStream stream = getClass().getResourceAsStream("/version.properties")){
             Properties properties = new Properties();
             
-            properties.load(is);
+            properties.load(stream);
             
             version = properties.getProperty("version");
         }catch(IOException ex){
@@ -214,13 +214,13 @@ public class AdvancedServerList<F>{
     }
     
     private void addPlaceholder(PlaceholderProvider placeholderProvider){
-        AdvancedServerList.getApi().addPlaceholderProvider(placeholderProvider);
+        AdvancedServerList.api().addPlaceholderProvider(placeholderProvider);
     }
     
     private void loadCommands(){
-        getPlugin().loadFaviconHandler(this);
+        plugin().loadFaviconHandler(this);
         
-        CommandManager<CmdSender> commandManager = plugin.getCommandManager();
+        CommandManager<CmdSender> commandManager = plugin().commandManager();
         
         commandManager.parameterInjectorRegistry().registerInjector(AdvancedServerList.class, ParameterInjector.constantInjector(this));
         
@@ -241,7 +241,7 @@ public class AdvancedServerList<F>{
                         StringParser.stringParser(),
                         Description.of("The profile to edit."),
                         SuggestionProvider.suggesting(
-                            getFileHandler().getProfiles().stream()
+                            fileHandler().getProfiles().stream()
                                 .map(ServerListProfile::file)
                                 .map(Suggestion::suggestion)
                                 .toList()
@@ -262,7 +262,7 @@ public class AdvancedServerList<F>{
             );
         }
         
-        getPlugin().getPluginLogger().success("Loaded Command <white>/advancedserverlist</white>!");
+        plugin().pluginLogger().success("Loaded Command <white>/advancedserverlist</white>!");
     }
     
     private ParserDescriptor<CmdSender, ?> descriptor(String option){
@@ -295,34 +295,34 @@ public class AdvancedServerList<F>{
         switch(date.getMonth()){
             case JANUARY -> {
                 if(date.getDayOfMonth() == 1){
-                    getPlugin().getPluginLogger().info("Happy new Year!");
-                    getPlugin().getPluginLogger().info("");
+                    plugin().pluginLogger().info("Happy new Year!");
+                    plugin().pluginLogger().info("");
                 }
             }
             case JUNE -> {
-                getPlugin().getPluginLogger().info("Happy Pride Month!");
-                getPlugin().getPluginLogger().info("");
+                plugin().pluginLogger().info("Happy Pride Month!");
+                plugin().pluginLogger().info("");
             }
             case AUGUST -> {
                 if(date.getDayOfMonth() == 1){
-                    getPlugin().getPluginLogger().info("Happy Birthday Switzerland!");
-                    getPlugin().getPluginLogger().info("");
+                    plugin().pluginLogger().info("Happy Birthday Switzerland!");
+                    plugin().pluginLogger().info("");
                 }
             }
             case OCTOBER -> {
                 if(date.getDayOfMonth() == 31){
-                    getPlugin().getPluginLogger().info("Happy Halloween!");
-                    getPlugin().getPluginLogger().info("");
+                    plugin().pluginLogger().info("Happy Halloween!");
+                    plugin().pluginLogger().info("");
                 }
             }
             case DECEMBER -> {
                 if(date.getDayOfMonth() == 13){
-                    getPlugin().getPluginLogger().info("Happy Birthday Andre_601!");
-                    getPlugin().getPluginLogger().info("");
+                    plugin().pluginLogger().info("Happy Birthday Andre_601!");
+                    plugin().pluginLogger().info("");
                 }else
                 if(date.getDayOfMonth() > 23 && date.getDayOfMonth() < 27){
-                    getPlugin().getPluginLogger().info("Merry Christmas!");
-                    getPlugin().getPluginLogger().info("");
+                    plugin().pluginLogger().info("Merry Christmas!");
+                    plugin().pluginLogger().info("");
                 }
             }
         }

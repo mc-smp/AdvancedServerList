@@ -63,7 +63,7 @@ public class PaperServerPlaceholders extends PlaceholderProvider{
                         if(world == null)
                             continue;
                         
-                        players += plugin.getPlayersOnline(world);
+                        players += plugin.playersOnline(world);
                     }
                     
                     yield String.valueOf(players);

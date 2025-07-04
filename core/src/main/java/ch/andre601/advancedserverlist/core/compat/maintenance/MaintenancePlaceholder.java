@@ -16,7 +16,7 @@ public class MaintenancePlaceholder extends PlaceholderProvider{
     }
     @Override
     public String parsePlaceholder(String placeholder, GenericPlayer player, GenericServer server){
-        if(!placeholder.equals("maintenanceEnabled") || !plugin.getPlugin().isPluginEnabled("Maintenance"))
+        if(!placeholder.equals("maintenanceEnabled") || !plugin.plugin().isPluginEnabled("Maintenance"))
             return null;
         
         return String.valueOf(MaintenanceUtil.get().isMaintenanceEnabled());

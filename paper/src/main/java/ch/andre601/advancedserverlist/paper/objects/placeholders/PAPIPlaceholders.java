@@ -69,7 +69,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
     
     @Override
     public @NotNull String getVersion(){
-        return plugin.getCore().getVersion();
+        return plugin.core().version();
     }
     
     @Override
@@ -80,16 +80,16 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
     @Override
     public String onPlaceholderRequest(Player pl, @NotNull String identifier){
         String host = pl.getVirtualHost() == null ? null : pl.getVirtualHost().getHostString();
-        CachedPlayer cached = plugin.getCore().getPlayerHandler().getCachedPlayer(pl.getUniqueId());
+        CachedPlayer cached = plugin.core().playerHandler().getCachedPlayer(pl.getUniqueId());
         
         int protocol = resolveProtocol(pl);
         int online = Bukkit.getOnlinePlayers().size();
         int max = Bukkit.getMaxPlayers();
         
-        BukkitServer server = new PaperServerImpl(plugin.getWorldCache().worlds(), online, max, host);
+        BukkitServer server = new PaperServerImpl(plugin.worldCache().worlds(), online, max, host);
         BukkitPlayer player = new PaperPlayerImpl(pl, cached, protocol);
         
-        ServerListProfile profile = ProfileManager.resolveProfile(plugin.getCore(), player, server);
+        ServerListProfile profile = ProfileManager.resolveProfile(plugin.core(), player, server);
         if(profile == null)
             return null;
         
@@ -113,7 +113,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
             max = online + (extraPlayers == null ? 0 : extraPlayers);
         }
         
-        BukkitServer finalServer = new PaperServerImpl(plugin.getWorldCache().worlds(), online, max, host);
+        BukkitServer finalServer = new PaperServerImpl(plugin.worldCache().worlds(), online, max, host);
         return switch(identifier.toLowerCase(Locale.ROOT)){
             case "favicon" -> getOption(entry.favicon(), pl, player, finalServer);
             case "motd" -> getOption(entry.motd(), pl, player, finalServer, true);
@@ -155,7 +155,7 @@ public class PAPIPlaceholders extends PlaceholderExpansion{
                 .modifyText(text -> PlaceholderAPI.setPlaceholders(pl, text))
                 .modifyText(text -> {
                     if(isMotd)
-                        return plugin.getCore().getTextCenterUtil().getCenteredText(text);
+                        return plugin.core().textCenterUtil().getCenteredText(text);
                     
                     return text;
                 })

@@ -77,8 +77,8 @@ public class TextCenterUtil{
     private Map<String, FontInfo> loadFontWidths(AdvancedServerList<?> plugin){
         try(InputStream stream = plugin.getClass().getResourceAsStream("/char-widths.json.gz")){
             if(stream == null){
-                plugin.getPlugin().getPluginLogger().warn("Internal char-widths.json.gz couldn't be retrieved.");
-                plugin.getPlugin().getPluginLogger().warn("The <center> Placeholder won't work.");
+                plugin.plugin().pluginLogger().warn("Internal char-widths.json.gz couldn't be retrieved.");
+                plugin.plugin().pluginLogger().warn("The <center> Placeholder won't work.");
                 return new HashMap<>();
             }
             
@@ -87,9 +87,9 @@ public class TextCenterUtil{
             
             return new Gson().fromJson(reader, new TypeToken<Map<String, FontInfo>>(){}.getType());
         }catch(IOException ex){
-            plugin.getPlugin().getPluginLogger().warn("Encountered IOException while loading font widths.");
-            plugin.getPlugin().getPluginLogger().warn("The <center> Placeholder won't work.");
-            plugin.getPlugin().getPluginLogger().warn("Cause: <white>%s</white>", ex.getMessage());
+            plugin.plugin().pluginLogger().warn("Encountered IOException while loading font widths.");
+            plugin.plugin().pluginLogger().warn("The <center> Placeholder won't work.");
+            plugin.plugin().pluginLogger().warn("Cause: <white>%s</white>", ex.getMessage());
             return new HashMap<>();
         }
     }

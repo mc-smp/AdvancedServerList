@@ -78,17 +78,17 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public void setMaxPlayers(int maxPlayers){
+    public void maxPlayers(int maxPlayers){
         builder.maximumPlayers(maxPlayers);
     }
     
     @Override
-    public void setOnlinePlayers(int onlinePlayers){
+    public void onlinePlayers(int onlinePlayers){
         builder.onlinePlayers(onlinePlayers);
     }
     
     @Override
-    public void setMotd(Component component){
+    public void motd(Component component){
         builder.description(component);
     }
     
@@ -98,12 +98,12 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public void setPlayerCount(String name){
+    public void playerCount(String name){
         builder.version(new ServerPing.Version(-1, name));
     }
     
     @Override
-    public void setPlayers(List<String> lines, VelocityPlayerImpl player, GenericServer server){
+    public void players(List<String> lines, VelocityPlayerImpl player, GenericServer server){
         ServerPing.SamplePlayer[] players = new ServerPing.SamplePlayer[lines.size()];
         
         for(int i = 0; i < players.length; i++){
@@ -120,18 +120,18 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public void setPlayersHidden(){
+    public void playersHidden(){
         builder.clearSamplePlayers();
     }
     
     @Override
-    public void setFavicon(Favicon favicon){
+    public void favicon(Favicon favicon){
         builder.favicon(favicon);
     }
     
     // Not used in Velocity
     @Override
-    public void setDefaultFavicon(){}
+    public void defaultFavicon(){}
     
     @Override
     public void updateEvent(){
@@ -152,12 +152,12 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public int getProtocolVersion(){
+    public int protocolVersion(){
         return event.getConnection().getProtocolVersion().getProtocol();
     }
     
     @Override
-    public int getOnlinePlayers(){
+    public int onlinePlayers(){
         int players = plugin.getOnlinePlayers(null);
         if(players == -1)
             return builder.getOnlinePlayers();
@@ -166,12 +166,12 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public int getMaxPlayers(){
+    public int maxPlayers(){
         return builder.getMaximumPlayers();
     }
     
     @Override
-    public String getPlayerIP(){
+    public String playerIP(){
         return event.getConnection().getRemoteAddress().getHostString();
     }
     
@@ -199,12 +199,12 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public String getVirtualHost(){
+    public String virtualHost(){
         return this.resolveHost(event.getConnection().getVirtualHost().orElse(null));
     }
     
     @Override
-    public PluginCore<Favicon> getPlugin(){
+    public PluginCore<Favicon> plugin(){
         return plugin;
     }
     
@@ -214,7 +214,7 @@ public class VelocityEventWrapper implements GenericEventWrapper<Favicon, Veloci
     }
     
     @Override
-    public GenericServer createGenericServer(int playersOnline, int playersMax, String host){
+    public GenericServer createServer(int playersOnline, int playersMax, String host){
         Map<String, RegisteredServer> servers = new HashMap<>();
         plugin.getProxy().getAllServers().forEach(server -> servers.put(server.getServerInfo().getName(), server));
         

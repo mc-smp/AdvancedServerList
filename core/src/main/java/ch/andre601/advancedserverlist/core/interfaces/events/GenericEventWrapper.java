@@ -40,23 +40,23 @@ public interface GenericEventWrapper<F, P extends GenericPlayer>{
     
     GenericServerListEvent callEvent(ProfileEntry entry);
     
-    void setMaxPlayers(int maxPlayers);
+    void maxPlayers(int maxPlayers);
     
-    void setOnlinePlayers(int onlinePlayers);
+    void onlinePlayers(int onlinePlayers);
     
-    void setMotd(Component component);
+    void motd(Component component);
     
     void hidePlayers();
     
-    void setPlayerCount(String name);
+    void playerCount(String name);
     
-    void setPlayers(List<String> players, P player, GenericServer server);
+    void players(List<String> players, P player, GenericServer server);
     
-    void setPlayersHidden();
+    void playersHidden();
     
-    void setFavicon(F favicon);
+    void favicon(F favicon);
     
-    void setDefaultFavicon();
+    void defaultFavicon();
     
     void updateEvent();
     
@@ -64,23 +64,23 @@ public interface GenericEventWrapper<F, P extends GenericPlayer>{
     
     boolean isMaintenanceModeActive();
     
-    int getProtocolVersion();
+    int protocolVersion();
     
-    int getOnlinePlayers();
+    int onlinePlayers();
     
-    int getMaxPlayers();
+    int maxPlayers();
     
-    String getPlayerIP();
+    String playerIP();
     
     String parsePAPIPlaceholders(String text, P player);
     
-    String getVirtualHost();
+    String virtualHost();
     
-    PluginCore<F> getPlugin();
+    PluginCore<F> plugin();
     
     P createPlayer(CachedPlayer player, int protocol);
     
-    GenericServer createGenericServer(int playersOnline, int playersMax, String host);
+    GenericServer createServer(int playersOnline, int playersMax, String host);
     
     default String resolveHost(InetSocketAddress address){
         return address == null ? null : address.getHostString();

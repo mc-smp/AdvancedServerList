@@ -47,21 +47,21 @@ public class ServerLoadEventListener implements Listener{
         new WorldEventsListener(plugin);
         
         // Load currently loaded worlds into the WorldCache
-        Bukkit.getWorlds().forEach(world -> plugin.getWorldCache().addWorld(world));
+        Bukkit.getWorlds().forEach(world -> plugin.worldCache().addWorld(world));
         
         // Print a warning if server load was after a reload.
         if(event.getType() != ServerLoadEvent.LoadType.RELOAD)
             return;
         
-        plugin.getPluginLogger().warn("======================================================================================");
-        plugin.getPluginLogger().warn("SERVER RELOAD DETECTED!");
-        plugin.getPluginLogger().warn("");
-        plugin.getPluginLogger().warn("A server reload has been detected by AdvancedServerList, meaning either the /reload");
-        plugin.getPluginLogger().warn("command or Bukkit.reload() was executed.");
-        plugin.getPluginLogger().warn("");
-        plugin.getPluginLogger().warn("YOU WILL GET NO SUPPORT FOR THE PLUGIN FOR ANY ISSUES YOU ENCOUNTER AFTER A SERVER");
-        plugin.getPluginLogger().warn("RELOAD!");
-        plugin.getPluginLogger().warn("ALWAYS RESTART YOUR SERVER. NEVER RELOAD IT!");
-        plugin.getPluginLogger().warn("======================================================================================");
+        plugin.pluginLogger().warn("======================================================================================");
+        plugin.pluginLogger().warn("SERVER RELOAD DETECTED!");
+        plugin.pluginLogger().warn("");
+        plugin.pluginLogger().warn("A server reload has been detected by AdvancedServerList, meaning either the /reload");
+        plugin.pluginLogger().warn("command or Bukkit.reload() was executed.");
+        plugin.pluginLogger().warn("");
+        plugin.pluginLogger().warn("YOU WILL GET NO SUPPORT FOR THE PLUGIN FOR ANY ISSUES YOU ENCOUNTER AFTER A SERVER");
+        plugin.pluginLogger().warn("RELOAD!");
+        plugin.pluginLogger().warn("ALWAYS RESTART YOUR SERVER. NEVER RELOAD IT!");
+        plugin.pluginLogger().warn("======================================================================================");
     }
 }

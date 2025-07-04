@@ -41,11 +41,11 @@ public class WorldEventsListener implements Listener{
     
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event){
-        plugin.getWorldCache().addWorld(event.getWorld());
+        plugin.worldCache().addWorld(event.getWorld());
     }
     
     @EventHandler
     public void onWorldUnload(WorldUnloadEvent event){
-        plugin.getWorldCache().removeWorld(event.getWorld().getName());
+        plugin.worldCache().removeWorld(event.getWorld().getName());
     }
 }

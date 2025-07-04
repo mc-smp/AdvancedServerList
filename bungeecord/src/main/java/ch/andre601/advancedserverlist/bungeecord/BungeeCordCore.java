@@ -116,7 +116,7 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     @Override
     public void loadMetrics(){
         new Metrics(this, 15585).addCustomChart(new SimplePie("profiles",
-            () -> String.valueOf(core.getFileHandler().getProfiles().size())
+            () -> String.valueOf(core.fileHandler().getProfiles().size())
         ));
         
     }
@@ -157,22 +157,22 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
-    public AdvancedServerList<Favicon> getCore(){
+    public AdvancedServerList<Favicon> core(){
         return core;
     }
     
     @Override
-    public Path getFolderPath(){
+    public Path folderPath(){
         return getDataFolder().toPath();
     }
     
     @Override
-    public PluginLogger getPluginLogger(){
+    public PluginLogger pluginLogger(){
         return logger;
     }
     
     @Override
-    public FaviconHandler<Favicon> getFaviconHandler(){
+    public FaviconHandler<Favicon> faviconHandler(){
         if(faviconHandler == null)
             faviconHandler = new FaviconHandler<>(core);
         
@@ -180,17 +180,17 @@ public class BungeeCordCore extends Plugin implements PluginCore<Favicon>{
     }
     
     @Override
-    public CommandManager<CmdSender> getCommandManager(){
+    public CommandManager<CmdSender> commandManager(){
         return handler.commandHandler();
     }
     
     @Override
-    public String getPlatformInfo(){
+    public String platformInfo(){
         return getProxy().getName() + " " + getProxy().getVersion();
     }
     
     @Override
-    public String getLoader(){
+    public String loader(){
         return "bungeecord";
     }
     

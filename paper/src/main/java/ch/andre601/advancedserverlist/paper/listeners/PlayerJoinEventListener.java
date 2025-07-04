@@ -51,15 +51,15 @@ public class PlayerJoinEventListener implements Listener{
             return;
         
         Player player = event.getPlayer();
-        plugin.getCore().getPlayerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
+        plugin.core().playerHandler().addPlayer(address.getHostString(), player.getName(), player.getUniqueId());
         
         if(player.hasPermission("advancedserverlist.admin")  || player.hasPermission("advancedserverlist.updatecheck")){
-            if(plugin.getCore().getUpdateChecker() == null)
+            if(plugin.core().updateChecker() == null)
                 return;
             
             PaperCmdSender sender = new PaperCmdSender(player);
             
-            plugin.getCore().getUpdateChecker().performCachedUpdateCheck(sender);
+            plugin.core().updateChecker().performCachedUpdateCheck(sender);
         }
     }
 }

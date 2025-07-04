@@ -44,28 +44,28 @@ import java.util.List;
 public class PingEventHandler{
     
     public static <F, P extends GenericPlayer> ProfileEntry handleEvent(GenericEventWrapper<F, P> event){
-        event.getPlugin().getPluginLogger().debug(PingEventHandler.class, "Received ping event. Handling it...");
+        event.plugin().pluginLogger().debug(PingEventHandler.class, "Received ping event. Handling it...");
         if(event.isInvalidProtocol()){
-            event.getPlugin().getPluginLogger().debug(PingEventHandler.class, "Not handling event. Protocol was invalid.");
+            event.plugin().pluginLogger().debug(PingEventHandler.class, "Not handling event. Protocol was invalid.");
             return null;
         }
         
-        PluginCore<F> plugin = event.getPlugin();
-        String host = event.getVirtualHost();
-        PluginLogger logger = plugin.getPluginLogger();
+        PluginCore<F> plugin = event.plugin();
+        String host = event.virtualHost();
+        PluginLogger logger = plugin.pluginLogger();
         
         logger.debug(PingEventHandler.class, "Protocol valid. Continue handling...");
         
-        int online = event.getOnlinePlayers();
-        int max = event.getMaxPlayers();
+        int online = event.onlinePlayers();
+        int max = event.maxPlayers();
         
         P player = event.createPlayer(
-            plugin.getCore().getPlayerHandler().getCachedPlayer(event.getPlayerIP()),
-            event.getProtocolVersion()
+            plugin.core().playerHandler().getCachedPlayer(event.playerIP()),
+            event.protocolVersion()
         );
-        GenericServer server = event.createGenericServer(online, max, host);
+        GenericServer server = event.createServer(online, max, host);
         
-        ServerListProfile profile = ProfileManager.resolveProfile(plugin.getCore(), player, server);
+        ServerListProfile profile = ProfileManager.resolveProfile(plugin.core(), player, server);
         
         if(profile == null){
             logger.debugWarn(PingEventHandler.class, "Server List Profile couldn't be resolved properly. Cancelling event handling...");
@@ -97,7 +97,7 @@ public class PingEventHandler{
             
             try{
                 online = onlinePlayers == null ? online : Integer.parseInt(onlinePlayers);
-                event.setOnlinePlayers(online);
+                event.onlinePlayers(online);
             }catch(NumberFormatException ex){
                 logger.warn("Option 'playerCount -> onlinePlayers -> amount' is not a valid Number!");
             }
@@ -116,7 +116,7 @@ public class PingEventHandler{
                 max = online + (extraPlayers == null ? 0 : Integer.parseInt(extraPlayers));
                 
                 logger.debug(PingEventHandler.class, "'playerCount -> extraPlayers -> amount' is a valid number. Applying it...");
-                event.setMaxPlayers(max);
+                event.maxPlayers(max);
             }catch(NumberFormatException ex){
                 logger.warn("Option 'playerCount -> extraPlayers -> amount' is not a valid Number!");
             }
@@ -133,13 +133,13 @@ public class PingEventHandler{
                 max = maxPlayers == null ? 0 : Integer.parseInt(maxPlayers);
                 
                 logger.debug(PingEventHandler.class, "'playerCount -> maxPlayers -> amount' is a valid number. Applying it...");
-                event.setMaxPlayers(max);
+                event.maxPlayers(max);
             }catch(NumberFormatException ex){
                 logger.warn("Option 'playerCount -> maxPlayers -> amount' is not a valid Number!");
             }
         }
         
-        GenericServer finalServer = event.createGenericServer(online, max, host);
+        GenericServer finalServer = event.createServer(online, max, host);
         
         if(ProfileManager.checkOption(entry.motd()) && ignoreMaintenance(event, "motd")){
             logger.debug(PingEventHandler.class, "'motd' option present. Applying ['%s']...", String.join("', '", entry.motd()));
@@ -148,12 +148,12 @@ public class PingEventHandler{
                 .map(line -> ComponentParser.text(line)
                     .modifyText(text -> StringReplacer.replace(text, player, finalServer))
                     .modifyText(text -> event.parsePAPIPlaceholders(text, player))
-                    .modifyText(text -> plugin.getCore().getTextCenterUtil().getCenteredText(text))
+                    .modifyText(text -> plugin.core().textCenterUtil().getCenteredText(text))
                     .toComponent()
                 )
                 .toList();
             
-            event.setMotd(Component.join(JoinConfiguration.separator(Component.newline()), motd));
+            event.motd(Component.join(JoinConfiguration.separator(Component.newline()), motd));
         }
         
         boolean hidePlayers = ProfileManager.checkOption(entry.hidePlayersEnabled());
@@ -167,7 +167,7 @@ public class PingEventHandler{
         if(ProfileManager.checkOption(entry.playerCountText()) && !hidePlayers && ignoreMaintenance(event, "playerCountText")){
             logger.debug(PingEventHandler.class, "'playerCount -> text' option set. Applying '%s'...", entry.playerCountText());
             
-            event.setPlayerCount(
+            event.playerCount(
                 ComponentParser.text(entry.playerCountText())
                     .modifyText(text -> StringReplacer.replace(text, player, finalServer))
                     .modifyText(text -> event.parsePAPIPlaceholders(text, player))
@@ -178,13 +178,13 @@ public class PingEventHandler{
         boolean hidePlayersHover = ProfileManager.checkOption(entry.hidePlayersHoverEnabled());
         if(hidePlayersHover){
             logger.debug(PingEventHandler.class, "'playerCount -> hidePlayersHover' option set. Hiding Player Hover...");
-            event.setPlayersHidden();
+            event.playersHidden();
         }
         
         if(ProfileManager.checkOption(entry.players()) && !hidePlayers && !hidePlayersHover && ignoreMaintenance(event, "playerCountHover")){
             logger.debug(PingEventHandler.class, "'playerCount -> hover' option set. Applying ['%s']...", String.join("', '", entry.players()));
             
-            event.setPlayers(entry.players(), player, server);
+            event.players(entry.players(), player, server);
         }
         
         if(ProfileManager.checkOption(entry.favicon()) && ignoreMaintenance(event, "favicon")){
@@ -195,16 +195,16 @@ public class PingEventHandler{
                 .modify(text -> event.parsePAPIPlaceholders(text, player))
                 .asString();
             
-            F favicon = plugin.getFaviconHandler().favicon(faviconString);
+            F favicon = plugin.faviconHandler().favicon(faviconString);
             
             if(favicon == null){
                 logger.debugWarn(PingEventHandler.class, "Favicon was invalid or not yet resolved! Using default favicon of Server/Proxy...");
                 
-                event.setDefaultFavicon();
+                event.defaultFavicon();
             }else{
                 logger.debug(PingEventHandler.class, "Applying favicon...");
                 
-                event.setFavicon(favicon);
+                event.favicon(favicon);
             }
         }
         
@@ -218,6 +218,6 @@ public class PingEventHandler{
         if(!event.isMaintenanceModeActive())
             return true;
         
-        return !event.getPlugin().getCore().getFileHandler().getBool(true, "disableDuringMaintenance", option);
+        return !event.plugin().core().fileHandler().getBool(true, "disableDuringMaintenance", option);
     }
 }

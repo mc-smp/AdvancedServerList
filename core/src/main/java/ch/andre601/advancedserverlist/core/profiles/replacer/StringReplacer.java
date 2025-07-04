@@ -68,7 +68,7 @@ public class StringReplacer{
     }
     
     private static String parsePlaceholder0(String input, ParsePosition position, GenericPlayer player, GenericServer server, ParseWarnCollector collector){
-        AdvancedServerListAPI api = AdvancedServerList.getApi();
+        AdvancedServerListAPI api = AdvancedServerList.api();
         int index = position.getIndex();
         
         StringBuilder identifier = new StringBuilder();

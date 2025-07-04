@@ -48,28 +48,28 @@ public interface PluginCore<F>{
     
     void startScheduler();
     
-    AdvancedServerList<F> getCore();
+    AdvancedServerList<F> core();
     
-    Path getFolderPath();
+    Path folderPath();
     
-    PluginLogger getPluginLogger();
+    PluginLogger pluginLogger();
     
-    FaviconHandler<F> getFaviconHandler();
+    FaviconHandler<F> faviconHandler();
     
-    CommandManager<CmdSender> getCommandManager();
+    CommandManager<CmdSender> commandManager();
     
-    String getPlatformInfo();
+    String platformInfo();
     
-    String getLoader();
+    String loader();
     
     boolean isPluginEnabled(String plugin);
     
     F createFavicon(BufferedImage image) throws Exception;
     
     default boolean isDebugEnabled(){
-        if(getCore() == null)
+        if(core() == null)
             return false;
         
-        return getCore().getFileHandler().getBoolean("debug");
+        return core().fileHandler().getBoolean("debug");
     }
 }
