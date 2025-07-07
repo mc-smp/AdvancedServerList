@@ -1,0 +1,28 @@
+name: asl-mirror
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # every 30 minutes
+  workflow_dispatch:        # manual trigger option
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+    steps:
+      - name: Configure Git
+        run: |
+          git config --global user.name "mirror-job"
+          git config --global user.email "mirror-job@null.com"
+
+      - name: Clone ASL Repo
+        run: |
+          git clone --mirror https://codeberg.org/Andre601/AdvancedServerList.git asl.git
+
+      - name: Push to GitHub
+        run: |
+          cd asl.git
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/mc-smp/AdvancedServerList.git"
+          git push --prune origin +refs/heads/*:refs/heads/* +refs/tags/*:refs/tags/*
+
