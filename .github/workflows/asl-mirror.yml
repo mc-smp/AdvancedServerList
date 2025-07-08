@@ -1,0 +1,33 @@
+name: asl mirror
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Every 24 hours
+  workflow_dispatch:      # Allow manual runs
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+
+    steps:
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "mirror-job"
+          git config --global user.email "mirror-job@null.com"
+
+      - name: Clone source repo from Codeberg
+        run: |
+          git clone --bare https://codeberg.org/Andre601/AdvancedServerList.git asl.git
+
+      - name: Restore workflow directory
+        run: |
+          mkdir -p asl.git/.github/workflows
+          cp .github/workflows/asl-mirror.yml asl.git/.github/workflows/
+
+      - name: Mirror push to GitHub
+        run: |
+          cd asl.git
+          git remote set-url --push origin "https://x-access-token:${GH_PAT}@github.com/mc-smp/AdvancedServerList.git"
+          git push --prune origin +refs/heads/*:refs/heads/* +refs/tags/*:refs/tags/*
