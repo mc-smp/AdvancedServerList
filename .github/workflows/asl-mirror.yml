@@ -1,0 +1,73 @@
+name: asl mirror
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      gh_pat: ${{ secrets.gh_pat }}
+
+    steps:
+      - name: setup git
+        run: |
+          git config --global user.name "asl mirror"
+          git config --global user.email "asl-mirror@null.com"
+
+      - name: clone github repo
+        run: |
+          git clone https://x-access-token:${gh_pat}@github.com/mc-smp/AdvancedServerList.git target
+          cd target
+          git remote add codeberg https://codeberg.org/Andre601/AdvancedServerList.git
+
+      - name: fetch codeberg
+        run: |
+          cd target
+          git fetch codeberg --prune
+
+      - name: mirror branches preserving github folder only on master
+        run: |
+          cd target
+          for full_ref in $(git for-each-ref --format='%(refname)' refs/remotes/codeberg/); do
+            branch_name=$(echo "$full_ref" | sed 's#refs/remotes/codeberg/##')
+            if [ "$branch_name" = "HEAD" ]; then
+              continue
+            fi
+
+            if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+              git checkout "$branch_name"
+            else
+              git checkout -b "$branch_name"
+            fi
+
+            if [ "$branch_name" = "master" ]; then
+              if [ -d ".github" ]; then
+                cp -r .github ../github-workflows-backup
+              else
+                rm -rf ../github-workflows-backup || true
+              fi
+
+              git reset --hard "codeberg/$branch_name"
+
+              if [ -d "../github-workflows-backup" ]; then
+                rm -rf .github
+                mv ../github-workflows-backup .github
+                git add .github
+                git commit -m "restore .github workflows" || true
+              fi
+
+              git push origin "$branch_name" --force
+            else
+              git reset --hard "codeberg/$branch_name"
+              git push origin "$branch_name" --force
+            fi
+          done
+
+      - name: push tags
+        run: |
+          cd target
+          git push origin --tags --force
+
